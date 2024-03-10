@@ -1,0 +1,224 @@
+<script setup>
+import {getCurrentInstance, reactive, ref} from "vue";
+import {useRouter} from "vue-router";
+import axiosInstance from "@/utils/axios";
+import VueNativeSock from "vue-native-websocket-vue3";
+import store from "@/utils/store";
+import app, {globalStore} from "@/main";
+
+const router = useRouter()
+
+const loginForm = reactive({
+  username: '',
+  password: ''
+})
+
+const rules = reactive({
+  username: [{
+    required: true,
+    message: 'please input username',
+    trigger: 'blur'
+  }],
+  password: [{
+    required: true,
+    message: 'please input password',
+    trigger: 'blur'
+  }]
+})
+
+const loginFormInTemp = ref(null)
+
+
+const instance = getCurrentInstance();
+
+function initWebsocket() {
+  let baseUrl = 'ws://' + window.location.host.split(':')[0] + ':8082' + '/websocket/' + localStorage.getItem("token")
+  console.log(localStorage.getItem("token"))
+  app.use(VueNativeSock,
+      baseUrl, {
+        headers: {
+          Authorization: localStorage.getItem('token')
+        },
+        store: store,
+        format: 'json',
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 3000,
+        connectManually: true,
+      })
+  // modify the websocket's authorization header
+
+
+}
+
+function checkLoginType() {
+  if (localStorage.getItem('token') != null) {
+    console.log('reinit')
+    axiosInstance.get('/user', {
+      headers: {
+        Authorization: localStorage.getItem('token')
+      }
+    }).then((res) => {
+      console.log(res.data)
+      if (res.data.data.type === 1) {
+        router.push({path: '/admin'})
+      } else if (res.data.data.type === 0) {
+        initWebsocket()
+        localStorage.setItem('userId', res.data.data.id)
+        router.push({path: '/student'})
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+}
+
+const login = () => {
+  loginFormInTemp.value.validate((valid) => {
+    if (valid) {
+      axiosInstance.post('/login', {
+            username: loginForm.username,
+            password: loginForm.password
+          },
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
+          }
+      ).then((res) => {
+        console.log(res)
+        if (res.data.data && res.data.data.length > 0) { // 添加对res.data.data的检查
+          console.log('login success')
+          localStorage.setItem('token', res.data.data)
+          localStorage.setItem('username', loginForm.username)
+          checkLoginType()
+          console.log(localStorage.getItem('token'))
+        } else {
+          console.log('login failed')
+          alert('Username or password is incorrect')
+        }
+      }).catch((err) => {
+        console.log(err)
+        alert('Username or password is incorrect')
+      })
+    } else {
+
+    }
+
+  })
+}
+
+
+
+
+function toMain() {
+  router.push({path: '/main'})
+}
+
+function toStudent() {
+  router.push({path: '/student'})
+}
+
+function toAdmin() {
+  router.push({path: '/admin'})
+}
+
+
+
+</script>
+
+<template>
+  <div class="logo">
+    <a>
+      <img src="https://www.sustech.edu.cn/static/images/sustech-logo-cn.png" alt="logo">
+    </a>
+  </div>
+  <div class="video">
+    <video class="videoStyle" id="Id" playsinline="true" autoplay="true" muted="false" loop="true">
+      <source src="https://www.sustech.edu.cn/uploads/files/2023/12/04114651_48343.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="mainPanel">
+    <h1 style="font-size: 30px; text-align: center">
+      Dormitory Selection System
+    </h1>
+    <el-form :model="loginForm" :rules="rules" ref="loginFormInTemp">
+      <el-form-item label="username" prop="username" style="margin-left: 100px; margin-top: 30px; margin-bottom: 30px">
+        <el-input v-model="loginForm.username" style="max-width: 300px; height: 30px"></el-input>
+      </el-form-item>
+      <el-form-item label="password" prop="password" style="margin-left: 100px">
+        <el-input v-model="loginForm.password" show-password style="max-width: 300px"></el-input>
+      </el-form-item>
+<!--      <el-form-item>-->
+<!--        <el-button type="primary" @click="login">login</el-button>-->
+<!--      </el-form-item>-->
+    </el-form>
+    <button type="submit" class="submit" @click="login">
+      Sign in
+    </button>
+
+  </div>
+
+</template>
+
+<style scoped>
+.mainPanel {
+  width: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: rgba(255,255,255,0.9);
+  border-radius: 10px;
+  padding: 10px 10px;
+}
+
+.video{
+  width: 100%;
+  max-width: unset;
+  height: 100%;
+  position: absolute;
+  overflow: clip;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  z-index: -2;
+}
+
+.logo a img{
+height: 50%;
+
+}
+
+img, video {
+border: none;
+}
+
+img {
+vertical-align: middle;
+overflow-clip-margin: content-box;
+overflow: clip;
+border:0;
+height: 50%;
+}
+
+.submit {
+  display: block;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  margin-top: 30px;
+  margin-left: 120px;
+  background-color: #4F46E5;
+  color: #ffffff;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  width: 60%;
+  border-radius: 0.5rem;
+  text-transform: uppercase;
+}
+
+
+</style>
