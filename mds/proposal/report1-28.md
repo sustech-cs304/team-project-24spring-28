@@ -92,9 +92,9 @@ As the proposal requires, we try using AI to generate those contents and compare
 
 #### User Stories
 
-**Prompt: **
+**Prompt:**
 
-**Generated Contents: **
+**Generated Contents:**
 
 **Analysis:**
 
