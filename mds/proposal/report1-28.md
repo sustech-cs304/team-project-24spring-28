@@ -58,7 +58,9 @@
 
 The url for the project board: [Backlog · Campus Events and Entertainment Center (github.com)](https://github.com/orgs/sustech-cs304/projects/201)
 
+**Just an example:**
 
+<img src="snapshots/1.png" alt="1" style="zoom:50%;" />
 
 ## Part III. AI Usage
 
@@ -74,17 +76,17 @@ As the proposal requires, we try using AI to generate those contents and compare
 
 #### Features
 
-**Prompt: **
+**Prompt:**
 
-**Generated Contents: **
+**Generated Contents:**
 
 **Analysis:**
 
 #### Requirements
 
-**Prompt: **
+**Prompt:**
 
-**Generated Contents: **
+**Generated Contents:**
 
 **Analysis:**
 
@@ -98,9 +100,9 @@ As the proposal requires, we try using AI to generate those contents and compare
 
 #### Issues & tasks
 
-**Prompt: **
+**Prompt:**
 
-**Generated Contents: **
+**Generated Contents:**
 
 **Analysis:**
 
