@@ -38,11 +38,25 @@
 
 #### Non-functional Requirements
 
-1. a
-2. b
-3. c
-4. d
-5. e
+1. **security**:
+
+   The system shall ensure that the user's account information is not leaked and misappropriated.
+
+2. **reliability**:
+
+   The overall reliability of the system should reach more than 99%.
+
+3. **performance**:
+
+   All query operations should return results within 2 seconds.
+
+4. **product constraints**:
+
+   The software system should be deployed on a separate server running Linux.
+
+5. **process constraints**:
+
+   The software system should complete the implementation and testing of all functions before the defense.
 
 
 
