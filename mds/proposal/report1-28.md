@@ -18,21 +18,25 @@
 
 #### Functional Requirements
 
-1. a
-
-   The system should blabla...
-
-2. b
-
-   You can blabla...
-
-3. c
-
-4. d
-
-5. e
-
-
+1. **Effortlessly Organize a Variety of Activities**:
+   
+   The website offers a range of user-friendly features for organizing activities, including various presets. With just a few clicks, the events you organize can be showcased to the public.
+   
+2. **Rate Activities and Share Memorable Moments**:
+   
+   Similar to reviewing a movie, users can rate and comment on activities, sharing their thoughts and experiences.
+   
+3. **Discover Activities of Interest**:
+   
+   Users can explore activities based on categories or receive personalized recommendations for high-quality events on the homepage.
+   
+4. **Connect with Friends and Extend Invitations**:
+   
+   Easily invite friends to join activities through our chat system or share activity links on various social platforms, fostering more social interaction.
+   
+5. **Share Activity Content and Experiences Through Posts**:
+   
+   Users can share activity content and reflections through posts, enriched with relevant tags. Participants can engage in discussions by commenting on the posts.
 
 #### Non-functional Requirements
 
@@ -46,9 +50,41 @@
 
 #### Data Requirements
 
+1. **User Data**:
 
+   **Requirements**: User registration information, personal preferences, and interests.
 
+   **Data Acquisition**: Collect basic information through user registration forms or update personal preferences and interests through user settings.
 
+2. **Activity Data**:
+
+   **Requirements**: Detailed information about activities, dates, locations, and categories.
+
+   **Data Acquisition**: Gather relevant information when users create or participate in activities, or integrate with third-party event platforms to obtain data.
+
+3. **Rating and Comment Data**:
+
+   **Requirements**: User ratings and comments for activities.
+
+   **Data Acquisition**: Provide a rating and commenting feature, storing user-inputted data in the database.
+
+4. **Social Interaction Data**:
+
+   **Requirements**: User interactions, invitations, and shared activities.
+
+   **Data Acquisition**: Record chat logs, invitation details, and data related to activity sharing on social platforms.
+
+5. **Recommendation Data**:
+
+   **Requirements**: User interest and behavior data for personalized recommendations.
+
+   **Data Acquisition**: Analyze user activity history, ratings, and click behavior, using recommendation algorithms to generate personalized suggestions.
+
+6. **Post and Discussion Data**:
+
+   **Requirements**: User-generated posts, comments, and discussions.
+
+   **Data Acquisition**: Record user-generated posts, comments, and discussions between users.
 
 #### Technical Requirements
 
