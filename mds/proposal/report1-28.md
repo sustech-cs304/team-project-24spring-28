@@ -2,8 +2,6 @@
 
 **Project name: Campus Events and Entertainment Center**
 
-**Group members: **
-
 ## Part I. Project Proposal
 
 ### Project Overview
@@ -88,7 +86,9 @@
 
 #### Technical Requirements
 
+**Frontend:**
 
+**Backend:**
 
 
 
