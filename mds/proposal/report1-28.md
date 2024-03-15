@@ -6,10 +6,21 @@
 
 ### Project Overview
 
-+ target users
-+ functionalities
-+ overall goal
+**Target Users or Clients:** The target users of the proposed system are university students, faculty, and staff members who are interested in participating in or organizing campus events and activities. Additionally, event organizers and administrators will also use the system to manage and promote events.
 
+**Functionalities of the Proposed System:**
+
+1. **Effortlessly Organize a Variety of Activities:** Users can utilize user-friendly features to organize a wide range of activities, leveraging preset options for easy event setup and public showcasing.
+
+2. **Rate Activities and Share Memorable Moments:** Similar to reviewing movies, users can rate and comment on activities, sharing their experiences and thoughts with others.
+
+3. **Discover Activities of Interest:** Users have the ability to explore activities based on categories or receive personalized recommendations for high-quality events directly on the homepage.
+
+4. **Connect with Friends and Extend Invitations:** The system facilitates social interaction by allowing users to invite friends to join activities through the chat system or by sharing activity links on various social platforms.
+
+5. **Share Activity Content and Experiences Through Posts:** Users can share activity content and reflections through posts, enriched with relevant tags. This feature encourages discussions among participants through comments on the posts.
+
+**Overall Goal of the Proposed System:** The expected outcome of the proposed system is to create a centralized platform that enhances campus life by facilitating easy organization, discovery, participation, and social interaction around campus events and activities. The system aims to improve user engagement, foster community spirit, and promote a vibrant campus culture.
 
 
 ### Preliminary Requirement Analysis
