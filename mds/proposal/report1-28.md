@@ -49,23 +49,23 @@
 
 #### Non-functional Requirements
 
-1. **security**:
+1. **Security**:
 
    The system shall ensure that the user's account information is not leaked and misappropriated.
 
-2. **reliability**:
+2. **Reliability**:
 
    The overall reliability of the system should reach more than 99%.
 
-3. **performance**:
+3. **Performance**:
 
    All query operations should return results within 2 seconds.
 
-4. **product constraints**:
+4. **Product Constraints**:
 
    The software system should be deployed on a separate server running Linux.
 
-5. **process constraints**:
+5. **Process Constraints**:
 
    The software system should complete the implementation and testing of all functions before the defense.
 
@@ -112,6 +112,7 @@
 #### Technical Requirements
 
 **Frontend:**
+Vue3 + Element-Plus
 
 **Backend:**
 
