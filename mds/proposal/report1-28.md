@@ -128,8 +128,6 @@ The url for the project board: [Backlog · Campus Events and Entertainment Cente
 
 ## Part III. AI Usage
 
-***THIS PART should be done by WYR***
-
 Our group comes up with the features, requirements, user stories, issues and tasks on our own, without AI assistance.
 
 As the proposal requires, we try using AI to generate those contents and compare them with our works.
