@@ -122,9 +122,17 @@ Vue3 + Element-Plus
 
 The url for the project board: [Backlog · Campus Events and Entertainment Center (github.com)](https://github.com/orgs/sustech-cs304/projects/201)
 
-**Just an example:**
+**Backlog, the user stories and tasks**:
 
 <img src="snapshots/1.png" alt="1" style="zoom:50%;" />
+
+**Priority of the user stories**:
+
+***Add an image here***
+
+**Roadmap of our plan**:
+
+***Add an image here***
 
 ## Part III. AI Usage
 
@@ -254,5 +262,5 @@ Tasks:
 3. Connect the booking interface with the backend API.
 4. Test the booking process, including seat selection and ticket purchasing.
 
-### Conclusion
+### Comparison and Analysis
 
