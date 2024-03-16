@@ -1,9 +1,6 @@
 # team-project-24spring-28 
 
-**Proposal location:** 
-```
-mds/proposal/report1-28.md
-```
+[Proposal Report](mds/proposal/report1-28.md)
 
 ## Frontend
 To run:
