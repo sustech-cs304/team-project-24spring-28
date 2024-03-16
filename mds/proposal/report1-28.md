@@ -2,6 +2,8 @@
 
 **Project name: Campus Events and Entertainment Center**
 
+[PPT link](https://www.canva.cn/design/DAF_rurF4wg/NMOKZVrbbEFv28AQGcyhUg/view?utm_content=DAF_rurF4wg&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+
 ## Part I. Project Proposal
 
 ### Project Overview
@@ -124,15 +126,15 @@ The url for the project board: [Backlog · Campus Events and Entertainment Cente
 
 **Backlog, the user stories and tasks**:
 
-<img src="snapshots/1.png" alt="1" style="zoom:50%;" />
+<img src="snapshots/back.png" alt="1" style="zoom:50%;" />
 
 **Priority of the user stories**:
 
-***Add an image here***
+<img src="snapshots/priority.png" alt="1" style="zoom:50%;" />
 
 **Roadmap of our plan**:
 
-***Add an image here***
+<img src="snapshots/roadmap.png" alt="1" style="zoom:50%;" />
 
 ## Part III. AI Usage
 
