@@ -115,7 +115,7 @@
 Vue3 + Element-Plus
 
 **Backend:**
-
+SpringBoot + PostgresSQL + JPA + Websocket + JWT
 
 
 ## Part II. Task Decomposition & Planning
