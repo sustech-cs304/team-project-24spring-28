@@ -108,8 +108,8 @@ const login = () => {
   })
 }
 
-
-
+// -------------------test button function-------------------
+// add your test button function here
 
 function toMain() {
   router.push({path: '/main'})
@@ -123,7 +123,7 @@ function toAdmin() {
   router.push({path: '/admin'})
 }
 
-
+// -------------------end of the test list-------------------
 
 </script>
 
@@ -149,14 +149,20 @@ function toAdmin() {
       <el-form-item label="password" prop="password" style="margin-left: 100px">
         <el-input v-model="loginForm.password" show-password style="max-width: 300px"></el-input>
       </el-form-item>
-<!--      <el-form-item>-->
-<!--        <el-button type="primary" @click="login">login</el-button>-->
-<!--      </el-form-item>-->
+
     </el-form>
     <button type="submit" class="submit" @click="login">
       Sign in
     </button>
 
+
+    <!-- ------------- add your test button here --------------- -->
+    <button type="submit" @click="toMain">
+      toMain
+    </button>
+
+
+    <!-- ------------- end of the test list --------------- -->
   </div>
 
 </template>
