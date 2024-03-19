@@ -4,7 +4,7 @@
 
 <template>
 <!--    <el-card class="card-box" shadow="never">-->
-        <el-card style="max-width: 60vw; max-height: 30vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover">
+        <el-card style=" max-height: 30vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover">
             <template #header>Yummy hamburger</template>
             <el-row>
                 <el-col :span="8">
