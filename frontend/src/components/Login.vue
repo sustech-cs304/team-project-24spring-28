@@ -123,6 +123,10 @@ function toAdmin() {
   router.push({path: '/admin'})
 }
 
+function toPost() {
+    router.push({path: '/post'})
+}
+
 // -------------------end of the test list-------------------
 
 </script>
@@ -160,7 +164,9 @@ function toAdmin() {
     <button type="submit" @click="toMain">
       toMain
     </button>
-
+      <button type="submit" @click="toPost">
+          toPost
+      </button>
 
     <!-- ------------- end of the test list --------------- -->
   </div>
