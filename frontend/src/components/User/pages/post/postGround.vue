@@ -104,7 +104,9 @@ export default {
                                 <div class="common-layout" style="height: 20vh">
                                     <el-container>
                                         <el-header :height="10">Announcement</el-header>
-                                        <el-main>Main</el-main>
+                                        <el-main>
+
+                                        </el-main>
                                     </el-container>
                                 </div>
                             </el-card>
@@ -151,7 +153,7 @@ export default {
 }
 
 .el-col {
-    border-radius: 4px;
+    border-radius: 0.5vw;
 }
 
 /* 整个页面的设置 */
