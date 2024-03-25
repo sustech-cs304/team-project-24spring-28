@@ -1,7 +1,7 @@
 import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import Login from "@/components/Login.vue";
-import Post from "@/components/User/pages/post/postGround.vue"
-
+import Square from "@/components/User/pages/post/postSquare.vue"
+import Post from "@/components/User/pages/post/postDetail.vue"
 
 
 // import MessageMain from "@/components/Student/pages/Message/Message.vue";
@@ -19,8 +19,8 @@ import Post from "@/components/User/pages/post/postGround.vue"
 
 const routes = [
     {path: '/', component: Login},
-    {path: '/post', component: Post},
-
+    {path: '/square', component: Square},
+    {path: '/square/post', component: Post},
     // These are the routes in the old code, you can take them as reference
     // {path: '/main', name: 'main', component: Main},
     // {path: '/student', name: 'student', component: StudentEnd},

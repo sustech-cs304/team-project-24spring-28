@@ -1,37 +1,6 @@
-<script>
-import {ref} from 'vue'
-import postCard from '@/components/User/pages/post/components/postsGround/postCard.vue'
-import {
-    ArrowLeft,
-    ArrowRight,
-    Delete,
-    Edit,
-    Share,
-} from "@element-plus/icons";
+<script setup>
 
-const count = ref(0)
-const load = () => {
-    count.value += 10
-}
-export default {
-    computed: {
-        Delete() {
-            return Delete
-        },
-        Share() {
-            return Share
-        },
-        Edit() {
-            return Edit
-        },
-        ArrowLeft() {
-            return ArrowLeft
-        }
-    },
-    components: {
-        postCard
-    }
-}
+
 </script>
 
 <template>
@@ -50,15 +19,15 @@ export default {
                     <el-col>
                         <el-card>
                             <el-row>
-                                <el-col :span="12">
+                                <el-col :span="4">
                                     <el-button-group class="ml-4">
                                         <el-button type="primary" :icon="Edit"/>
                                         <el-button type="primary" :icon="Share"/>
                                         <el-button type="primary" :icon="Delete"/>
                                     </el-button-group>
                                 </el-col>
-                                <el-col :span="12">
-                                    <el-button type="primary">搜索</el-button>
+                                <el-col :span="20">
+                                    <el-button :icon="Search" round style="width: 100%">Search</el-button>
                                 </el-col>
                             </el-row>
                         </el-card>
@@ -66,22 +35,7 @@ export default {
                 </el-row>
                 <!--main-->
                 <el-row>
-                    <el-col :span="24">
-                        <div>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                        </div>
-                    </el-col>
+
                 </el-row>
                 <!--翻页-->
                 <el-row>
@@ -157,44 +111,4 @@ export default {
 }
 
 /* 整个页面的设置 */
-/* 走马灯 */
-.el-carousel__item h3 {
-    color: #475669;
-    opacity: 0.75;
-    line-height: 200px;
-    margin: 0;
-    text-align: center;
-}
-
-.el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-    background-color: #d3dce6;
-}
-
-/* 走马灯 */
-/* 无限滚动列表 */
-.infinite-list {
-    height: 300px;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-.infinite-list .infinite-list-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    background: var(--el-color-primary-light-9);
-    margin: 10px;
-    color: var(--el-color-primary);
-}
-
-.infinite-list .infinite-list-item + .list-item {
-    margin-top: 10px;
-}
-
 </style>

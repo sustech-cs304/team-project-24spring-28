@@ -1,31 +1,26 @@
-<script>
+<script setup>
+import { Pointer, Share, StarFilled } from "@element-plus/icons";
+import { ChatDotSquare } from "@element-plus/icons-vue";
+import { useRouter } from "vue-router";
 
-import {Pointer, Share, StarFilled} from "@element-plus/icons";
-import {defineComponent} from "vue";
-import {ChatDotSquare} from "@element-plus/icons-vue";
+const router = useRouter();
 
-export default defineComponent({
-    computed: {
-        ChatDotSquare() {
-            return ChatDotSquare
-        },
-        Pointer() {
-            return Pointer
-        },
-        Share() {
-            return Share
-        },
-        StarFilled() {
-            return StarFilled
-        }
-    }
-})
+const ChatDotSquareIcon = ChatDotSquare;
+const PointerIcon = Pointer;
+const ShareIcon = Share;
+const StarFilledIcon = StarFilled;
 
+function goToPost() {
+    router.push({ path: '/square/post' });
+
+    // let url = router.resolve({path: '/square/post'}).href;
+    // window.open(url, '_blank');
+}
 </script>
 
 <template>
 <!--    <el-card class="card-box" shadow="never">-->
-        <el-card style=" max-height: 27vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover">
+        <el-card style=" max-height: 27vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover" @click="goToPost">
 <!--            <template #header>Yummy hamburger</template>-->
             <el-row>
                 <el-col :span="20">
