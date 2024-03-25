@@ -124,7 +124,9 @@ function toAdmin() {
 }
 
 function toPost() {
-    router.push({path: '/post'})
+    // router.push({path: '/post'})
+  let url = router.resolve({path: '/post'}).href
+  window.open(url, '_blank')
 }
 
 // -------------------end of the test list-------------------
