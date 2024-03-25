@@ -124,8 +124,9 @@ function toAdmin() {
 }
 
 function toSquare() {
-  let url = router.resolve({path: '/square'}).href
-  window.open(url, '_blank')
+    router.push({path: '/square'})
+  // let url = router.resolve({path: '/square'}).href
+  // window.open(url, '_blank')
 }
 
 function toPost() {
