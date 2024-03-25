@@ -15,38 +15,62 @@
             </el-col>
             <el-col :span="15">
                 <!--subheader-->
-                <el-row :justify="space-between">
-                    <el-col>
-                        <el-card>
-                            <el-row>
-                                <el-col :span="4">
-                                    <el-button-group class="ml-4">
-                                        <el-button type="primary" :icon="Edit"/>
-                                        <el-button type="primary" :icon="Share"/>
-                                        <el-button type="primary" :icon="Delete"/>
-                                    </el-button-group>
-                                </el-col>
-                                <el-col :span="20">
-                                    <el-button :icon="Search" round style="width: 100%">Search</el-button>
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                    </el-col>
-                </el-row>
+                <el-affix offset="10">
+                    <el-row :justify="space-between">
+                        <el-col>
+                            <el-card>
+                                <el-row>
+                                    <el-col :span="4">
+                                        <el-button-group class="ml-4">
+                                            <el-button type="primary" :icon="Edit"/>
+                                            <el-button type="primary" :icon="Share"/>
+                                            <el-button type="primary" :icon="Delete"/>
+                                        </el-button-group>
+                                    </el-col>
+                                    <el-col :span="20">
+                                        <el-button :icon="Search" round style="width: 100%">Search</el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                </el-affix>
                 <!--main-->
                 <el-row>
-
-                </el-row>
-                <!--翻页-->
-                <el-row>
                     <el-col>
-                        <el-affix offset="5" position="bottom">
-                            <el-card style="border: none; display: flex; justify-content: center; align-items: center;"
-                                     shadow="never">
-                                <el-pagination background layout="prev, pager, next" :total="1000"/>
-                            </el-card>
-                        </el-affix>
+                        <el-row>
+                            <!--gap-->
+                        </el-row>
+                        <el-row>
+                            <!--theme-->
+                            <el-col :span="24">
+                                <el-card style="height: 1000px">
+
+                                </el-card>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+
+                        </el-row>
+                        <el-row>
+                            <!--comment-->
+                            <el-col>
+                                <el-card style="height: 1000px">
+
+                                </el-card>
+                                <el-card>
+
+                                </el-card>
+                                <el-card>
+
+                                </el-card>
+                            </el-col>
+                        </el-row>
                     </el-col>
+                </el-row>
+                <!--buttons-->
+                <el-row>
+
                 </el-row>
             </el-col>
             <!--aside-right-->

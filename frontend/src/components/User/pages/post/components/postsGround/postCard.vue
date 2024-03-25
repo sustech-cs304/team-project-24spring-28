@@ -11,10 +11,10 @@ const ShareIcon = Share;
 const StarFilledIcon = StarFilled;
 
 function goToPost() {
-    router.push({ path: '/square/post' });
+    // router.push({ path: '/square/post' });
 
-    // let url = router.resolve({path: '/square/post'}).href;
-    // window.open(url, '_blank');
+    let url = router.resolve({path: '/square/post'}).href;
+    window.open(url, '_blank');
 }
 </script>
 
