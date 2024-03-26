@@ -10,17 +10,11 @@ const PointerIcon = Pointer;
 const ShareIcon = Share;
 const StarFilledIcon = StarFilled;
 
-function goToPost() {
-    // router.push({ path: '/square/post' });
-
-    let url = router.resolve({path: '/square/post'}).href;
-    window.open(url, '_blank');
-}
 </script>
 
 <template>
     <!--    <el-card class="card-box" shadow="never">-->
-    <el-card style=" max-height: 27vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover" @click="goToPost">
+    <el-card style=" max-height: 27vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover" >
         <!--            <template #header>Yummy hamburger</template>-->
         <el-row>
             <el-col :span="20">

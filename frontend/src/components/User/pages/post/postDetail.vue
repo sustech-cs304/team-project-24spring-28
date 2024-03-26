@@ -1,12 +1,33 @@
 <script setup>
-
-
 import PostComments from "@/components/User/pages/post/components/postDetail/postComments.vue";
 import ProfileCard from "@/components/User/pages/post/components/profileCard.vue";
-import {MoreFilled, Pointer, Share, StarFilled} from "@element-plus/icons";
+import {ArrowLeft, ArrowRight, MoreFilled, Pointer, Share, StarFilled} from "@element-plus/icons";
 import {ChatDotSquare} from "@element-plus/icons-vue";
 
+// variable
 let name = "ggb"
+
+// Post
+function likePost(){
+
+}
+function collectPost(){
+
+}
+function sharePost(){
+
+}
+function commentPost(){
+
+}
+// comment
+function likeComment(){
+
+}
+function shareComment(){
+
+}
+
 </script>
 
 <template>
@@ -65,7 +86,7 @@ let name = "ggb"
                         <el-row>
                             <!--theme-->
                             <el-col :span="24">
-                                <el-card style="height: 1000px">
+                                <el-card style="height: 200px">
 
                                 </el-card>
                             </el-col>
@@ -104,9 +125,16 @@ let name = "ggb"
                         <el-col style="margin-bottom: 4px">
                             <el-button type="info" class="button-left" style="width: 100%;">?</el-button>
                         </el-col>
-                        <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="Pointer" class="button-left" style="width: 100%;" plain/>
-                        </el-col>
+<!--                        <el-tooltip-->
+<!--                            effect="dark"-->
+<!--                            content="Like"-->
+<!--                            placement="left-start"-->
+<!--                        >-->
+                            <el-col style="margin-bottom: 4px">
+                                <el-button type="primary" :icon="Pointer" class="button-left" style="width: 100%;" plain/>
+                            </el-col>
+<!--                        </el-tooltip>-->
+
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="StarFilled" class="button-left" style="width: 100%;" plain/>
                         </el-col>
@@ -116,7 +144,13 @@ let name = "ggb"
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="ChatDotSquare" class="button-left" style="width: 100%;" plain/>
                         </el-col>
-                        <el-col style="margin-bottom: 3px">
+                        <el-col style="margin-bottom: 4px">
+                            <el-button type="primary" :icon="ArrowLeft" class="button-left" style="width: 100%;" plain/>
+                        </el-col>
+                        <el-col style="margin-bottom: 4px">
+                            <el-button type="primary" :icon="ArrowRight" class="button-left" style="width: 100%;" plain/>
+                        </el-col>
+                        <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="MoreFilled" class="button-left" style="width: 100%;" plain/>
                         </el-col>
                     </el-row>
@@ -174,4 +208,18 @@ let name = "ggb"
 }
 
 /* 整个页面的设置 */
+/* 弹出提示 */
+.el-popper.is-customized .el-popper__content {
+    /* 设置渐变色作为背景 */
+    background: linear-gradient(90deg, rgb(159, 229, 151), rgb(204, 229, 129));
+    /* Set padding to ensure the height is 32px */
+    padding: 6px 12px;
+}
+.el-popper.is-customized .el-popper__arrow::before {
+    /* 设置箭头的渐变色 */
+    background: linear-gradient(45deg, #b2e68d, #bce689);
+    right: 0;
+}
+/* 弹出提示 */
+
 </style>
