@@ -5,7 +5,7 @@ import {
     ArrowLeft,
     ArrowRight,
     Delete,
-    Edit,
+    Edit, Search,
     Share,
 } from "@element-plus/icons";
 
@@ -15,6 +15,9 @@ const load = () => {
 }
 export default {
     computed: {
+        Search() {
+            return Search
+        },
         Delete() {
             return Delete
         },
@@ -50,15 +53,15 @@ export default {
                     <el-col>
                         <el-card>
                             <el-row>
-                                <el-col :span="12">
+                                <el-col :span="4">
                                     <el-button-group class="ml-4">
                                         <el-button type="primary" :icon="Edit"/>
                                         <el-button type="primary" :icon="Share"/>
                                         <el-button type="primary" :icon="Delete"/>
                                     </el-button-group>
                                 </el-col>
-                                <el-col :span="12">
-                                    <el-button type="primary">搜索</el-button>
+                                <el-col :span="20">
+                                    <el-button :icon="Search" round style="width: 100%">Search</el-button>
                                 </el-col>
                             </el-row>
                         </el-card>
@@ -104,7 +107,9 @@ export default {
                                 <div class="common-layout" style="height: 20vh">
                                     <el-container>
                                         <el-header :height="10">Announcement</el-header>
-                                        <el-main>Main</el-main>
+                                        <el-main>
+
+                                        </el-main>
                                     </el-container>
                                 </div>
                             </el-card>
@@ -151,7 +156,7 @@ export default {
 }
 
 .el-col {
-    border-radius: 4px;
+    border-radius: 0.5vw;
 }
 
 /* 整个页面的设置 */

@@ -6,7 +6,7 @@ const {defineConfig} = require('@vue/cli-service')
 
 module.exports = defineConfig({
     transpileDependencies: true,
-    publicPath: './',
+    publicPath: '/',
     lintOnSave: false,
     devServer: {
         proxy: {
@@ -21,7 +21,7 @@ module.exports = defineConfig({
         },
         // add to avoid refresh 404
         historyApiFallback: true,
-    }
+    },
     // plugins: [
     //     AutoImport({resolvers: [ElementPlusResolver()]}),
     //     Components({resolvers: [ElementPlusResolver()]}),

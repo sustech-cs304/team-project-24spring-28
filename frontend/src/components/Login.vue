@@ -123,11 +123,18 @@ function toAdmin() {
   router.push({path: '/admin'})
 }
 
-function toPost() {
-    router.push({path: '/post'})
+function toSquare() {
+    router.push({path: '/square'})
+  // let url = router.resolve({path: '/square'}).href
+  // window.open(url, '_blank')
 }
 
-// -------------------end of the test list-------------------
+function toPost() {
+    // router.push({path: '/post'})
+  let url = router.resolve({path: '/square/post'}).href
+  window.open(url, '_blank')
+}
+
 
 </script>
 
@@ -164,9 +171,14 @@ function toPost() {
     <button type="submit" @click="toMain">
       toMain
     </button>
-      <button type="submit" @click="toPost">
-          toPost
-      </button>
+
+    <button type="submit" @click="toSquare">
+      toSquare
+    </button>
+
+    <button type="submit" @click="toPost">
+      toPost
+    </button>
 
     <!-- ------------- end of the test list --------------- -->
   </div>
