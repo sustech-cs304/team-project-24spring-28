@@ -3,6 +3,8 @@ import Login from "@/components/Login.vue";
 import Square from "@/components/User/pages/post/postSquare.vue"
 import Post from "@/components/User/pages/post/postDetail.vue"
 
+import EventPage from "@/components/User/pages/event/EventPage.vue"
+
 
 // import MessageMain from "@/components/Student/pages/Message/Message.vue";
 // import Main from "@/components/Student/Main.vue";
@@ -21,6 +23,8 @@ const routes = [
     {path: '/', component: Login},
     {path: '/square', component: Square},
     {path: '/square/post', component: Post},
+
+    {path: '/event', component: EventPage},
     // These are the routes in the old code, you can take them as reference
     // {path: '/main', name: 'main', component: Main},
     // {path: '/student', name: 'student', component: StudentEnd},

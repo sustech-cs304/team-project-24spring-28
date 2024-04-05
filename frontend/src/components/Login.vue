@@ -135,6 +135,10 @@ function toPost() {
   window.open(url, '_blank')
 }
 
+function toEvent() {
+  router.push({path: '/event'})
+}
+
 
 </script>
 
@@ -178,6 +182,10 @@ function toPost() {
 
     <button type="submit" @click="toPost">
       toPost
+    </button>
+
+    <button type="submit" @click="toEvent">
+      toEvent
     </button>
 
     <!-- ------------- end of the test list --------------- -->

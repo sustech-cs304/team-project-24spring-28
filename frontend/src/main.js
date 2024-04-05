@@ -4,6 +4,12 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+import VueMarkdownEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
+import '@kangc/v-md-editor/lib/theme/style/vuepress.css';
+import Prism from 'prismjs';
+
 import App from './App.vue'
 
 // I am not sure whether it works or not
@@ -32,7 +38,12 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }
 
+VueMarkdownEditor.use(vuepressTheme, {
+    Prism,
+});
+
 app.use(ElementPlus)
+app.use(VueMarkdownEditor)
 app.use(router).mount('#app')
 app.provide('globalStore', globalStore)
 export default app
