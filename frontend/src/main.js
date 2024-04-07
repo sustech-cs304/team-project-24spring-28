@@ -21,7 +21,7 @@ router.beforeEach((to, from, next) => {
     next()
 })
 
-document.title = 'Dormitory Selection System'
+document.title = '南科大活动中心'
 
 export const globalStore = reactive({
     'notification': false

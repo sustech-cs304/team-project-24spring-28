@@ -108,6 +108,11 @@ const login = () => {
   })
 }
 
+// TODO: add the sign up function
+function toSignUp() {
+  router.push({path: '/signup'})
+}
+
 // -------------------test button function-------------------
 // add your test button function here
 
@@ -151,7 +156,7 @@ function toPost() {
   </div>
   <div class="mainPanel">
     <h1 style="font-size: 30px; text-align: center">
-      Dormitory Selection System
+      南科大活动中心
     </h1>
     <el-form :model="loginForm" :rules="rules" ref="loginFormInTemp">
       <el-form-item label="username" prop="username" style="margin-left: 100px; margin-top: 30px; margin-bottom: 30px">
@@ -162,6 +167,13 @@ function toPost() {
       </el-form-item>
 
     </el-form>
+
+    <div @click="toSignUp">
+      <p class="signUpText" style="margin-left: 110px; margin-top: 10px; color: #6bccff; cursor: pointer">
+        I don't have an account...
+      </p>
+    </div>
+
     <button type="submit" class="submit" @click="login">
       Sign in
     </button>
@@ -244,5 +256,11 @@ height: 50%;
   text-transform: uppercase;
 }
 
+.signUpText {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  text-decoration: underline;
+}
 
 </style>
