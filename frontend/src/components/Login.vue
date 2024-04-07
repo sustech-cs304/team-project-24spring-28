@@ -151,7 +151,7 @@ function toPost() {
   </div>
   <div class="video">
     <video class="videoStyle" id="Id" playsinline="true" autoplay="true" muted="false" loop="true">
-      <source src="https://www.sustech.edu.cn/uploads/files/2023/12/04114651_48343.mp4" type="video/mp4">
+      <source src="https://www.sustech.edu.cn/uploads/files/2024/01/25215239_50474.mp4" type="video/mp4">
     </video>
   </div>
   <div class="mainPanel">
