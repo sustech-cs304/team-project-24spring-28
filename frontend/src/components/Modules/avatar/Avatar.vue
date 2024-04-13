@@ -188,6 +188,7 @@ let avatar_url = computed(() => {
   justify-content: center;
   align-items: center;
   align-content: center;
+  position: relative;
 }
 
 .levitate {
@@ -197,7 +198,7 @@ let avatar_url = computed(() => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: relative;
+  position: absolute;
   align-content: center;
   align-items: center;
   border: 1px solid #cccccc;

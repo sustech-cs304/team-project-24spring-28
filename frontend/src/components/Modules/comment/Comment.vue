@@ -27,24 +27,24 @@ const commentData = ref([])
 
 // TODO: edit in the future
 onMounted(() => {
-  axiosInstance.get(`/comment/room`, {params: {roomId: roomId}}).then((res) => {
-    commentData.value = res.data.data
-    for (let i = 0; i < commentData.value.length; i++) {
-      axiosInstance.get(`/comment/under`, {
-            params: {
-              commentId: commentData.value[i].id
-            }
-          }
-      ).then((res) => {
-        commentData.value[i].subComments = res.data.data
-        console.log('commentData:', commentData)
-      }).catch((err) => {
-        console.log(err)
-      })
-    }
-  }).catch((err) => {
-    console.log(err)
-  })
+  // axiosInstance.get(`/comment/room`, {params: {roomId: roomId}}).then((res) => {
+  //   commentData.value = res.data.data
+  //   for (let i = 0; i < commentData.value.length; i++) {
+  //     axiosInstance.get(`/comment/under`, {
+  //           params: {
+  //             commentId: commentData.value[i].id
+  //           }
+  //         }
+  //     ).then((res) => {
+  //       commentData.value[i].subComments = res.data.data
+  //       console.log('commentData:', commentData)
+  //     }).catch((err) => {
+  //       console.log(err)
+  //     })
+  //   }
+  // }).catch((err) => {
+  //   console.log(err)
+  // })
 
 })
 
