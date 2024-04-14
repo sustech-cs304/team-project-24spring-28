@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.example.backend.domain.enums.EventType;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Entity
@@ -20,8 +21,11 @@ public class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    @OneToOne
-    private AbstractEnrollment abstractEnrollment;
+    @ManyToMany(mappedBy = "favouriteEvents")
+    private List<User> collectors;
 
+    @OneToOne
+    @JoinColumn(name = "abstractEnrollment_id")
+    private AbstractEnrollment abstractEnrollment;
 
 }
