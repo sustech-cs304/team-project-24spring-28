@@ -7,6 +7,7 @@ import EventPage from "@/components/User/pages/event/EventPage.vue"
 
 import mainPage from "@/components/User/pages/main/mainPage.vue"
 import searchPage from "@/components/User/pages/main/searchPage.vue";
+import signUp from "@/components/User/pages/main/signUp.vue";
 
 
 // import MessageMain from "@/components/Student/pages/Message/Message.vue";
@@ -24,6 +25,7 @@ import searchPage from "@/components/User/pages/main/searchPage.vue";
 
 const routes = [
     {path: '/', component: Login},
+    {path: '/signup', component: signUp},
     {path: '/square', component: Square},
     {path: '/square/post', component: Post},
 
