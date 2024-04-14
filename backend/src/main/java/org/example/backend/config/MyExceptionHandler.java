@@ -1,6 +1,6 @@
 package org.example.backend.config;
 
-import com.example.dormitoryselection.dto.GlobalResponse;
+import org.example.backend.dto.GlobalResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
