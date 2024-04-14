@@ -6,6 +6,7 @@ import Post from "@/components/User/pages/post/postDetail.vue"
 import EventPage from "@/components/User/pages/event/EventPage.vue"
 
 import mainPage from "@/components/User/pages/main/mainPage.vue"
+import searchPage from "@/components/User/pages/main/searchPage.vue";
 
 
 // import MessageMain from "@/components/Student/pages/Message/Message.vue";
@@ -28,6 +29,7 @@ const routes = [
 
     {path: '/event', component: EventPage},
     {path: '/main', component: mainPage},
+    {path: '/search', component: searchPage},
 
     // These are the routes in the old code, you can take them as reference
     // {path: '/main', name: 'main', component: Main},

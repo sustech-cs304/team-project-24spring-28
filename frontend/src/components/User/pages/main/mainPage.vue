@@ -35,7 +35,29 @@ export default {
     components: {
       HeaderForAll,
         postCard
+    },
+
+  data() {
+    return {
+      input: '' // 绑定搜索框的输入值
+    };
+  },
+  methods: {
+    onClear() {
+      // 清除搜索框的输入值
+      this.input = '';
+    },
+    search() {
+      // 执行搜索跳转逻辑，这里只是一个示例
+      // 替换为你实际的跳转逻辑
+      // if (this.input.trim() !== '') {
+      //   window.location.href = `/search?query=${encodeURIComponent(this.input)}`;
+      // } else {
+      //   alert('请输入搜索内容');
+      // }
+      window.location.href = '/search'
     }
+  }
 }
 </script>
 
@@ -53,7 +75,7 @@ export default {
               clearable
               @clear="onClear"
           >
-            <template #prepend>搜索</template>
+            <template #prepend><el-button @click="search" type="primary">搜索</el-button></template>
           </el-input>
         </div>
       </el-row>

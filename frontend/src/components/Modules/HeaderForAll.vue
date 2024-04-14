@@ -51,7 +51,6 @@ export default {
   justify-content: space-between;
   padding: 10px;
   background-color: #ffcfdf;
-  color: #000000;
 }
 
 /* Logo Styles */
