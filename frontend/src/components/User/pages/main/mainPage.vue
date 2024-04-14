@@ -59,7 +59,6 @@ export default {
       </el-row>
         <el-row :class="main-main" gutter="10">
             <el-col :span="24">
-                <el-affix :offset="10">
                     <el-row>
                         <el-col>
                             <el-card style="border-radius: 0.5vw">
@@ -71,9 +70,26 @@ export default {
                             </el-card>
                         </el-col>
                     </el-row>
-                </el-affix>
             </el-col>
         </el-row>
+      <el-row>
+        <el-col :span="24">
+          <div>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+            <postCard></postCard>
+          </div>
+        </el-col>
+      </el-row>
     </div>
 </template>
 
