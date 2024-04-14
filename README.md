@@ -6,6 +6,8 @@
 
 [Sprint 1 Report](mds/sprint1/design-28.md)
 
+[PPT link for Sprint 1](https://www.canva.cn/design/DAGCYtnNrFM/GuQyQc4o-4rSKQwtrB3zlA/view?utm_content=DAGCYtnNrFM&utm_campaign=designshare&utm_medium=link&utm_source=editor)
+
 ## Co-Work
 [Apifox](https://app.apifox.com/project/4284000)
 
