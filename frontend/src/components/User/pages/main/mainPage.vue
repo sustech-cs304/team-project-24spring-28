@@ -41,84 +41,25 @@ export default {
 
 <template>
     <div class="common-layout-all">
-<!--        <el-row :class="main-header">-->
-<!--            header-->
-<!--            <el-backtop :right="10" :bottom="10" />-->
-<!--        </el-row>-->
       <HeaderForAll>
       </HeaderForAll>
+      <el-row>
+        <div class="container">
+          <h1>校园活动平台</h1>
+          <p>欢迎来到校园活动平台，发现最新最热门的校园活动！</p>
+          <el-input
+              v-model="input"
+              placeholder="搜索你感兴趣的活动！"
+              clearable
+              @clear="onClear"
+          >
+            <template #prepend>搜索</template>
+          </el-input>
+        </div>
+      </el-row>
         <el-row :class="main-main" gutter="10">
-            <el-col :span="3">
-                aside
-            </el-col>
-            <el-col :span="15">
-                <!--subheader-->
-                <el-row :justify="space-between">
-                    <el-col>
-                        <el-card>
-                            <el-row>
-                                <el-col :span="4">
-                                    <el-button-group class="ml-4">
-                                        <el-button type="primary" :icon="Edit"/>
-                                        <el-button type="primary" :icon="Share"/>
-                                        <el-button type="primary" :icon="Delete"/>
-                                    </el-button-group>
-                                </el-col>
-                                <el-col :span="20">
-                                    <el-button :icon="Search" round style="width: 100%">Search</el-button>
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <!--main-->
-                <el-row>
-                    <el-col :span="24">
-                        <div>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                        </div>
-                    </el-col>
-                </el-row>
-                <!--翻页-->
-                <el-row>
-                    <el-col>
-                        <el-affix offset="5" position="bottom">
-                            <el-card style="border: none; display: flex; justify-content: center; align-items: center;"
-                                     shadow="never">
-                                <el-pagination background layout="prev, pager, next" :total="1000"/>
-                            </el-card>
-                        </el-affix>
-                    </el-col>
-                </el-row>
-            </el-col>
-            <!--aside-right-->
-            <el-col :span="6">
+            <el-col :span="24">
                 <el-affix :offset="10">
-                    <el-row gutter="10">
-                        <el-col>
-                            <el-card>
-                                <div class="common-layout" style="height: 20vh">
-                                    <el-container>
-                                        <el-header :height="10">Announcement</el-header>
-                                        <el-main>
-
-                                        </el-main>
-                                    </el-container>
-                                </div>
-                            </el-card>
-                        </el-col>
-                    </el-row>
                     <el-row>
                         <el-col>
                             <el-card style="border-radius: 0.5vw">
@@ -132,10 +73,6 @@ export default {
                     </el-row>
                 </el-affix>
             </el-col>
-        </el-row>
-        <el-row :class="main-footer">
-            footer
-
         </el-row>
     </div>
 </template>
@@ -202,6 +139,14 @@ export default {
 
 .infinite-list .infinite-list-item + .list-item {
     margin-top: 10px;
+}
+
+.container {
+  background-image: url('../../../../assets/star.png');
+  /* 可以添加其他背景图片的样式，比如平铺、大小等 */
+  /* background-size: cover; */
+  /* background-repeat: no-repeat; */
+  /* background-position: center center; */
 }
 
 </style>
