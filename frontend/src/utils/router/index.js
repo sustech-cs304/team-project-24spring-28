@@ -5,6 +5,10 @@ import Post from "@/components/User/pages/post/postDetail.vue"
 
 import EventPage from "@/components/User/pages/event/EventPage.vue"
 
+import mainPage from "@/components/User/pages/main/mainPage.vue"
+import searchPage from "@/components/User/pages/main/searchPage.vue";
+import signUp from "@/components/User/pages/main/signUp.vue";
+
 
 // import MessageMain from "@/components/Student/pages/Message/Message.vue";
 // import Main from "@/components/Student/Main.vue";
@@ -21,10 +25,14 @@ import EventPage from "@/components/User/pages/event/EventPage.vue"
 
 const routes = [
     {path: '/', component: Login},
+    {path: '/signup', component: signUp},
     {path: '/square', component: Square},
     {path: '/square/post', component: Post},
 
     {path: '/event', component: EventPage},
+    {path: '/main', component: mainPage},
+    {path: '/search', component: searchPage},
+
     // These are the routes in the old code, you can take them as reference
     // {path: '/main', name: 'main', component: Main},
     // {path: '/student', name: 'student', component: StudentEnd},
