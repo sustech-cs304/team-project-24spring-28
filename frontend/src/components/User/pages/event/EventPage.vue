@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import {VMdEditor} from '@kangc/v-md-editor'
 import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import Comment from '@/components/Modules/comment/Comment.vue'
 import Avatar from '@/components/Modules/avatar/Avatar.vue'
@@ -10,6 +9,7 @@ let title = ref('')
 let authorId = ref('')
 let authorName = ref('')
 let time = ref('')
+let score = ref(0)
 let text = ref('')
 let postList = ref([])
 
@@ -18,6 +18,13 @@ title = 'TitleTitleTitleTitle!'
 authorId = '123456'
 authorName = 'Lamptales'
 time = '2024-4-4'
+score = '4'
+
+let stars = ref("")
+stars = '⭐'
+for (let i = 1; i < score; i++) {
+    stars = stars + '⭐'
+}
 
 text = 'sdf\n' +
     '### Title\n' +
@@ -383,129 +390,6 @@ test_text = '<p align="left">\n' +
     'doker-compose up -d --build\n' +
     '```\n' +
     '\n' +
-    '## 🤖 Model Pretraining\n' +
-    'While the pretraining data for Llama2 has doubled compared to the first generation LLaMA, the proportion of Chinese pretraining data is still very low, accounting for only 0.13%. This results in a relatively weak Chinese capability for the original Llama2. To enhance the model\'s Chinese capability, two approaches can be adopted: fine-tuning and pretraining.\n' +
-    '\n' +
-    '- Fine-tuning requires fewer computational resources and can quickly create a prototype of a Chinese Llama. However, its drawback is evident – it can only leverage the existing Chinese capabilities of the base model. Due to the limited amount of Chinese training data for Llama2, the potential improvement is also restricted, addressing the symptoms rather than the root cause.\n' +
-    '\n' +
-    '- Pretraining based on large-scale Chinese corpora involves high costs, requiring not only large-scale high-quality Chinese data but also substantial computational resources. However, the advantage is clear – it optimizes the Chinese capability from the model\'s foundational layers, achieving a fundamental improvement, injecting robust Chinese capabilities into the core of the large model.\n' +
-    '\n' +
-    'We provide the pretraining code for the Llama model to the community, along with [Chinese test data](https://github.com/LlamaFamily/Llama-Chinese/tree/main/data). More data can be found in [Chinese Data](#-chinese-data). The specific code and configurations are as follows:\n' +
-    '\n' +
-    '- Model pretraining script: [train/pretrain/pretrain.sh](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/pretrain/pretrain.sh)\n' +
-    '- Pretraining implementation code: [train/pretrain/pretrain_clm.py](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/pretrain/pretrain_clm.py)\n' +
-    '- [DeepSpeed](https://github.com/microsoft/DeepSpeed) acceleration:\n' +
-    '  - For single-card training, ZeRO-2 can be used. See parameters in [train/pretrain/ds_config_zero2.json](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/pretrain/ds_config_zero2.json).\n' +
-    '  - For multi-card training, ZeRO-3 can be used. See parameters in [train/pretrain/ds_config_zero3.json](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/pretrain/ds_config_zero3.json).\n' +
-    '- Training effectiveness metrics: [train/pretrain/accuracy.py](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/pretrain/accuracy.py)\n' +
-    '\n' +
-    '## 💡 Model Fine-Tuning\n' +
-    '\n' +
-    'This repository provides both LoRA fine-tuning and full-parameter fine-tuning code. Detailed information about LoRA can be found in the paper "[LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685)" and the Microsoft GitHub repository [LoRA](https://github.com/microsoft/LoRA).\n' +
-    '\n' +
-    '### Step1: Environment Setup\n' +
-    '\n' +
-    'Install the necessary environment dependencies according to [requirements.txt](https://github.com/LlamaFamily/Llama-Chinese/blob/main/requirements.txt).\n' +
-    '\n' +
-    '### Step2: Data Preparation\n' +
-    '\n' +
-    'In the data directory, there is a sample data for the model\'s SFT:\n' +
-    '- Training data: [data/train_sft.csv](https://github.com/LlamaFamily/Llama-Chinese/blob/main/data/train_sft.csv)\n' +
-    '- Validation data: [data/dev_sft.csv](https://github.com/LlamaFamily/Llama-Chinese/blob/main/data/dev_sft.csv)\n' +
-    '\n' +
-    'Each CSV file contains a "text" column, with each row representing a training example. Organize questions and answers in the model\'s input format, as shown below:\n' +
-    '```\n' +
-    '"<s>Human: "+question+"\\n</s><s>Assistant: "+answer\n' +
-    '```\n' +
-    'For example,\n' +
-    '```\n' +
-    '<s>Human: Describe why the Earth is unique in one sentence.</s><s>Assistant: Because the Earth is currently the only known planet with existing life.</s>\n' +
-    '```\n' +
-    '\n' +
-    '### Step3: Fine-tuning Scripts\n' +
-    '\n' +
-    '#### LoRA Fine-tuning\n' +
-    'LoRA fine-tuning script: [train/sft/finetune_lora.sh](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/sft/finetune_lora.sh). For details on LoRA fine-tuning implementation, refer to [train/sft/finetune_clm_lora.py](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/sft/finetune_clm_lora.py). Fine-tuning on a single machine with multiple cards can be achieved by modifying the "--include localhost:0" in the script.\n' +
-    '\n' +
-    '#### Full-parameter Fine-tuning\n' +
-    'Full-parameter fine-tuning script: [train/sft/finetune.sh](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/sft/finetune.sh). For details on full-parameter fine-tuning implementation, refer to [train/sft/finetune_clm.py](https://github.com/LlamaFamily/Llama-Chinese/blob/main/train/sft/finetune_clm.py).\n' +
-    '\n' +
-    '### Step4: Load Fine-tuned Model\n' +
-    '\n' +
-    '#### LoRA Fine-tuning\n' +
-    'For LoRA fine-tuned model parameters, see [Chinese Fine-Tuned Model based on Llama2](#chinese-fine-tuned-model-based-on-llama2). LoRA parameters need to be combined with base model parameters.\n' +
-    '\n' +
-    'Use [PEFT](https://github.com/huggingface/peft) to load both pretraining and fine-tuned model parameters. In the example code below, set "base_model_name_or_path" to the pretraining model\'s save path and "finetune_model_path" to the fine-tuned model\'s save path.\n' +
-    '\n' +
-    '```python\n' +
-    'import torch\n' +
-    'from transformers import AutoTokenizer, AutoModelForCausalLM\n' +
-    'from peft import PeftModel, PeftConfig\n' +
-    '\n' +
-    'finetune_model_path = \'\'  # For example: \'FlagAlpha/Llama2-Chinese-7b-Chat-LoRA\'\n' +
-    'config = PeftConfig.from_pretrained(finetune_model_path)\n' +
-    'tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, use_fast=False)\n' +
-    'tokenizer.pad_token = tokenizer.eos_token\n' +
-    'device_map = "cuda:0" if torch.cuda.is_available() else "auto"\n' +
-    'model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, device_map=device_map, torch_dtype=torch.float16, load_in_8bit=True)\n' +
-    'model = PeftModel.from_pretrained(model, finetune_model_path, device_map={"": 0})\n' +
-    'model = model.eval()\n' +
-    'input_ids = tokenizer([\'<s>Human: Introduce Beijing\\n</s><s>Assistant: \'], return_tensors="pt", add_special_tokens=False).input_ids\n' +
-    'if torch.cuda.is_available():\n' +
-    '  input_ids = input_ids.to(\'cuda\')\n' +
-    'generate_input = {\n' +
-    '    "input_ids": input_ids,\n' +
-    '    "max_new_tokens": 512,\n' +
-    '    "do_sample": True,\n' +
-    '    "top_k": 50,\n' +
-    '    "top_p": 0.95,\n' +
-    '    "temperature": 0.3,\n' +
-    '    "repetition_penalty": 1.3,\n' +
-    '    "eos_token_id": tokenizer.eos_token_id,\n' +
-    '    "bos_token_id": tokenizer.bos_token_id,\n' +
-    '    "pad_token_id": tokenizer.pad_token_id\n' +
-    '}\n' +
-    'generate_ids = model.generate(**generate_input)\n' +
-    'text = tokenizer.decode(generate_ids[0])\n' +
-    'print(text)\n' +
-    '```\n' +
-    '#### Full-parameter Fine-tuning\n' +
-    'For full-parameter fine-tuned models, use the same calling method as in Model Calling Code Example, just modify the model name or save path accordingly.\n' +
-    '\n' +
-    '\n' +
-    '\n' +
-    '## 🍄 Model Quantization\n' +
-    'We have quantized the parameters of the Chinese fine-tuned model to facilitate running with fewer computational resources. Currently, we have uploaded a 4-bit compressed version of the 13B Chinese fine-tuned model [FlagAlpha/Llama2-Chinese-13b-Chat](https://huggingface.co/FlagAlpha/Llama2-Chinese-13b-Chat) as [FlagAlpha/Llama2-Chinese-13b-Chat-4bit](https://huggingface.co/FlagAlpha/Llama2-Chinese-13b-Chat-4bit) on [Hugging Face](https://huggingface.co/FlagAlpha). The specific calling method is as follows:\n' +
-    '\n' +
-    'Environmental requirements:\n' +
-    '```\n' +
-    'pip install git+https://github.com/PanQiWei/AutoGPTQ.git\n' +
-    '```\n' +
-    '\n' +
-    '```python\n' +
-    'from transformers import AutoTokenizer\n' +
-    'from auto_gptq import AutoGPTQForCausalLM\n' +
-    '\n' +
-    'model = AutoGPTQForCausalLM.from_quantized(\'FlagAlpha/Llama2-Chinese-13b-Chat-4bit\', device="cuda:0")\n' +
-    'tokenizer = AutoTokenizer.from_pretrained(\'FlagAlpha/Llama2-Chinese-13b-Chat-4bit\', use_fast=False)\n' +
-    'input_ids = tokenizer([\'<s>Human: How to land on Mars\\n</s><s>Assistant: \'], return_tensors="pt", add_special_tokens=False).input_ids.to(\'cuda\')        \n' +
-    'generate_input = {\n' +
-    '    "input_ids": input_ids,\n' +
-    '    "max_new_tokens": 512,\n' +
-    '    "do_sample": True,\n' +
-    '    "top_k": 50,\n' +
-    '    "top_p": 0.95,\n' +
-    '    "temperature": 0.3,\n' +
-    '    "repetition_penalty": 1.3,\n' +
-    '    "eos_token_id": tokenizer.eos_token_id,\n' +
-    '    "bos_token_id": tokenizer.bos_token_id,\n' +
-    '    "pad_token_id": tokenizer.pad_token_id\n' +
-    '}\n' +
-    'generate_ids = model.generate(**generate_input)\n' +
-    'text = tokenizer.decode(generate_ids[0])\n' +
-    'print(text)\n' +
-    '```\n' +
-    '\n' +
     '## 🚀 Inference Acceleration\n' +
     'As the parameter scale of large models continues to grow, improving model inference speed has become an important research direction with limited computational resources. Common inference acceleration frameworks include lmdeploy, FasterTransformer, vLLM, and JittorLLMs.\n' +
     '\n' +
@@ -631,17 +515,20 @@ postList = [
       </div>
 
       <div class="name-time-wrap">
-        <p>{{ authorName }}</p>
-        <p style="margin-left: 20px">{{ time }}</p>
+        <p style="margin-top: 5px; margin-bottom: 5px">{{ authorName }}</p>
+        <p style="margin-left: 20px; margin-top: 5px; margin-bottom: 5px">{{ time }}</p>
+      </div>
+
+      <div>
+        <p style="margin-top: 5px"
+        >{{ stars }}</p>
       </div>
 
       <div>
         <v-md-preview :text="test_text"></v-md-preview>
       </div>
 
-      <div style="display: flex; flex-direction: row; justify-content: center">
-        <el-button type="primary" @click="handleClick">我要参加！</el-button>
-      </div>
+
 
       <comment comment-block-id="1"></comment>
 
@@ -678,7 +565,14 @@ postList = [
     </div>
 
   </div>
-<!--  <v-md-editor v-model="text"></v-md-editor>-->
+
+  <div class="bottom-button">
+    <el-button type="primary" @click="handleClick">我要参加</el-button>
+    <el-button type="primary"
+               @click="handleClick"
+               style="margin-left: 20px; margin-right: 50px"
+    >我想发帖</el-button>
+  </div>
 </template>
 
 <style scoped>
@@ -688,7 +582,7 @@ postList = [
   display: flex;
   flex-direction: row;
   overflow-y: scroll;
-  height: 90vh;
+  height: 85vh;
 }
 
 .event-title {
@@ -699,6 +593,9 @@ postList = [
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
 }
 
 .left-body {
@@ -717,5 +614,15 @@ postList = [
   align-items: center;
   height: auto;
   margin-bottom: 60px;
+}
+
+.bottom-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  height: 7vh;
+  margin-right: 100px;
+  margin-left: 50px;
 }
 </style>
