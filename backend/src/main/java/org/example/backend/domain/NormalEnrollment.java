@@ -9,4 +9,12 @@ import java.util.List;
 public class NormalEnrollment extends AbstractEnrollment {
     @ManyToMany
     private List<User> participants;
+
+    public List<User> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
+    }
 }
