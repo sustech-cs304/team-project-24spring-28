@@ -1,17 +1,30 @@
 package org.example.backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
+import org.example.backend.domain.enums.UserType;
+import org.hibernate.annotations.NotFound;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue(value = "Abstract")
 public class AbstractUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String username;
     private String password;
+    @Column(name = "user_type", insertable = false, updatable = false)
+    private UserType userType;
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
 
     public long getId() {
         return id;

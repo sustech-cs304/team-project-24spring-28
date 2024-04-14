@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@DiscriminatorValue(value = "User")
 public class User extends AbstractUser {
     @ManyToMany
     private List<Event> favouriteEvents;

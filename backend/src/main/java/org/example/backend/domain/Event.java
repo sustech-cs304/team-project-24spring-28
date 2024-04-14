@@ -14,7 +14,6 @@ public class Event {
     private long id;
 
     private String name;
-
     private EventType type;
     private String description;
     private String location;
