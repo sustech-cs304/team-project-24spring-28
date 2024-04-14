@@ -148,6 +148,10 @@ function toWriteEvent() {
   router.push({path: '/event/create'})
 }
 
+function toManageEvent() {
+  router.push({path: '/event/manage'})
+}
+
 
 </script>
 
@@ -206,6 +210,10 @@ function toWriteEvent() {
 
     <button type="submit" @click="toWriteEvent">
       toWriteEvent
+    </button>
+
+    <button type="submit" @click="toManageEvent">
+      toManageEvent
     </button>
 
     <!-- ------------- end of the test list --------------- -->
