@@ -57,7 +57,7 @@ function shareComment(){
                                     <el-col>
                                         <el-row>
                                             <!--profile-->
-                                            <el-col :span="8">
+                                            <el-col :span="3">
                                                 <profile-card :name="name"></profile-card>
                                             </el-col>
                                             <!--activity-->

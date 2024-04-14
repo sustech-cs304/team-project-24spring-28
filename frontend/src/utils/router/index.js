@@ -7,14 +7,22 @@ import EventPage from "@/components/User/pages/event/EventPage.vue"
 import CreateEvent from "@/components/User/pages/event/CreateEvent.vue";
 import ManageEvent from "@/components/User/pages/event/ManageEvent.vue";
 
+import mainPage from "@/components/User/pages/main/mainPage.vue"
+import searchPage from "@/components/User/pages/main/searchPage.vue";
+import signUp from "@/components/User/pages/main/signUp.vue";
+
 const routes = [
     {path: '/', component: Login},
+    {path: '/signup', component: signUp},
     {path: '/square', component: Square},
     {path: '/square/post', component: Post},
 
     {path: '/event', component: EventPage},
     {path: '/event/create', component: CreateEvent},
     {path: '/event/manage', component: ManageEvent},
+  
+    {path: '/main', component: mainPage},
+    {path: '/search', component: searchPage},
 ]
 
 const router = createRouter({
