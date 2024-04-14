@@ -2,6 +2,9 @@
 import { ref, reactive } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
 
+
+let imageUrl = ref('')
+
 let mdText = ref('')
 
 const form = reactive({
@@ -37,6 +40,23 @@ const rules = reactive({
     { required: true, message: '请选择活动结束时间', trigger: 'change' }
   ]
 })
+
+function beforeUpload(file) {
+  console.log(file.name)
+  imageUrl.value = URL.createObjectURL(file.raw)
+  console.log(imageUrl)
+  return false
+}
+
+function handleSuccess(response, file, fileList) {
+  console.log(response)
+  imageUrl.value = URL.createObjectURL(file.raw)
+}
+
+
+
+
+
 
 let eventTypes = [
   { value: '1', label: '计数式' },
@@ -128,8 +148,22 @@ mdText = 'sdf\n' +
             :picker-options="pickerOptions">
           </el-date-picker>
         </el-form-item>
+
+        <el-form-item label="活动封面" style="width: 600px">
+          <el-upload
+            class="avatar-uploader"
+            action=""
+            :auto-upload="false"
+            :show-file-list="false"
+            :on-success="handleSuccess"
+            :on-change="beforeUpload">
+            <img v-if="imageUrl" :src="imageUrl" class="avatar"/>
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
       </el-form>
     </div>
+
 
     <div>
       <p style="margin-left: 25px; font-size: 14px; color: #606266"
@@ -146,5 +180,28 @@ mdText = 'sdf\n' +
 </template>
 
 <style scoped>
+/deep/ .avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
 
 </style>
