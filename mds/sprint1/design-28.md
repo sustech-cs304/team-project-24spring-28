@@ -55,6 +55,10 @@ This page is to show the detailed information of an event. The basic information
 
 This is the card to show the brief information of an event. The card includes the poster of the event and some basic information. The card is used in the main page and the search page.
 
+**in event page, we can evaluate the event and creat various events.The featrue "Effort lessly Organize a variety of activities"**
+
+
+
 #### Message Page
 <img src="imgs/ids/12111519/message.png" alt="1" style="zoom:50%;" />
 
