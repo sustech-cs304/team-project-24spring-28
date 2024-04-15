@@ -77,5 +77,6 @@ This is the homepage, where users can easily navigate to their desired pages thr
 #### search Page
 <img src="imgs/ids/12112710/searchPage.png" alt="1" style="zoom:50%;" />
 This is the search page, starting with a header for easy navigation. Following that is the search bar, beneath which are activity categories for users to filter by. Below that are activity cards displaying information about the activities that users have searched for.
+
 **in main Page and search page, users can discover Activities of interest which is one of our feature.**
 
