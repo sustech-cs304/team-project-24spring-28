@@ -1,6 +1,6 @@
 <template>
     <el-popover
-        :width="300"
+        :width="400"
         popper-style="box-shadow: rgb(14 18 22 / 35%) 0px 10px 38px -10px, rgb(14 18 22 / 20%) 0px 10px 20px -15px; padding: 20px;"
         placement="bottom-start"
         :show-arrow="false"
@@ -11,7 +11,7 @@
                 <el-button-group >
                     <el-button class="profile-avatar">
                         <div class="block">
-                            <el-avatar :size="40" :src="props.avatar" />
+                            <el-avatar shape="square" :size="40" :src="props.avatar" />
                         </div>
                     </el-button>
                     <el-button  class="profile-name">
@@ -25,11 +25,17 @@
                 class="demo-rich-conent"
                 style="display: flex; gap: 16px; flex-direction: column"
             >
-                <el-avatar
-                    :size="60"
-                    src="{{props.avatar}}"
-                    style="margin-bottom: 8px"
-                />
+<!--                <el-avatar-->
+<!--                    shape="square"-->
+<!--                    :size="60"-->
+<!--                    src="{{props.avatar}}"-->
+<!--                    style="margin-bottom: 8px"-->
+<!--                />-->
+                <div>
+                    <div class="demo-image__lazy">
+                        <el-image v-for="url in urls" :key="url" :src="url" lazy />
+                    </div>
+                </div>
                 <div>
                     <p
                         class="demo-rich-content__name"
@@ -58,28 +64,37 @@
 import { defineProps } from 'vue';
 
 const props = defineProps({
-    avatar: {
+    poster: {
         type: String,
-        default: 'squareUrl' // 设置头像的默认值
+        default: 'posterUrl' // 设置海报的默认值
     },
     name: {
         type: String,
-        default: 'John Doe' // 设置名字的默认值
+        default: 'Default Event Name' // 设置活动名的默认值
     },
     id: {
         type: String,
-        default: '666666'
+        default: '666666' // 设置活动id
     },
     bio: {
         type: String,
-        default: 'Have no bio yet.'
+        default: 'Have no bio yet.' // 设置活动的简介
     },
-    //对应人物页面
     link: {
-        type: String
+        type: String,
+        default: 'Default Event Page Link'  //对应活动页面
     }
 
 });
+const urls = [
+    'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
+    'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',
+    'https://fuss10.elemecdn.com/0/6f/e35ff375812e6b0020b6b4e8f9583jpeg.jpeg',
+    'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg',
+    'https://fuss10.elemecdn.com/d/e6/c4d93a3805b3ce3f323f7974e6f78jpeg.jpeg',
+    'https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg',
+    'https://fuss10.elemecdn.com/2/11/6535bcfb26e4c79b48ddde44f4b6fjpeg.jpeg',
+]
 </script>
 
 <style scoped>
@@ -91,5 +106,18 @@ const props = defineProps({
 .profile-name{
     border: none;
     height: 45px;
+}
+
+.demo-image__lazy {
+    height: 35vh;
+    overflow-y: auto;
+}
+.demo-image__lazy .el-image {
+    display: block;
+    min-height: 200px;
+    margin-bottom: 10px;
+}
+.demo-image__lazy .el-image:last-child {
+    margin-bottom: 0;
 }
 </style>
