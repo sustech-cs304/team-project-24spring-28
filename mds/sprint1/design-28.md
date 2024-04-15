@@ -66,6 +66,10 @@ In the sub-header, there are various commonly used buttons along with a search b
 <img src="imgs/ids/12112813/PostDetails.png" alt="1" style="zoom:50%;" />
 In the post details page, in addition to the header and aside, there is a subheader and button group that is affixed for stability, along with the post content and corresponding comments. The subheader displays the post title, information about the poster, and a link to the event (if available). The button group provides shortcuts for almost all functionalities on the page, such as liking, bookmarking, commenting, sharing, navigating to events, and guided tours. A button at the bottom right corner of the page allows for a quick return to the top of the page.
 
+
+
+**For now, Post Square and Post Detail have implemented feature "Share Activity Content and Experiences Through Posts".**
+
 ### Main Page
 <img src="imgs/ids/12112710/mainPage.jpg" alt="1" style="zoom:50%;" />
 This is the homepage, where users can easily navigate to their desired pages through the navigation bar or manage their personal information by clicking on their avatar. Below is a search bar where users can search for activities they are interested in. Next, there's a carousel displaying popular activities to help users filter. Following that, there are some featured posts to assist users in evaluating whether a particular activity is worth participating in.
