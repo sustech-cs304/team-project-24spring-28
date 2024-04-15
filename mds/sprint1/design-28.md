@@ -48,11 +48,24 @@ We divide all users into administrators and users. Their functions do not inters
 #### Event Detail page
 <img src="imgs/ids/12111519/event_detail.png" alt="1" style="zoom:50%;" />
 
+This page is to show the detailed information of an event. The basic information part on the top-left corner shows the basic information including the title, time, score, and so on. The body part shows the description of the event, along with the poster of the event. The comment block is under the body part. On the right panel, There are the information of the event holder, and a list of the posts related to this event.
+
 #### Event Card
 <img src="imgs/ids/12111519/small_event_card.png" alt="1" style="zoom:50%;" />
 
+This is the card to show the brief information of an event. The card includes the poster of the event and some basic information. The card is used in the main page and the search page.
+
 #### Message Page
 <img src="imgs/ids/12111519/message.png" alt="1" style="zoom:50%;" />
+
+This is the massage page, which take the message page of Bilibili as a reference. The leftest panel is to choose the types of the message. The middle panel for type 'chat' is to show the name list of the users who have chatted with the current user. The right panel is to show the chat history of the selected user.
+
+#### Comment Block
+<img src="imgs/ids/12111519/comment.png" alt="1" style="zoom:50%;" />
+
+This is the comment block, which take the comment block of Bilibili as a reference. The comment block is structured as a two-level hierarchy. The first level is the comments of the event or the post, and the second level is the discussions under a certain comment. The comment block is used in the event detail page and the post detail page.
+
+**The chat system and the comment block implement the feature "Connect with Friends and Extend Invitations".**
 
 #### Post Square
 <img src="imgs/ids/12112813/PostSquare.png" alt="1" style="zoom:50%;" />
