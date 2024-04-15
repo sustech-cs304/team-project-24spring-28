@@ -6,19 +6,29 @@ import Avatar from '@/components/Modules/avatar/Avatar.vue'
 
 
 let title = ref('')
+let eventName = ref('')
 let authorId = ref('')
 let authorName = ref('')
-let time = ref('')
+let applyStartTime = ref('')
+let applyEndTime = ref('')
+let startTime = ref('')
+let endTime = ref('')
 let score = ref(0)
+let posterUrl = ref('')
 let text = ref('')
 let postList = ref([])
 
 // just for test
-title = 'TitleTitleTitleTitle!'
+title = '某某活动马上就要开始了！'
+eventName = '活动某某'
 authorId = '123456'
 authorName = 'Lamptales'
-time = '2024-4-4'
+applyStartTime = '2024-4-4 00:00:00'
+applyEndTime = '2024-4-14 00:00:00'
+startTime = '2024-4-16 00:00:00'
+endTime = '2024-4-26 00:00:00'
 score = '4'
+posterUrl = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
 
 let stars = ref("")
 stars = '⭐'
@@ -515,13 +525,24 @@ postList = [
       </div>
 
       <div class="name-time-wrap">
-        <p style="margin-top: 5px; margin-bottom: 5px">{{ authorName }}</p>
-        <p style="margin-left: 20px; margin-top: 5px; margin-bottom: 5px">{{ time }}</p>
+        <p style="margin-top: 5px; margin-bottom: 5px">{{ eventName }}</p>
+      </div>
+
+      <div style="margin-top: 10px; margin-left: 5px">
+        报名时间: {{applyStartTime}} - {{applyEndTime}}
+      </div>
+
+      <div style="margin-top: 10px; margin-left: 5px">
+        活动时间: {{applyStartTime}} - {{applyEndTime}}
       </div>
 
       <div>
-        <p style="margin-top: 5px"
+        <p style="margin-top: 10px"
         >{{ stars }}</p>
+      </div>
+
+      <div>
+        <img :src="posterUrl"/>
       </div>
 
       <div>
@@ -537,7 +558,7 @@ postList = [
 
     <div class="right-panel">
       <div class="author-wrap">
-        <Avatar :user-id="authorId" :need-small="true" size-small="60px" name="LampTales" :need-levi="false"></Avatar>
+        <Avatar :user-id="authorId" :need-small="true" size-small="60px" name="LampTales"></Avatar>
         <p style="margin-left: 40px; font-size: 18px;"
         >{{ authorName }}</p>
       </div>

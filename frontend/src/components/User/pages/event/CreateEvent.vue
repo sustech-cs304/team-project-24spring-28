@@ -194,13 +194,13 @@ mdText = 'sdf\n' +
   font-size: 28px;
   color: #8c939d;
   width: 178px;
-  height: 178px;
+  height: 254px;
   line-height: 178px;
   text-align: center;
 }
 .avatar {
   width: 178px;
-  height: 178px;
+  height: 254px;
   display: block;
 }
 
