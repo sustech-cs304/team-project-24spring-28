@@ -6,6 +6,7 @@ import Avatar from '@/components/Modules/avatar/Avatar.vue'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
 import {useRoute, useRouter} from "vue-router";
+import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
 const router = useRouter()
 const route = useRoute()
 
@@ -137,9 +138,11 @@ function showGrade(newGrade) {
 
     <div class="right-panel">
       <div class="author-wrap">
-        <Avatar :user-id="authorId" :need-small="true" size-small="60px" name="LampTales"></Avatar>
-        <p style="margin-left: 40px; font-size: 18px;"
-        >{{ authorName }}</p>
+        <avatar-with-name
+            :user-id="authorId"
+            :need-small="true"
+            size-small="60px"
+            name="LampTales"></avatar-with-name>
       </div>
       <div>
         <p class="event-title">Related Posts</p>
@@ -227,6 +230,7 @@ function showGrade(newGrade) {
   align-items: center;
   height: auto;
   margin-bottom: 60px;
+  margin-top: 20px;
 }
 
 .bottom-button {

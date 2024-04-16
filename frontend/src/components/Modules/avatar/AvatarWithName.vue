@@ -39,13 +39,18 @@ const props = defineProps({
 
 <template>
   <div class="person">
-    <avatar :user-id="userId"
-            :need-levi="needLevi"
-            :need-small="needSmall"
-            :size-small="sizeSmall"
-            :size-mini="sizeMini"
-            :size-wrapper="sizeWrapper"/>
-    <p class="text" :style="{color: nameColor}">{{name}}</p>
+    <div>
+      <avatar :user-id="userId"
+              :need-levi="needLevi"
+              :need-small="needSmall"
+              :size-small="sizeSmall"
+              :size-mini="sizeMini"
+              :size-wrapper="sizeWrapper"/>
+    </div>
+
+    <div>
+      <p class="text" :style="{color: nameColor}">{{name}}</p>
+    </div>
   </div>
 </template>
 
@@ -59,6 +64,6 @@ const props = defineProps({
 .text {
   font-size: 15px;
   font-weight: normal;
-  margin-left: 5px;
+  margin-left: 25px;
 }
 </style>
