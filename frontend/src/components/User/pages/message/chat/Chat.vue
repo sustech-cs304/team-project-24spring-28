@@ -1,10 +1,9 @@
 <script setup>
 import {onBeforeRouteLeave, useRoute, useRouter} from "vue-router";
-import Avatar from "@/components/old/Student/Avatar.vue";
+import Avatar from "@/components/Modules/avatar/Avatar.vue";
 import {getCurrentInstance, onMounted, onUpdated, onBeforeUnmount, ref} from "vue";
 import axiosInstance from "@/utils/axios";
-import {formatTime, nowDate} from "@/components/old/Student/pages/Message/utils"
-import {globalStore} from "@/main";
+import {formatTime, nowDate} from "@/components/User/pages/message/utils";
 
 
 const router = useRouter()

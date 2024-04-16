@@ -1,8 +1,8 @@
 <script setup>
-import {formatTime} from "@/components/old/Student/pages/Message/utils";
 import axiosInstance from "@/utils/axios";
 import {reactive, ref, onMounted, getCurrentInstance} from "vue";
-import Avatar from "@/components/old/Student/Avatar.vue";
+import Avatar from "@/components/Modules/avatar/Avatar.vue";
+import {formatTime} from "@/components/User/pages/message/utils";
 
 
 const exchangeData = ref([])

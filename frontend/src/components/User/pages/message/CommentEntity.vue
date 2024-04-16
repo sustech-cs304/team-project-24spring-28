@@ -1,5 +1,5 @@
 <script setup>
-import Avatar from "@/components/old/Student/Avatar.vue";
+import Avatar from "@/components/Modules/avatar/Avatar.vue";
 import router from "@/utils/router";
 
 const props = defineProps({

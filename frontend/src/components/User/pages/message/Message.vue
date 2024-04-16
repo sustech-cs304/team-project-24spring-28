@@ -2,14 +2,13 @@
 import {useRoute, useRouter} from "vue-router";
 import {reactive, ref, onMounted, getCurrentInstance} from "vue";
 import axiosInstance from "@/utils/axios";
-import HeaderBar from "@/components/old/Student/HeaderBar.vue";
-import NoticeEntity from "@/components/old/Student/pages/Message/NoticeEntity.vue";
-import Avatar from "@/components/old/Student/Avatar.vue";
-import Chat from "@/components/old/Student/pages/Message/chat/Chat.vue";
-import CommentEntity from "@/components/old/Student/pages/Message/CommentEntity.vue";
-import {formatTime} from "@/components/old/Student/pages/Message/utils";
-import Invitation from "@/components/old/Student/pages/Message/Invitation/Invitation.vue";
-import Exchange from "@/components/old/Student/pages/Message/exchange/Exchange.vue";
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
+import NoticeEntity from "@/components/User/pages/message/NoticeEntity.vue"
+import Chat from "@/components/User/pages/message/chat/Chat.vue";
+import CommentEntity from "@/components/User/pages/message/CommentEntity.vue";
+import { formatTime } from "@/components/User/pages/message/utils";
+import Invitation from "@/components/User/pages/message/Invitation/Invitation.vue";
+import Exchange from "@/components/User/pages/message/exchange/Exchange.vue";
 
 
 const router = useRouter()
@@ -188,7 +187,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <HeaderBar/>
+  <header-for-all/>
   <div class="wrap">
     <div class="button_list">
 
