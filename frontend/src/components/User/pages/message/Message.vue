@@ -45,144 +45,144 @@ const noticeData = ref([])
 const commentData = ref([])
 
 
-onMounted(() => {
-  // get all the unread stages
-  axiosInstance.get('/message/hasUnread')
-      .then(response => {
-        // hasUnread.value.notice = response.data.data.notice
-        // hasUnread.value.invAndApp = response.data.data.invAndApp
-        // hasUnread.value.exchange = response.data.data.exchange
-        // hasUnread.value.comment = response.data.data.comment
-        // hasUnread.value.chat = response.data.data.chat
-        let temp = JSON.parse(response.data.data)
-        hasUnread.value.notice = temp.notice
-        hasUnread.value.invAndApp = temp.invAndApp
-        hasUnread.value.exchange = temp.exchange
-        hasUnread.value.comment = temp.comment
-        hasUnread.value.chat = temp.chat
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
-  // update the stages immediately
-  let temp = new FormData()
-  if (messageSelectList.invAndAppSelect) {
-    hasUnread.value.invAndApp = false
-    temp.append('messageType', 'invitation')
-    axiosInstance.post('/message/read', temp).then(() => {
-    }).catch(() => {
-      console.log('Invitations read failed')
-    })
-  } else if (messageSelectList.exchangeSelect) {
-    hasUnread.value.exchange = false
-    temp.append('messageType', 'exchange')
-    axiosInstance.post('/message/read', temp).then(() => {
-    }).catch(() => {
-      console.log('Exchanges read failed')
-    })
-  } else if (messageSelectList.commentSelect) {
-    hasUnread.value.comment = false
-    temp.append('messageType', 'comment')
-    axiosInstance.post('/message/read', temp).then(() => {
-    }).catch(() => {
-      console.log('Comments read failed')
-    })
-  } else if (messageSelectList.chatSelect) {
-    hasUnread.value.chat = false
-    temp.append('messageType', 'chat')
-    axiosInstance.post('/message/read', temp).then(() => {
-    }).catch(() => {
-      console.log('Chats read failed')
-    })
-  } else {
-    hasUnread.value.notice = false
-    temp.append('messageType', 'notice')
-    axiosInstance.post('/message/read', temp).then(() => {
-    }).catch(() => {
-      console.log('Notices read failed')
-    })
-  }
-
-  // get the corresponding data
-  if (messageSelectList.invAndAppSelect) {
-
-  } else if (messageSelectList.exchangeSelect) {
-
-  } else if (messageSelectList.commentSelect) {
-    axiosInstance.get('/message/comment')
-        .then(response => {
-          // commentData.value = response.data.data;
-          let tempList = response.data.data
-          commentData.value = []
-          for (let i = 0; i < tempList.length; i++) {
-            let exData = JSON.parse(tempList[i].content)
-            commentData.value.push({
-              id: tempList[i].id,
-              time: formatTime(tempList[i].time),
-              commenterId: tempList[i].from.id,
-              commenterName: tempList[i].from.name,
-              roomId: exData.roomId,
-              roomName: exData.roomName,
-              commentContent: exData.commentContent,
-              oriCommentContent: exData.oriCommentContent
-            })
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
-  } else if (messageSelectList.chatSelect) {
-
-  } else {
-    axiosInstance.get('/message/notice')
-        .then(response => {
-          noticeData.value = response.data.data;
-        })
-        .catch(error => {
-          console.error(error);
-        });
-  }
-
-
-  // test data
-
-  // commentData.value = [
-  //   {
-  //     id: 1,
-  //     time: '2023-07-01 19:45:00',
-  //     commenterId: 123456,
-  //     commenterName: '王煜然',
-  //     roomId: 3,
-  //     roomName: '湖畔三栋3楼326',
-  //     commentContent: '？哥们你真的要挨个房间问一遍吗',
-  //     oriCommentContent: '想找一起玩原神的舍友。',
-  //   },
-  //   {
-  //     id: 2,
-  //     time: '2023-06-01 19:45:00',
-  //     commenterId: 456789,
-  //     commenterName: 'Haoson',
-  //     roomId: 2,
-  //     roomName: '湖畔三栋3楼325',
-  //     commentContent: '我也想找一起玩原神的舍友。',
-  //     oriCommentContent: '我想找一起玩原神的舍友。',
-  //   },
-  //   {
-  //     id: 3,
-  //     time: '2023-05-01 19:45:00',
-  //     commenterId: 789123,
-  //     commenterName: 'Shinomiya',
-  //     roomId: 1,
-  //     roomName: '湖畔三栋3楼324',
-  //     commentContent: '你说的对，但是《原神》是由米哈游自主研发的一款全新开放世界冒险游戏。游戏发生在一个被称作「提瓦特」的幻想世界，在这里，被神选中的人将被授予「神之眼」，导引元素之力。你将扮演一位名为「旅行者」的神秘角色，在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的亲人——同时，逐步发掘「原神」的真相。',
-  //     oriCommentContent: '大家好啊，我想找一起玩原神的舍友。',
-  //   },
-  // ]
-
-
-
-})
+// onMounted(() => {
+//   // get all the unread stages
+//   axiosInstance.get('/message/hasUnread')
+//       .then(response => {
+//         // hasUnread.value.notice = response.data.data.notice
+//         // hasUnread.value.invAndApp = response.data.data.invAndApp
+//         // hasUnread.value.exchange = response.data.data.exchange
+//         // hasUnread.value.comment = response.data.data.comment
+//         // hasUnread.value.chat = response.data.data.chat
+//         let temp = JSON.parse(response.data.data)
+//         hasUnread.value.notice = temp.notice
+//         hasUnread.value.invAndApp = temp.invAndApp
+//         hasUnread.value.exchange = temp.exchange
+//         hasUnread.value.comment = temp.comment
+//         hasUnread.value.chat = temp.chat
+//       })
+//       .catch(error => {
+//         console.error(error);
+//       });
+//
+//   // update the stages immediately
+//   let temp = new FormData()
+//   if (messageSelectList.invAndAppSelect) {
+//     hasUnread.value.invAndApp = false
+//     temp.append('messageType', 'invitation')
+//     axiosInstance.post('/message/read', temp).then(() => {
+//     }).catch(() => {
+//       console.log('Invitations read failed')
+//     })
+//   } else if (messageSelectList.exchangeSelect) {
+//     hasUnread.value.exchange = false
+//     temp.append('messageType', 'exchange')
+//     axiosInstance.post('/message/read', temp).then(() => {
+//     }).catch(() => {
+//       console.log('Exchanges read failed')
+//     })
+//   } else if (messageSelectList.commentSelect) {
+//     hasUnread.value.comment = false
+//     temp.append('messageType', 'comment')
+//     axiosInstance.post('/message/read', temp).then(() => {
+//     }).catch(() => {
+//       console.log('Comments read failed')
+//     })
+//   } else if (messageSelectList.chatSelect) {
+//     hasUnread.value.chat = false
+//     temp.append('messageType', 'chat')
+//     axiosInstance.post('/message/read', temp).then(() => {
+//     }).catch(() => {
+//       console.log('Chats read failed')
+//     })
+//   } else {
+//     hasUnread.value.notice = false
+//     temp.append('messageType', 'notice')
+//     axiosInstance.post('/message/read', temp).then(() => {
+//     }).catch(() => {
+//       console.log('Notices read failed')
+//     })
+//   }
+//
+//   // get the corresponding data
+//   if (messageSelectList.invAndAppSelect) {
+//
+//   } else if (messageSelectList.exchangeSelect) {
+//
+//   } else if (messageSelectList.commentSelect) {
+//     axiosInstance.get('/message/comment')
+//         .then(response => {
+//           // commentData.value = response.data.data;
+//           let tempList = response.data.data
+//           commentData.value = []
+//           for (let i = 0; i < tempList.length; i++) {
+//             let exData = JSON.parse(tempList[i].content)
+//             commentData.value.push({
+//               id: tempList[i].id,
+//               time: formatTime(tempList[i].time),
+//               commenterId: tempList[i].from.id,
+//               commenterName: tempList[i].from.name,
+//               roomId: exData.roomId,
+//               roomName: exData.roomName,
+//               commentContent: exData.commentContent,
+//               oriCommentContent: exData.oriCommentContent
+//             })
+//           }
+//         })
+//         .catch(error => {
+//           console.error(error);
+//         });
+//   } else if (messageSelectList.chatSelect) {
+//
+//   } else {
+//     axiosInstance.get('/message/notice')
+//         .then(response => {
+//           noticeData.value = response.data.data;
+//         })
+//         .catch(error => {
+//           console.error(error);
+//         });
+//   }
+//
+//
+//   // test data
+//
+//   // commentData.value = [
+//   //   {
+//   //     id: 1,
+//   //     time: '2023-07-01 19:45:00',
+//   //     commenterId: 123456,
+//   //     commenterName: '王煜然',
+//   //     roomId: 3,
+//   //     roomName: '湖畔三栋3楼326',
+//   //     commentContent: '？哥们你真的要挨个房间问一遍吗',
+//   //     oriCommentContent: '想找一起玩原神的舍友。',
+//   //   },
+//   //   {
+//   //     id: 2,
+//   //     time: '2023-06-01 19:45:00',
+//   //     commenterId: 456789,
+//   //     commenterName: 'Haoson',
+//   //     roomId: 2,
+//   //     roomName: '湖畔三栋3楼325',
+//   //     commentContent: '我也想找一起玩原神的舍友。',
+//   //     oriCommentContent: '我想找一起玩原神的舍友。',
+//   //   },
+//   //   {
+//   //     id: 3,
+//   //     time: '2023-05-01 19:45:00',
+//   //     commenterId: 789123,
+//   //     commenterName: 'Shinomiya',
+//   //     roomId: 1,
+//   //     roomName: '湖畔三栋3楼324',
+//   //     commentContent: '你说的对，但是《原神》是由米哈游自主研发的一款全新开放世界冒险游戏。游戏发生在一个被称作「提瓦特」的幻想世界，在这里，被神选中的人将被授予「神之眼」，导引元素之力。你将扮演一位名为「旅行者」的神秘角色，在自由的旅行中邂逅性格各异、能力独特的同伴们，和他们一起击败强敌，找回失散的亲人——同时，逐步发掘「原神」的真相。',
+//   //     oriCommentContent: '大家好啊，我想找一起玩原神的舍友。',
+//   //   },
+//   // ]
+//
+//
+//
+// })
 
 </script>
 
