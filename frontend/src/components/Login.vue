@@ -141,7 +141,7 @@ function toPost() {
 }
 
 function toEvent() {
-  router.push({path: '/event'})
+  router.push({path: '/event', query: {id: 1}})
 }
 
 function toWriteEvent() {
