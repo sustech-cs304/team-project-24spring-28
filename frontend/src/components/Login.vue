@@ -152,6 +152,10 @@ function toManageEvent() {
   router.push({path: '/event/manage'})
 }
 
+function toMessage() {
+  router.push({path: '/message'})
+}
+
 
 </script>
 
@@ -214,6 +218,10 @@ function toManageEvent() {
 
     <button type="submit" @click="toManageEvent">
       toManageEvent
+    </button>
+
+    <button type="submit" @click="toMessage">
+      toMessage
     </button>
 
     <!-- ------------- end of the test list --------------- -->

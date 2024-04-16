@@ -1,5 +1,5 @@
 <script setup>
-import {formatTime} from "@/components/old/Student/pages/message/utils";
+import { formatTime } from "@/components/User/pages/message/utils";
 import axiosInstance from "@/utils/axios";
 import {reactive, ref, onMounted, getCurrentInstance} from "vue";
 import Avatar from "@/components/old/Student/Avatar.vue";
