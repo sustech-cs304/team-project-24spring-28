@@ -108,7 +108,7 @@ function likeComment() {
 function shareComment() {
 
 }
-
+// 右侧按钮实现---start---
 const isStarred = ref(false);
 const isLiked = ref(false);
 const toggleStar = () => {
@@ -120,6 +120,11 @@ const toggleLike = () => {
     isLiked.value = !isLiked.value;
 }
 
+const commentSectionRef = ref(null);
+const scrollToCommentSection = () => {
+    commentSectionRef.value.$el.scrollIntoView({ behavior: 'smooth' });
+}
+
 const activeNames = ref(['contentFold'])
 const handleChange = (val) => {
     console.log(val)
@@ -128,6 +133,7 @@ const toggleCollapse = () => {
     // 切换折叠面板的展开状态
     activeNames.value = activeNames.value.length ? [] : ['contentFold'];
 }
+// 右侧按钮实现---end---
 </script>
 
 <template>
@@ -206,7 +212,7 @@ const toggleCollapse = () => {
                                 <!--                                <post-comments>-->
 
                                 <!--                                </post-comments>-->
-                                <comment>
+                                <comment ref="commentSection">
 
                                 </comment>
                                 <el-card style="height: 1000px">
@@ -256,11 +262,11 @@ const toggleCollapse = () => {
                             </div>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
-                                <el-button type="primary" :icon="Share" class="button-left" style="width: 100%;" plain/>
+                            <el-button type="primary" :icon="Share" class="button-left" style="width: 100%;" plain/>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="ChatDotSquare" class="button-left" style="width: 100%;"
-                                       plain/>
+                                       plain @click="scrollToCommentSection"/>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="ArrowLeft" class="button-left" style="width: 100%;" plain/>

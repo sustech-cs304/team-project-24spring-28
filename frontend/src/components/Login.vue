@@ -116,6 +116,10 @@ function toSignUp() {
 // -------------------test button function-------------------
 // add your test button function here
 
+function toProfile() {
+    router.push({path: '/profile'})
+}
+
 function toMain() {
   router.push({path: '/main'})
 }
@@ -208,6 +212,9 @@ function toManageEvent() {
       toEvent
     </button>
 
+      <button type="submit" @click="toProfile">
+          toProfile
+      </button>
     <button type="submit" @click="toWriteEvent">
       toWriteEvent
     </button>
