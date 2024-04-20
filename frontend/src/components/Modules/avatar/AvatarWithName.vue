@@ -1,5 +1,6 @@
 <script setup>
 import Avatar from "@/components/Modules/avatar/Avatar.vue";
+import {stringify} from "qs";
 
 const props = defineProps({
   userId: {
@@ -33,6 +34,10 @@ const props = defineProps({
   nameColor: {
     type: String,
     default: '#000000'
+  },
+  marginLeft: {
+    type: String,
+    default: '25px'
   }
 })
 </script>
@@ -49,7 +54,8 @@ const props = defineProps({
     </div>
 
     <div>
-      <p class="text" :style="{color: nameColor}">{{name}}</p>
+      <p class="text" :style="'color: ' + nameColor + ';' + 'margin-left: ' + marginLeft"
+      >{{name}}</p>
     </div>
   </div>
 </template>
