@@ -23,9 +23,7 @@ let startTime = ref('')
 let endTime = ref('')
 let grade = ref(2)
 let posterUrl = ref('')
-
 let text = ref('')
-let test_text = ref('')
 
 let postList = ref([])
 
@@ -39,6 +37,13 @@ let formVisible = ref(false)
 // count attributes
 let currentCount = ref(0)
 let limitCount = ref('')
+
+// select attributes
+//TODO: select attributes
+
+// form attributes
+let definedForm = ref([])
+const appliedForm = ref([])
 
 function clickApply() {
   if (eventType === 'count') {
@@ -63,6 +68,15 @@ function countApply() {
   countVisible.value = false
 }
 
+function formApply() {
+  // console.log(appliedForm.value)
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
+  }
+  alert('报名成功！')
+  formVisible.value = false
+}
+
 onMounted(() => {
   // get event info
   title.value = '某某活动马上就要开始了！'
@@ -76,7 +90,7 @@ onMounted(() => {
   let score = 4
   posterUrl.value = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
 
-  eventType = 'count'
+  eventType = 'form'
 
   currentCount.value = 5
   let limit = -1
@@ -86,19 +100,41 @@ onMounted(() => {
     limitCount.value = limit.toString()
   }
 
+  definedForm.value = [
+    {
+      id: 0,
+      name: '姓名',
+      type: 'input',
+    },
+    {
+      id: 1,
+      name: '学号',
+      type: 'input',
+    },
+    {
+      id: 2,
+      name: '性别',
+      type: 'select',
+      options: ['男', '女']
+    }
+  ]
+
+  for (let i = 0; i < definedForm.value.length; i++) {
+    appliedForm.value.push({
+      id: definedForm.value[i].id,
+      name: definedForm.value[i].name,
+      value: ''
+    })
+  }
+
 
   stars.value = '⭐'
   for (let i = 1; i < score; i++) {
     stars.value += '⭐'
   }
 
-  text.value = 'sdf\n' +
-      '### Title\n' +
-      '\n' +
-      '![Description](https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg){{{width="200" height="auto"}}}'
 
-
-  test_text.value = '<p align="left">\n' +
+  text.value = '<p align="left">\n' +
       '    English ｜ <a href="README.md">中文</a>\n' +
       '</p>\n' +
       '<br>\n' +
@@ -177,7 +213,7 @@ function showGrade(newGrade) {
       </div>
 
       <div>
-        <v-md-preview :text="test_text"></v-md-preview>
+        <v-md-preview :text="text"></v-md-preview>
       </div>
 
       <comment comment-block-id="1"></comment>
@@ -261,7 +297,30 @@ function showGrade(newGrade) {
   </el-dialog>
 
   <el-dialog v-model="formVisible" title="自定义报名活动">
-    <span>自定义报名活动</span>
+    <div>
+      <el-form>
+        <el-form-item v-for="item in definedForm" :key="item.name" :label="item.name">
+          <el-input v-if="item.type === 'input'" v-model="appliedForm[item.id].value"/>
+          <el-select v-else-if="item.type === 'select'" v-model="appliedForm[item.id].value">
+            <el-option
+                v-for="option in item.options"
+                :key="option"
+                :label="option"
+                :value="option"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="formApply">报名</el-button>
+      </div>
+      <div>
+        <el-button type="primary" @click="clickCancel">取消</el-button>
+      </div>
+    </div>
   </el-dialog>
 </template>
 
