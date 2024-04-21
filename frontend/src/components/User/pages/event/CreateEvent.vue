@@ -100,10 +100,18 @@ let definedForm = ref([])
 let formVisible = ref(false)
 
 function deleteForm(id) {
+  let found = false
   for (let i = 0; i < definedForm.value.length; i++) {
+    if (found) {
+      definedForm.value[i].id -= 1
+      continue
+    }
     if (definedForm.value[i].id === id) {
       definedForm.value.splice(i, 1)
-      break
+      found = true
+      if (definedForm.value.length !== 0) {
+        definedForm.value[i].id -= 1
+      }
     }
   }
 }
