@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import Comment from '@/components/Modules/comment/Comment.vue'
 import Avatar from '@/components/Modules/avatar/Avatar.vue'
@@ -21,75 +21,160 @@ let applyStartTime = ref('')
 let applyEndTime = ref('')
 let startTime = ref('')
 let endTime = ref('')
-let score = ref(0)
 let grade = ref(2)
 let posterUrl = ref('')
 let text = ref('')
+
 let postList = ref([])
 
-// just for test
-title = '某某活动马上就要开始了！'
-eventName = '活动某某'
-authorId = '123456'
-authorName = 'Lamptales'
-applyStartTime = '2024-4-4 00:00:00'
-applyEndTime = '2024-4-14 00:00:00'
-startTime = '2024-4-16 00:00:00'
-endTime = '2024-4-26 00:00:00'
-score = '4'
-posterUrl = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
+let stars = ref('')
 
-let stars = ref("")
-stars = '⭐'
-for (let i = 1; i < score; i++) {
-    stars = stars + '⭐'
+let eventType = ''
+let countVisible = ref(false)
+let selectVisible = ref(false)
+let formVisible = ref(false)
+
+// count attributes
+let currentCount = ref(0)
+let limitCount = ref('')
+
+// select attributes
+//TODO: select attributes
+
+// form attributes
+let definedForm = ref([])
+const appliedForm = ref([])
+
+function clickApply() {
+  if (eventType === 'count') {
+    console.log('count')
+    countVisible.value = true
+  } else if (eventType === 'select') {
+    selectVisible.value = true
+  } else if (eventType === 'form') {
+    formVisible.value = true
+  }
 }
 
-text = 'sdf\n' +
-    '### Title\n' +
-    '\n' +
-    '![Description](https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg){{{width="200" height="auto"}}}'
+function clickCancel() {
+  countVisible.value = false
+  selectVisible.value = false
+  formVisible.value = false
+}
 
-let test_text = ref('')
-test_text = '<p align="left">\n' +
-    '    English ｜ <a href="README.md">中文</a>\n' +
-    '</p>\n' +
-    '<br>\n' +
-    '\n' +
-    '<h1 align="center">\n' +
-    '  Llama-Chinese\n' +
-    '</h1>\n' +
-    '<p align="center" width="100%">\n' +
-    '  <img src="https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg" alt="Llama" style="width: 20%; display: block; margin: auto;"></a>\n' +
-    '</p>\n' +
-    '<p align="center">\n' +
-    '  <font face="黑体" color=orange size="6"> The Best Chinese Llama Large Language Model </font>\n' +
-    '</p>\n' +
-    '<p align="center">\n' +
-    '  <a href="https://llama.family">Online: llama.family</a>\n' +
-    '</p>\n' +
-    '<p align="center">\n' +
-    '  <a href="https://huggingface.co/FlagAlpha/Atom-7B-Chat">Open-source Chinese Pre-trained LLM Atom based on Llama2</a>\n' +
-    '</p>\n' +
-    '\n'
+function countApply() {
+  currentCount.value += 1
+  alert('报名成功！')
+  countVisible.value = false
+}
 
-postList = [
-  {
-    title: 'Title1',
-    author: 'Author1',
-    time: '2024-4-4',
-  },
-  {
-    title: 'Title2',
-    author: 'Author2',
-    time: '2024-4-4',
-  },
-  {
-    title: 'Title3',
-    author: 'Author3',
-    time: '2024-4-4',
+function formApply() {
+  // console.log(appliedForm.value)
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
   }
-]
+  alert('报名成功！')
+  formVisible.value = false
+}
+
+onMounted(() => {
+  // get event info
+  title.value = '某某活动马上就要开始了！'
+  eventName.value = '活动某某'
+  authorId.value = '123456'
+  authorName.value = 'Lamptales'
+  applyStartTime.value = '2024-4-4 00:00:00'
+  applyEndTime.value = '2024-4-14 00:00:00'
+  startTime.value = '2024-4-16 00:00:00'
+  endTime.value = '2024-4-26 00:00:00'
+  let score = 4
+  posterUrl.value = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
+
+  eventType = 'form'
+
+  currentCount.value = 5
+  let limit = -1
+  if (limit === -1) {
+    limitCount.value = '无限制'
+  } else {
+    limitCount.value = limit.toString()
+  }
+
+  definedForm.value = [
+    {
+      id: 0,
+      name: '姓名',
+      type: 'input',
+    },
+    {
+      id: 1,
+      name: '学号',
+      type: 'input',
+    },
+    {
+      id: 2,
+      name: '性别',
+      type: 'select',
+      options: ['男', '女']
+    }
+  ]
+
+  for (let i = 0; i < definedForm.value.length; i++) {
+    appliedForm.value.push({
+      id: definedForm.value[i].id,
+      name: definedForm.value[i].name,
+      value: ''
+    })
+  }
+
+
+  stars.value = '⭐'
+  for (let i = 1; i < score; i++) {
+    stars.value += '⭐'
+  }
+
+
+  text.value = '<p align="left">\n' +
+      '    English ｜ <a href="README.md">中文</a>\n' +
+      '</p>\n' +
+      '<br>\n' +
+      '\n' +
+      '<h1 align="center">\n' +
+      '  Llama-Chinese\n' +
+      '</h1>\n' +
+      '<p align="center" width="100%">\n' +
+      '  <img src="https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg" alt="Llama" style="width: 20%; display: block; margin: auto;"></a>\n' +
+      '</p>\n' +
+      '<p align="center">\n' +
+      '  <font face="黑体" color=orange size="6"> The Best Chinese Llama Large Language Model </font>\n' +
+      '</p>\n' +
+      '<p align="center">\n' +
+      '  <a href="https://llama.family">Online: llama.family</a>\n' +
+      '</p>\n' +
+      '<p align="center">\n' +
+      '  <a href="https://huggingface.co/FlagAlpha/Atom-7B-Chat">Open-source Chinese Pre-trained LLM Atom based on Llama2</a>\n' +
+      '</p>\n' +
+      '\n'
+
+  postList.value = [
+    {
+      title: 'Title1',
+      author: 'Author1',
+      time: '2024-4-4',
+    },
+    {
+      title: 'Title2',
+      author: 'Author2',
+      time: '2024-4-4',
+    },
+    {
+      title: 'Title3',
+      author: 'Author3',
+      time: '2024-4-4',
+    }
+  ]
+})
+
 
 function showGrade(newGrade) {
   console.log(newGrade)
@@ -128,7 +213,7 @@ function showGrade(newGrade) {
       </div>
 
       <div>
-        <v-md-preview :text="test_text"></v-md-preview>
+        <v-md-preview :text="text"></v-md-preview>
       </div>
 
       <comment comment-block-id="1"></comment>
@@ -170,7 +255,7 @@ function showGrade(newGrade) {
   </div>
 
   <div class="bottom-button">
-    <el-button type="primary" @click="handleClick">我要参加</el-button>
+    <el-button type="primary" @click="clickApply">我要参加</el-button>
     <el-button type="primary"
                @click="handleClick"
                style="margin-left: 20px;"
@@ -189,6 +274,54 @@ function showGrade(newGrade) {
       <label title="text" for="star1"></label>
     </div>
   </div>
+
+  <el-dialog v-model="countVisible" title="活动报名">
+    <div>
+      <p
+      >当前报名人数: {{ currentCount }}/{{ limitCount }}</p>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="countApply">报名</el-button>
+      </div>
+      <div>
+        <el-button type="primary" @click="clickCancel">取消</el-button>
+      </div>
+    </div>
+
+  </el-dialog>
+
+  <el-dialog v-model="selectVisible" title="选座式活动">
+    <span>选座式活动</span>
+  </el-dialog>
+
+  <el-dialog v-model="formVisible" title="自定义报名活动">
+    <div>
+      <el-form>
+        <el-form-item v-for="item in definedForm" :key="item.name" :label="item.name">
+          <el-input v-if="item.type === 'input'" v-model="appliedForm[item.id].value"/>
+          <el-select v-else-if="item.type === 'select'" v-model="appliedForm[item.id].value">
+            <el-option
+                v-for="option in item.options"
+                :key="option"
+                :label="option"
+                :value="option"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="formApply">报名</el-button>
+      </div>
+      <div>
+        <el-button type="primary" @click="clickCancel">取消</el-button>
+      </div>
+    </div>
+  </el-dialog>
 </template>
 
 <style scoped>

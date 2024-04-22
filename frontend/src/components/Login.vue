@@ -156,6 +156,10 @@ function toMessage() {
   router.push({path: '/message'})
 }
 
+function toEventCardTest() {
+  router.push({path: '/event/cardTest'})
+}
+
 
 </script>
 
@@ -222,6 +226,10 @@ function toMessage() {
 
     <button type="submit" @click="toMessage">
       toMessage
+    </button>
+    
+    <button type="submit" @click="toEventCardTest">
+      toCardTest
     </button>
 
     <!-- ------------- end of the test list --------------- -->
