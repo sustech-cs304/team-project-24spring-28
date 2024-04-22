@@ -152,6 +152,10 @@ function toManageEvent() {
   router.push({path: '/event/manage'})
 }
 
+function toMessage() {
+  router.push({path: '/message'})
+}
+
 function toEventCardTest() {
   router.push({path: '/event/cardTest'})
 }
@@ -220,6 +224,10 @@ function toEventCardTest() {
       toManageEvent
     </button>
 
+    <button type="submit" @click="toMessage">
+      toMessage
+    </button>
+    
     <button type="submit" @click="toEventCardTest">
       toCardTest
     </button>

@@ -2,6 +2,7 @@ import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import Login from "@/components/Login.vue";
 import Square from "@/components/User/pages/post/postSquare.vue"
 import Post from "@/components/User/pages/post/postDetail.vue"
+import Message from "@/components/User/pages/message/Message.vue"
 
 import EventPage from "@/components/User/pages/event/EventPage.vue"
 import CreateEvent from "@/components/User/pages/event/CreateEvent.vue";
@@ -25,6 +26,7 @@ const routes = [
   
     {path: '/main', component: mainPage},
     {path: '/search', component: searchPage},
+    {path: '/message', component: Message}
 ]
 
 const router = createRouter({
