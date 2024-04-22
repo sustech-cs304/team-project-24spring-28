@@ -4,7 +4,7 @@ import {ref, onMounted, onBeforeUnmount, defineProps} from 'vue';
 const props = defineProps({
     background: {
         type: String,
-        default: 'C:\\Users\\27449\\Desktop\\personalProject\\team-project-24spring-28\\frontend\\src\\assets\\Like\\like.png'
+        default: '@/assets/Like/star.png'
     },
     givenNumber: {
         type: Number,
