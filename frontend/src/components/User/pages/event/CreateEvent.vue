@@ -340,10 +340,7 @@ onMounted(() => {
 
     <div style="display: flex; flex-direction: row; justify-content: flex-end">
       <div style="margin-right: 20px">
-        <el-button type="primary" @click="formApply">报名</el-button>
-      </div>
-      <div>
-        <el-button type="primary" @click="formCancel">取消</el-button>
+        <el-button type="primary" @click="formApply">完成</el-button>
       </div>
     </div>
   </el-dialog>
