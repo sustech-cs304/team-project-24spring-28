@@ -129,6 +129,34 @@ function formCancel() {
 }
 
 
+let newFormEntryVisible = ref(false)
+let newFormEntryName = ref('')
+let newFormEntryType = ref('')
+let newFormEntryOptions = ref([])
+
+function addNewFormEntryClick() {
+  newFormEntryVisible.value = true
+}
+
+function addNewFormEntryApply() {
+  if (newFormEntryType.value === 'input') {
+    definedForm.value.push({
+      id: definedForm.value.length,
+      name: newFormEntryName.value,
+      type: 'input',
+    })
+  } else {
+    definedForm.value.push({
+      id: definedForm.value.length,
+      name: newFormEntryName.value,
+      type: 'select',
+      options: newFormEntryOptions.value.split('\n')
+    })
+  }
+  newFormEntryVisible.value = false
+}
+
+
 let editSelectVisible = ref(false)
 let currentEditSelectId = ref(0)
 let editSelectTable = ref([])
@@ -338,6 +366,10 @@ onMounted(() => {
       </el-form>
     </div>
 
+    <div style="margin-top: 20px; display: flex; flex-direction: row; justify-content: center">
+      <el-button type="primary" style="margin-right: 20px" @click="addNewFormEntryClick">添加表项</el-button>
+    </div>
+
     <div style="display: flex; flex-direction: row; justify-content: flex-end">
       <div style="margin-right: 20px">
         <el-button type="primary" @click="formApply">完成</el-button>
@@ -368,8 +400,30 @@ onMounted(() => {
       <div style="margin-right: 20px">
         <el-button type="primary" @click="editSelectApply">确定</el-button>
       </div>
-      <div>
-        <el-button type="primary" @click="editSelectCancel">取消</el-button>
+    </div>
+  </el-dialog>
+
+  <el-dialog v-model="newFormEntryVisible" title="添加表项">
+    <div>
+      <el-form>
+        <el-form-item label="表项名称">
+          <el-input v-model="newFormEntryName"></el-input>
+        </el-form-item>
+        <el-form-item label="表项类型">
+          <el-select v-model="newFormEntryType">
+            <el-option label="输入框" value="input"></el-option>
+            <el-option label="下拉框" value="select"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选项" v-if="newFormEntryType === 'select'">
+          <el-input v-model="newFormEntryOptions" type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-top: 30px">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="addNewFormEntryApply">确定</el-button>
       </div>
     </div>
   </el-dialog>
