@@ -73,6 +73,17 @@ function formApply() {
   for (let i = 0; i < appliedForm.value.length; i++) {
     console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
   }
+
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    if (appliedForm.value[i].value === '') {
+      alert('请填写：' + appliedForm.value[i].name)
+      return
+    }
+  }
+
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    appliedForm.value[i].value = ''
+  }
   alert('报名成功！')
   formVisible.value = false
 }
@@ -105,17 +116,20 @@ onMounted(() => {
       id: 0,
       name: '姓名',
       type: 'input',
+      required: true
     },
     {
       id: 1,
       name: '学号',
       type: 'input',
+      required: true
     },
     {
       id: 2,
       name: '性别',
       type: 'select',
-      options: ['男', '女']
+      options: ['男', '女'],
+      required: true
     }
   ]
 
