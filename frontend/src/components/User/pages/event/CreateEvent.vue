@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
 
 
@@ -14,7 +14,11 @@ const form = reactive({
   applyStartTime: '',
   applyEndTime: '',
   startTime: '',
-  endTime: ''
+  endTime: '',
+  introduction: '',
+
+  limitCount: '',
+  seatSet: '',
 })
 
 const rules = reactive({
@@ -38,6 +42,9 @@ const rules = reactive({
   ],
   endTime: [
     { required: true, message: '请选择活动结束时间', trigger: 'change' }
+  ],
+  introduction: [
+    { required: true, message: '请输入活动简介', trigger: 'blur' }
   ]
 })
 
@@ -52,8 +59,6 @@ function handleSuccess(response, file, fileList) {
   console.log(response)
   imageUrl.value = URL.createObjectURL(file.raw)
 }
-
-
 
 
 
@@ -91,10 +96,108 @@ let pickerOptions = {
   ]
 }
 
-mdText = 'sdf\n' +
-    '### Title\n' +
-    '\n' +
-    '![Description](https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg){{{width="200" height="auto"}}}'
+let definedForm = ref([])
+let formVisible = ref(false)
+
+function deleteForm(id) {
+  let found = false
+  for (let i = 0; i < definedForm.value.length; i++) {
+    if (found) {
+      definedForm.value[i].id -= 1
+      continue
+    }
+    if (definedForm.value[i].id === id) {
+      definedForm.value.splice(i, 1)
+      found = true
+      if (definedForm.value.length !== 0) {
+        definedForm.value[i].id -= 1
+      }
+    }
+  }
+}
+
+function formClick() {
+  formVisible.value = true
+}
+
+function formApply() {
+  formVisible.value = false
+}
+
+function formCancel() {
+  formVisible.value = false
+}
+
+
+let editSelectVisible = ref(false)
+let currentEditSelectId = ref(0)
+let editSelectTable = ref([])
+function reTableEditSelect() {
+  editSelectTable.value = []
+  for (let i = 0; i < definedForm.value[currentEditSelectId.value].options.length; i++) {
+    editSelectTable.value.push({
+      id: i,
+      name: definedForm.value[currentEditSelectId.value].options[i]
+    })
+  }
+}
+function editSelectClick(id) {
+  currentEditSelectId.value = id
+  reTableEditSelect()
+  editSelectVisible.value = true
+
+}
+
+function deleteOptionForEditSelect(index) {
+  definedForm.value[currentEditSelectId.value].options.splice(index, 1)
+  reTableEditSelect()
+}
+
+let newOptionForEditSelect = ref('')
+function addOptionForEditSelect() {
+  definedForm.value[currentEditSelectId.value].options.push(newOptionForEditSelect.value)
+  newOptionForEditSelect.value = ''
+  reTableEditSelect()
+}
+
+function editSelectApply() {
+  editSelectVisible.value = false
+}
+
+function editSelectCancel() {
+  editSelectVisible.value = false
+}
+
+
+onMounted(() => {
+  definedForm.value = [
+    {
+      id: 0,
+      name: '姓名',
+      type: 'input',
+    },
+    {
+      id: 1,
+      name: '学号',
+      type: 'input',
+    },
+    {
+      id: 2,
+      name: '年级',
+      type: 'select',
+      options: ['大一', '大二', '大三', '大四'],
+    }
+  ]
+
+
+
+
+  mdText.value = 'sdf\n' +
+      '### Title\n' +
+      '\n' +
+      '![Description](https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg){{{width="200" height="auto"}}}'
+
+})
 
 </script>
 
@@ -116,6 +219,23 @@ mdText = 'sdf\n' +
             <el-option v-for="item in eventTypes" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
+
+        <div v-if="form.type === '1'">
+          <el-form-item label="活动限制人数" prop="limitCount" style="width: 250px">
+            <el-input v-model="form.limitCount"></el-input>
+          </el-form-item>
+        </div>
+
+        <div v-if="form.type === '2'">
+          <el-form-item label="座位" prop="seatCount" style="width: 400px">
+            <el-input v-model="form.seatSet"></el-input>
+          </el-form-item>
+        </div>
+
+        <div v-if="form.type === '3'" style="margin-left: 120px; margin-bottom: 20px">
+          <el-button type="primary" @click="formClick">自定义表单</el-button>
+        </div>
+
         <el-form-item label="报名开始时间" prop="applyStartTime">
           <el-date-picker
             v-model="form.applyStartTime"
@@ -161,6 +281,11 @@ mdText = 'sdf\n' +
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
+
+        <el-form-item label="活动简介" prop="introduction" style="width: 600px">
+          <el-input type="textarea" v-model="form.introduction"></el-input>
+        </el-form-item>
+
       </el-form>
     </div>
 
@@ -177,6 +302,81 @@ mdText = 'sdf\n' +
       <el-button type="primary">发起活动</el-button>
     </div>
   </div>
+
+  <el-dialog v-model="formVisible" title="自定义报名活动">
+    <div>
+      <el-form>
+        <el-form-item
+            v-for="item in definedForm"
+            :key="item.name"
+            :label="item.name"
+        >
+          <el-col span="12">
+            <el-input v-if="item.type === 'input'" />
+            <el-select v-else-if="item.type === 'select'" >
+              <el-option
+                  v-for="option in item.options"
+                  :key="option"
+                  :label="option"
+                  :value="option"
+              ></el-option>
+            </el-select>
+          </el-col>
+
+          <el-col span="12" v-if="item.type === 'select'">
+            <el-button type="primary"
+                       @click="editSelectClick(item.id)"
+                       style="margin-left: 30px"
+            >编辑选项</el-button>
+          </el-col>
+
+          <el-col span="12">
+            <el-button type="primary" @click="deleteForm(item.id)" style="margin-left: 30px">删除表项</el-button>
+          </el-col>
+
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="formApply">报名</el-button>
+      </div>
+      <div>
+        <el-button type="primary" @click="formCancel">取消</el-button>
+      </div>
+    </div>
+  </el-dialog>
+
+  <el-dialog v-model="editSelectVisible" title="编辑选项">
+    <div>
+      <el-table :data="editSelectTable" style="width: 100%">
+        <el-table-column type="index" label="序号"></el-table-column>
+        <el-table-column prop="name" label="选项内容"></el-table-column>
+        <el-table-column label="操作">
+          <template #default="row">
+            <el-button @click="deleteOptionForEditSelect(row.$index)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; flex-direction: row; justify-content: center">
+      <el-input v-model="newOptionForEditSelect" style="width: 200px"></el-input>
+      <el-button type="primary" @click="addOptionForEditSelect" style="margin-left: 30px"
+      >添加选项</el-button>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-top: 30px">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="editSelectApply">确定</el-button>
+      </div>
+      <div>
+        <el-button type="primary" @click="editSelectCancel">取消</el-button>
+      </div>
+    </div>
+  </el-dialog>
+
 </template>
 
 <style scoped>
