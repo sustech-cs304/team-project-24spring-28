@@ -15,3 +15,5 @@ spring:
       hibernate:
         temp:
           use_jdbc_metadata_defaults: true
+image-server:
+  path: backend/src/main/resources/images
