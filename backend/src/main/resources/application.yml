@@ -6,6 +6,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/se_database
     username: postgres
     password: 12345678
+  jackson:
+    default-property-inclusion: NON_NULL
   jpa:
     hibernate:
       ddl-auto: update
