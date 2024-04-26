@@ -15,6 +15,7 @@ public class AbstractUser {
     private long id;
     private String username;
     private String password;
+    private String name;
     @Column(name = "user_type", insertable = false, updatable = false)
     private UserType userType;
 
@@ -48,5 +49,13 @@ public class AbstractUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
