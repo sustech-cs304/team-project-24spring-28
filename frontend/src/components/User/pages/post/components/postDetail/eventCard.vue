@@ -9,12 +9,12 @@
         <template #reference>
             <div class="card-container">
                 <el-button-group >
-                    <el-button class="profile-avatar">
+                    <el-button class="profile-avatar" v-if="props.posterVisible">
                         <div class="block">
                             <el-avatar shape="square" :size="40" :src="props.avatar" />
                         </div>
                     </el-button>
-                    <el-button  class="profile-name">
+                    <el-button class="profile-name" v-if="props.nameVisible">
                         <p>{{ props.name }}</p>
                     </el-button>
                 </el-button-group>
@@ -68,9 +68,17 @@ const props = defineProps({
         type: String,
         default: 'posterUrl' // 设置海报的默认值
     },
+    posterVisible: {
+        type: Boolean,
+        default: true
+    },
     name: {
         type: String,
         default: 'Default Event Name' // 设置活动名的默认值
+    },
+    nameVisible: {
+        type: Boolean,
+        default: true
     },
     id: {
         type: String,
@@ -84,6 +92,7 @@ const props = defineProps({
         type: String,
         default: 'Default Event Page Link'  //对应活动页面
     }
+
 
 });
 const urls = [

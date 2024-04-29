@@ -10,6 +10,7 @@ import {
     Share,
 } from "@element-plus/icons";
 import MarkdownEdit from "@/components/User/pages/post/components/postsSquare/markdownEdit.vue";
+import SimplePost from "@/components/Modules/SimplePost.vue";
 
 const count = ref(0)
 const editDialogVisible = ref(false)
@@ -130,6 +131,11 @@ const markdownText = ref('')
                                     </el-carousel-item>
                                 </el-carousel>
                             </el-card>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col>
+                            <simple-post></simple-post>
                         </el-col>
                     </el-row>
                 </el-affix>

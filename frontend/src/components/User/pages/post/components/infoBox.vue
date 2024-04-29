@@ -1,10 +1,11 @@
 <script setup>
 import {ref, onMounted, onBeforeUnmount, defineProps} from 'vue';
 
+
 const props = defineProps({
     background: {
         type: String,
-        default: '@/assets/Like/star.png'
+        default: 'https://img0.baidu.com/it/u=1260559264,2354594855&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=333'
     },
     givenNumber: {
         type: Number,
@@ -40,7 +41,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="box" :style="{ backgroundImage: `url(${props.background})` }">
+    <div  class="box" :style="{ backgroundImage: `url(${props.background})` }">
         <span ref="num" class="number">{{props.givenNumber}}</span>
     </div>
 </template>
