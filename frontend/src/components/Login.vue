@@ -145,7 +145,7 @@ function toPost() {
 }
 
 function toEvent() {
-  router.push({path: '/event'})
+  router.push({path: '/event', query: {id: 1}})
 }
 
 function toWriteEvent() {
@@ -154,6 +154,14 @@ function toWriteEvent() {
 
 function toManageEvent() {
   router.push({path: '/event/manage'})
+}
+
+function toMessage() {
+  router.push({path: '/message'})
+}
+
+function toEventCardTest() {
+  router.push({path: '/event/cardTest'})
 }
 
 
@@ -221,6 +229,14 @@ function toManageEvent() {
 
     <button type="submit" @click="toManageEvent">
       toManageEvent
+    </button>
+
+    <button type="submit" @click="toMessage">
+      toMessage
+    </button>
+    
+    <button type="submit" @click="toEventCardTest">
+      toCardTest
     </button>
 
     <!-- ------------- end of the test list --------------- -->

@@ -2,10 +2,12 @@ import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import Login from "@/components/Login.vue";
 import Square from "@/components/User/pages/post/postSquare.vue"
 import Post from "@/components/User/pages/post/postDetail.vue"
+import Message from "@/components/User/pages/message/Message.vue"
 
 import EventPage from "@/components/User/pages/event/EventPage.vue"
 import CreateEvent from "@/components/User/pages/event/CreateEvent.vue";
 import ManageEvent from "@/components/User/pages/event/ManageEvent.vue";
+import ExamplePage from "@/components/Modules/event/ExamplePage.vue";
 
 import mainPage from "@/components/User/pages/main/mainPage.vue"
 import searchPage from "@/components/User/pages/main/searchPage.vue";
@@ -23,9 +25,10 @@ const routes = [
     {path: '/event', component: EventPage},
     {path: '/event/create', component: CreateEvent},
     {path: '/event/manage', component: ManageEvent},
-
+    {path: '/event/cardTest', component: ExamplePage},
     {path: '/main', component: mainPage},
     {path: '/search', component: searchPage},
+    {path: '/message', component: Message}
 ]
 
 const router = createRouter({
