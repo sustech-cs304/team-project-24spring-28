@@ -4,6 +4,7 @@ import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import Comment from '@/components/Modules/comment/Comment.vue'
 import Avatar from '@/components/Modules/avatar/Avatar.vue'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
+import SimplePost from "@/components/Modules/SimplePost.vue";
 
 import {useRoute, useRouter} from "vue-router";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
@@ -21,7 +22,7 @@ let applyStartTime = ref('')
 let applyEndTime = ref('')
 let startTime = ref('')
 let endTime = ref('')
-let grade = ref(2)
+let grade = ref(0)
 let posterUrl = ref('')
 let text = ref('')
 
@@ -259,22 +260,8 @@ function showGrade(newGrade) {
         <p class="event-title">Related Posts</p>
       </div>
 
-      <div>
-        <el-card v-for="post in postList" :key="post.title" style="margin-top: 20px">
-          <el-row>
-            <el-col>
-              <p>{{ post.title }}</p>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col>
-              <p>{{ post.author }}</p>
-            </el-col>
-            <el-col>
-              <p>{{ post.time }}</p>
-            </el-col>
-          </el-row>
-        </el-card>
+      <div v-for="post in postList">
+        <simple-post></simple-post>
       </div>
     </div>
 
