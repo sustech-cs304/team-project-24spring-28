@@ -31,7 +31,7 @@
 <script setup>
 import { ref } from 'vue';
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
-import postCard from "@/components/User/pages/post/components/postsGround/postCard.vue";
+import postCard from "@/components/User/pages/post/components/postsSquare/postCard.vue";
 
 
 const searchInput = ref('');

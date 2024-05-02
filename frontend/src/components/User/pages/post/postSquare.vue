@@ -1,43 +1,50 @@
-<script>
-import {ref} from 'vue'
-import postCard from '@/components/User/pages/post/components/postsGround/postCard.vue'
+<script setup>
+import { ref } from 'vue'
+import postCard from '@/components/User/pages/post/components/postsSquare/postCard.vue'
 import {
     ArrowLeft,
     ArrowRight,
     Delete,
-    Edit, Search,
+    Edit,
+    Search,
     Share,
 } from "@element-plus/icons";
+import MarkdownEdit from "@/components/User/pages/post/components/postsSquare/markdownEdit.vue";
+import SimplePost from "@/components/Modules/SimplePost.vue";
 
 const count = ref(0)
+const editDialogVisible = ref(false)
+
 const load = () => {
     count.value += 10
 }
-export default {
-    computed: {
-        Search() {
-            return Search
-        },
-        Delete() {
-            return Delete
-        },
-        Share() {
-            return Share
-        },
-        Edit() {
-            return Edit
-        },
-        ArrowLeft() {
-            return ArrowLeft
-        }
-    },
-    components: {
-        postCard
-    }
+
+const handleEditPost = () => {
+    editDialogVisible.value = true;
 }
+const markdownText = ref('')
 </script>
 
 <template>
+    <el-dialog
+        v-model="editDialogVisible"
+        title="Start mine!"
+        width="1300"
+        :before-close="handleClose"
+    >
+<!--        <span>This is a message</span>-->
+        <markdown-edit v-model="markdownText"></markdown-edit>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="editDialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="editDialogVisible = false">
+                    Confirm
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
+
+
     <div class="common-layout-all">
         <el-row :class="main-header">
             header
@@ -55,7 +62,7 @@ export default {
                             <el-row>
                                 <el-col :span="4">
                                     <el-button-group class="ml-4">
-                                        <el-button type="primary" :icon="Edit"/>
+                                        <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
                                         <el-button type="primary" :icon="Share"/>
                                         <el-button type="primary" :icon="Delete"/>
                                     </el-button-group>
@@ -124,6 +131,11 @@ export default {
                                     </el-carousel-item>
                                 </el-carousel>
                             </el-card>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col>
+                            <simple-post></simple-post>
                         </el-col>
                     </el-row>
                 </el-affix>

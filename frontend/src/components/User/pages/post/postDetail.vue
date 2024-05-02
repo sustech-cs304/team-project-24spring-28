@@ -6,6 +6,7 @@ import {ChatDotSquare} from "@element-plus/icons-vue";
 import Comment from '@/components/Modules/comment/Comment.vue';
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import {ref} from 'vue';
+import EventCard from "@/components/User/pages/post/components/postDetail/eventCard.vue";
 // variable
 let name = "ggb"
 
@@ -83,30 +84,45 @@ let text = "# 民族音乐学导论（音乐人类学）\n" +
     "\n"
 
 // Post
-function likePost(){
+function likePost() {
 
 }
-function collectPost(){
+
+function collectPost() {
 
 }
-function sharePost(){
+
+function sharePost() {
 
 }
-function commentPost(){
+
+function commentPost() {
 
 }
+
 // comment
-function likeComment(){
-
-}
-function shareComment(){
+function likeComment() {
 
 }
 
+function shareComment() {
+
+}
+// 右侧按钮实现---start---
 const isStarred = ref(false);
+const isLiked = ref(false);
 const toggleStar = () => {
     // 切换收藏状态
     isStarred.value = !isStarred.value;
+}
+const toggleLike = () => {
+    // 切换点赞状态
+    isLiked.value = !isLiked.value;
+}
+
+const commentSectionRef = ref(null);
+const scrollToCommentSection = () => {
+    commentSectionRef.value.$el.scrollIntoView({ behavior: 'smooth' });
 }
 
 const activeNames = ref(['contentFold'])
@@ -117,6 +133,7 @@ const toggleCollapse = () => {
     // 切换折叠面板的展开状态
     activeNames.value = activeNames.value.length ? [] : ['contentFold'];
 }
+// 右侧按钮实现---end---
 </script>
 
 <template>
@@ -150,8 +167,9 @@ const toggleCollapse = () => {
                                                 <profile-card :name="name"></profile-card>
                                             </el-col>
                                             <!--activity-->
+                                            <el-col :span="4"/>
                                             <el-col :span="8">
-
+                                                <event-card :name="'sdfsldfjsldfkjdsflkjsalfdfsldfjsldfkjdsflkjsalf'"></event-card>
                                             </el-col>
 
                                         </el-row>
@@ -191,10 +209,10 @@ const toggleCollapse = () => {
                         <el-row>
                             <!--comment-->
                             <el-col>
-<!--                                <post-comments>-->
+                                <!--                                <post-comments>-->
 
-<!--                                </post-comments>-->
-                                <comment>
+                                <!--                                </post-comments>-->
+                                <comment ref="commentSection">
 
                                 </comment>
                                 <el-card style="height: 1000px">
@@ -222,43 +240,48 @@ const toggleCollapse = () => {
                         <el-col style="margin-bottom: 4px">
                             <el-button type="info" class="button-left" style="width: 100%;">?</el-button>
                         </el-col>
-<!--                        <el-tooltip-->
-<!--                            effect="dark"-->
-<!--                            content="Like"-->
-<!--                            placement="left-start"-->
-<!--                        >-->
-                            <el-col style="margin-bottom: 4px">
-                                <el-button type="primary" :icon="Pointer" class="button-left" style="width: 100%;" plain/>
-                            </el-col>
-<!--                        </el-tooltip>-->
+                        <el-col style="margin-bottom: 4px">
+                            <div v-show="!isLiked">
+                                <el-button type="primary" :icon="Pointer" @click="toggleLike" class="button-left"
+                                           style="width: 100%;" plain/>
+                            </div>
+                            <div v-show="isLiked">
+                                <el-button type="primary" :icon="Pointer" @click="toggleLike" class="button-left"
+                                           style="width: 100%;"/>
+                            </div>
+                        </el-col>
 
-                            <el-col style="margin-bottom: 4px" >
-                                <div v-show="isStarred">
-                                    <el-button type="primary" :icon="StarFilled" @click="toggleStar" class="button-left" style="width: 100%;" plain/>
-                                </div>
-                                <div v-show="!isStarred">
-                                    <el-button type="primary" :icon="StarFilled" @click="toggleStar" class="button-left" style="width: 100%;" />
-                                </div>
-                            </el-col>
-
-
+                        <el-col style="margin-bottom: 4px">
+                            <div v-show="!isStarred">
+                                <el-button type="primary" :icon="StarFilled" @click="toggleStar" class="button-left"
+                                           style="width: 100%;" plain/>
+                            </div>
+                            <div v-show="isStarred">
+                                <el-button type="primary" :icon="StarFilled" @click="toggleStar" class="button-left"
+                                           style="width: 100%;"/>
+                            </div>
+                        </el-col>
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="Share" class="button-left" style="width: 100%;" plain/>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="ChatDotSquare" class="button-left" style="width: 100%;" plain/>
+                            <el-button type="primary" :icon="ChatDotSquare" class="button-left" style="width: 100%;"
+                                       plain @click="scrollToCommentSection"/>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="ArrowLeft" class="button-left" style="width: 100%;" plain/>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="ArrowRight" class="button-left" style="width: 100%;" plain/>
+                            <el-button type="primary" :icon="ArrowRight" class="button-left" style="width: 100%;"
+                                       plain/>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="Open" @click="toggleCollapse" class="button-left" style="width: 100%;" plain/>
+                            <el-button type="primary" :icon="Open" @click="toggleCollapse" class="button-left"
+                                       style="width: 100%;" plain/>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="MoreFilled" class="button-left" style="width: 100%;" plain/>
+                            <el-button type="primary" :icon="MoreFilled" class="button-left" style="width: 100%;"
+                                       plain/>
                         </el-col>
                     </el-row>
                     <el-row>
@@ -322,11 +345,13 @@ const toggleCollapse = () => {
     /* Set padding to ensure the height is 32px */
     padding: 6px 12px;
 }
+
 .el-popper.is-customized .el-popper__arrow::before {
     /* 设置箭头的渐变色 */
     background: linear-gradient(45deg, #b2e68d, #bce689);
     right: 0;
 }
+
 /* 弹出提示 */
 
 </style>
