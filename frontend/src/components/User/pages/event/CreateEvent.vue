@@ -203,17 +203,20 @@ onMounted(() => {
       id: 0,
       name: '姓名',
       type: 'input',
+      required: true,
     },
     {
       id: 1,
       name: '学号',
       type: 'input',
+      required: false,
     },
     {
       id: 2,
       name: '年级',
       type: 'select',
       options: ['大一', '大二', '大三', '大四'],
+      required: true,
     }
   ]
 
