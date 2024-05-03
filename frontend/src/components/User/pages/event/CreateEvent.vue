@@ -133,6 +133,7 @@ let newFormEntryVisible = ref(false)
 let newFormEntryName = ref('')
 let newFormEntryType = ref('')
 let newFormEntryOptions = ref([])
+let newFormEntryRequired = ref(false)
 
 function addNewFormEntryClick() {
   newFormEntryVisible.value = true
@@ -144,13 +145,15 @@ function addNewFormEntryApply() {
       id: definedForm.value.length,
       name: newFormEntryName.value,
       type: 'input',
+      required: newFormEntryRequired.value
     })
   } else {
     definedForm.value.push({
       id: definedForm.value.length,
       name: newFormEntryName.value,
       type: 'select',
-      options: newFormEntryOptions.value.split('\n')
+      options: newFormEntryOptions.value.split('\n'),
+      required: newFormEntryRequired.value
     })
   }
   newFormEntryVisible.value = false
@@ -420,6 +423,9 @@ onMounted(() => {
         </el-form-item>
         <el-form-item label="选项" v-if="newFormEntryType === 'select'">
           <el-input v-model="newFormEntryOptions" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="是否必填">
+          <el-switch v-model="newFormEntryRequired"></el-switch>
         </el-form-item>
       </el-form>
     </div>
