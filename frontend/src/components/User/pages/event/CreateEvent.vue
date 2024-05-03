@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
 
 let imageUrl = ref('')
@@ -237,9 +238,10 @@ onMounted(() => {
 
 <template>
   <div>
-    <p>Header</p>
+    <header-for-all/>
   </div>
-  <div style="overflow-y: scroll; height: 90vh">
+  <div style="overflow-y: scroll; height: 87vh; margin-top: 20px"
+  >
     <div>
       <el-form :model="form" :rules="rules" label-width="120px">
         <el-form-item label="活动标题" prop="title" style="width: 600px">

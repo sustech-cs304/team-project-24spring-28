@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive } from 'vue'
 import {useRouter} from "vue-router";
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
 const router = useRouter()
 
@@ -47,10 +48,11 @@ function exportApplication(index) {
 
 <template>
   <div>
-    <p>Header</p>
+    <HeaderForAll></HeaderForAll>
   </div>
 
-  <div style="margin-left: 20px; margin-right: 20px">
+  <div style="margin-left: 20px; margin-right: 20px; margin-top: 20px;"
+  >
     <div style="margin-bottom: 30px; margin-top: 20px">
       <el-button @click="createNewEvent">创建新活动</el-button>
     </div>
