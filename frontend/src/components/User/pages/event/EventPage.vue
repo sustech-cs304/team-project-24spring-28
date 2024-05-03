@@ -4,6 +4,7 @@ import VMdPreview from '@kangc/v-md-editor/lib/preview'
 import Comment from '@/components/Modules/comment/Comment.vue'
 import Avatar from '@/components/Modules/avatar/Avatar.vue'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
+import SimplePost from "@/components/Modules/SimplePost.vue";
 
 import {useRoute, useRouter} from "vue-router";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
@@ -21,12 +22,13 @@ let applyStartTime = ref('')
 let applyEndTime = ref('')
 let startTime = ref('')
 let endTime = ref('')
-let grade = ref(2)
+let grade = ref(0)
 let posterUrl = ref('')
 let text = ref('')
 
 let postList = ref([])
 
+let liked = ref(false)
 let stars = ref('')
 
 let eventType = ''
@@ -44,6 +46,16 @@ let limitCount = ref('')
 // form attributes
 let definedForm = ref([])
 const appliedForm = ref([])
+
+
+function clickLike() {
+  liked.value = !liked.value
+  console.log(liked.value)
+}
+
+function clickWrite() {
+  console.log('write')
+}
 
 function clickApply() {
   if (eventType === 'count') {
@@ -73,6 +85,17 @@ function formApply() {
   for (let i = 0; i < appliedForm.value.length; i++) {
     console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
   }
+
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    if (appliedForm.value[i].value === '') {
+      alert('请填写：' + appliedForm.value[i].name)
+      return
+    }
+  }
+
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    appliedForm.value[i].value = ''
+  }
   alert('报名成功！')
   formVisible.value = false
 }
@@ -87,6 +110,7 @@ onMounted(() => {
   applyEndTime.value = '2024-4-14 00:00:00'
   startTime.value = '2024-4-16 00:00:00'
   endTime.value = '2024-4-26 00:00:00'
+  liked.value = true
   let score = 4
   posterUrl.value = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
 
@@ -105,17 +129,20 @@ onMounted(() => {
       id: 0,
       name: '姓名',
       type: 'input',
+      required: true
     },
     {
       id: 1,
       name: '学号',
       type: 'input',
+      required: true
     },
     {
       id: 2,
       name: '性别',
       type: 'select',
-      options: ['男', '女']
+      options: ['男', '女'],
+      required: true
     }
   ]
 
@@ -233,31 +260,35 @@ function showGrade(newGrade) {
         <p class="event-title">Related Posts</p>
       </div>
 
-      <div>
-        <el-card v-for="post in postList" :key="post.title" style="margin-top: 20px">
-          <el-row>
-            <el-col>
-              <p>{{ post.title }}</p>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col>
-              <p>{{ post.author }}</p>
-            </el-col>
-            <el-col>
-              <p>{{ post.time }}</p>
-            </el-col>
-          </el-row>
-        </el-card>
+      <div v-for="post in postList">
+        <simple-post></simple-post>
       </div>
     </div>
 
   </div>
 
   <div class="bottom-button">
-    <el-button type="primary" @click="clickApply">我要参加</el-button>
+    <input type="checkbox"
+           :checked="liked"
+           id="favorite"
+           name="favorite-checkbox"
+           value="favorite-button"
+           class="liked-input"
+           @click="clickLike"
+    >
+    <label for="favorite" class="liked-label">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      <div class="action">
+        <span class="option-1">收藏</span>
+        <span class="option-2">已收藏</span>
+      </div>
+    </label>
     <el-button type="primary"
-               @click="handleClick"
+               @click="clickApply"
+                style="margin-left: 20px;"
+    >我要参加</el-button>
+    <el-button type="primary"
+               @click="clickWrite"
                style="margin-left: 20px;"
     >我想发帖</el-button>
 
@@ -376,6 +407,9 @@ function showGrade(newGrade) {
   margin-left: 50px;
 }
 
+
+
+
 .rating:not(:checked) > input {
   position: absolute;
   appearance: none;
@@ -407,5 +441,87 @@ function showGrade(newGrade) {
 
 .rating > input:checked ~ label {
   color: #ffa723;
+}
+
+
+
+
+.liked-label {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 15px 10px 10px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 10px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  color: black;
+}
+
+.liked-input {
+  display: none;
+}
+
+.liked-input:checked + .liked-label svg {
+  fill: hsl(0deg 100% 50%);
+  stroke: hsl(0deg 100% 50%);
+  animation: heartButton 1s;
+}
+
+@keyframes heartButton {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.3);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.liked-input + .liked-label .action {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+}
+
+.liked-input + .liked-label .action span {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+  transition: all .5s;
+}
+
+.liked-input + .liked-label .action span.option-1 {
+  transform: translate(0px,0%);
+  opacity: 1;
+}
+
+.liked-input:checked + .liked-label .action span.option-1 {
+  transform: translate(0px,-100%);
+  opacity: 0;
+}
+
+.liked-input + .liked-label .action span.option-2 {
+  transform: translate(0px,100%);
+  opacity: 0;
+}
+
+.liked-input:checked + .liked-label .action span.option-2 {
+  transform: translate(0px,0%);
+  opacity: 1;
 }
 </style>

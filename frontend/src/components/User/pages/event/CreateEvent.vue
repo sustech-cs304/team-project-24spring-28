@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
 
 let imageUrl = ref('')
@@ -129,6 +130,37 @@ function formCancel() {
 }
 
 
+let newFormEntryVisible = ref(false)
+let newFormEntryName = ref('')
+let newFormEntryType = ref('')
+let newFormEntryOptions = ref([])
+let newFormEntryRequired = ref(false)
+
+function addNewFormEntryClick() {
+  newFormEntryVisible.value = true
+}
+
+function addNewFormEntryApply() {
+  if (newFormEntryType.value === 'input') {
+    definedForm.value.push({
+      id: definedForm.value.length,
+      name: newFormEntryName.value,
+      type: 'input',
+      required: newFormEntryRequired.value
+    })
+  } else {
+    definedForm.value.push({
+      id: definedForm.value.length,
+      name: newFormEntryName.value,
+      type: 'select',
+      options: newFormEntryOptions.value.split('\n'),
+      required: newFormEntryRequired.value
+    })
+  }
+  newFormEntryVisible.value = false
+}
+
+
 let editSelectVisible = ref(false)
 let currentEditSelectId = ref(0)
 let editSelectTable = ref([])
@@ -175,17 +207,20 @@ onMounted(() => {
       id: 0,
       name: '姓名',
       type: 'input',
+      required: true,
     },
     {
       id: 1,
       name: '学号',
       type: 'input',
+      required: false,
     },
     {
       id: 2,
       name: '年级',
       type: 'select',
       options: ['大一', '大二', '大三', '大四'],
+      required: true,
     }
   ]
 
@@ -203,9 +238,10 @@ onMounted(() => {
 
 <template>
   <div>
-    <p>Header</p>
+    <header-for-all/>
   </div>
-  <div style="overflow-y: scroll; height: 90vh">
+  <div style="overflow-y: scroll; height: 87vh; margin-top: 20px"
+  >
     <div>
       <el-form :model="form" :rules="rules" label-width="120px">
         <el-form-item label="活动标题" prop="title" style="width: 600px">
@@ -338,12 +374,13 @@ onMounted(() => {
       </el-form>
     </div>
 
+    <div style="margin-top: 20px; display: flex; flex-direction: row; justify-content: center">
+      <el-button type="primary" style="margin-right: 20px" @click="addNewFormEntryClick">添加表项</el-button>
+    </div>
+
     <div style="display: flex; flex-direction: row; justify-content: flex-end">
       <div style="margin-right: 20px">
-        <el-button type="primary" @click="formApply">报名</el-button>
-      </div>
-      <div>
-        <el-button type="primary" @click="formCancel">取消</el-button>
+        <el-button type="primary" @click="formApply">完成</el-button>
       </div>
     </div>
   </el-dialog>
@@ -371,8 +408,33 @@ onMounted(() => {
       <div style="margin-right: 20px">
         <el-button type="primary" @click="editSelectApply">确定</el-button>
       </div>
-      <div>
-        <el-button type="primary" @click="editSelectCancel">取消</el-button>
+    </div>
+  </el-dialog>
+
+  <el-dialog v-model="newFormEntryVisible" title="添加表项">
+    <div>
+      <el-form>
+        <el-form-item label="表项名称">
+          <el-input v-model="newFormEntryName"></el-input>
+        </el-form-item>
+        <el-form-item label="表项类型">
+          <el-select v-model="newFormEntryType">
+            <el-option label="输入框" value="input"></el-option>
+            <el-option label="下拉框" value="select"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="选项" v-if="newFormEntryType === 'select'">
+          <el-input v-model="newFormEntryOptions" type="textarea"></el-input>
+        </el-form-item>
+        <el-form-item label="是否必填">
+          <el-switch v-model="newFormEntryRequired"></el-switch>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end; margin-top: 30px">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="addNewFormEntryApply">确定</el-button>
       </div>
     </div>
   </el-dialog>
