@@ -7,6 +7,7 @@ import Message from "@/components/User/pages/message/Message.vue"
 import EventPage from "@/components/User/pages/event/EventPage.vue"
 import CreateEvent from "@/components/User/pages/event/CreateEvent.vue";
 import ManageEvent from "@/components/User/pages/event/ManageEvent.vue";
+import MyEvent from "@/components/User/pages/event/MyEvent.vue";
 import ExamplePage from "@/components/Modules/event/ExamplePage.vue";
 
 import mainPage from "@/components/User/pages/main/mainPage.vue"
@@ -26,6 +27,8 @@ const routes = [
     {path: '/event/create', component: CreateEvent},
     {path: '/event/manage', component: ManageEvent},
     {path: '/event/cardTest', component: ExamplePage},
+    {path: '/event/my', component: MyEvent},
+
     {path: '/main', component: mainPage},
     {path: '/search', component: searchPage},
     {path: '/message', component: Message}

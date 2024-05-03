@@ -164,6 +164,10 @@ function toEventCardTest() {
   router.push({path: '/event/cardTest'})
 }
 
+function toMyEvent() {
+  router.push({path: '/event/my'})
+}
+
 
 </script>
 
@@ -237,6 +241,10 @@ function toEventCardTest() {
     
     <button type="submit" @click="toEventCardTest">
       toCardTest
+    </button>
+
+    <button type="submit" @click="toMyEvent">
+      toMyEvent
     </button>
 
     <!-- ------------- end of the test list --------------- -->
