@@ -9,9 +9,9 @@
                             <div class="profile">
                                 <el-avatar
                                     :size="250"
-                                    src="{{$props.avatar}}"
+                                    :src="avatar"
                                     shape="square"
-                                    style="margin-bottom: 8px"
+                                    style="margin-bottom: 8px; opacity: 1"
                                 />
                                 <!--                        <img :src="$props.avatar" alt="Avatar" class="avatar">-->
                                 <h1>{{$props.name}}</h1>
@@ -51,7 +51,7 @@ export default {
     props: {
         avatar: {
             type: String,
-            default: 'squareUrl' // 设置头像的默认值
+            default: 'https://q.115.com/imgload?r=242FCAA00B768FC8F00058B3781B71185BE2F6E7&u=dPjgXZ&s=eIAgzeJggQMuoquThaEovA&e=5&st=0' // 设置头像的默认值
         },
         name: {
             type: String,
