@@ -1,109 +1,61 @@
 <template>
     <div class="bg">
-        <el-row :class="main-header">header</el-row>
-        <el-row :class="main-main" gutter="10">
-            <section>
-                <div class="sec_new">
-                    <el-row>
-                        <el-col span="8">
-                            <div class="profile">
-                                <el-avatar
-                                    :size="250"
-                                    src="{{$props.avatar}}"
-                                    shape="square"
-                                    style="margin-bottom: 8px"
-                                />
-                                <!--                        <img :src="$props.avatar" alt="Avatar" class="avatar">-->
-                                <h1>{{$props.name}}</h1>
-                                <p style="margin: 0; font-size: 14px; color: var(--el-color-info)">@{{$props.id }}</p>
-                                <p>{{$props.bio}}</p>
-                            </div>
-                        </el-col>
-                        <el-col span="16">
-
-                        </el-col>
-                    </el-row>
-
-                </div>
-                <img src="@/components/User/pages/profile/images/stars.png" alt="" id="stars">
-                <img src="@/components/User/pages/profile/images/moon.png" alt="" id="moon">
-                <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
-                <div id="text">Moon Light</div>
-                <!--            <a href="#" id="btn">explore</a>-->
-                <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
-            </section>
-        </el-row>
-        <el-row :class="main-footer">footer</el-row>
-<!--        <div class="sec">-->
-<!--            <h2>This is title</h2>-->
-<!--            <p>-->
-<!--                &lt;!&ndash; 这里是你的长文本内容 &ndash;&gt;-->
-<!--                12323149236012897102958713098735-->
-<!--            </p>-->
-<!--        </div>-->
+        <header>
+            <a href="#" id="logo">Logo</a>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Work</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </header>
+        <section>
+            <img src="@/components/User/pages/profile/images/stars.png" alt="" id="stars">
+            <img src="@/components/User/pages/profile/images/moon.png" alt="" id="moon">
+            <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
+            <div id="text">Moon Light</div>
+            <a href="#" id="btn">explore</a>
+            <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
+        </section>
+        <div class="sec">
+            <h2>This is title</h2>
+            <p>
+                <!-- 这里是你的长文本内容 -->
+                12323149236012897102958713098735
+            </p>
+        </div>
     </div>
 </template>
 
 <script>
-import {defineProps} from "vue";
-
 export default {
-    props: {
-        avatar: {
-            type: String,
-            default: 'squareUrl' // 设置头像的默认值
-        },
-        name: {
-            type: String,
-            default: 'John Doe' // 设置名字的默认值
-        },
-        id: {
-            type: String,
-            default: '666666'
-        },
-        bio: {
-            type: String,
-            default: 'Have no bio yet.'
-        },
-        // 对应人物页面
-        link: {
-            type: String
-        }
-    },
     mounted() {
         //获取到一些关键元素
         let stars = this.$el.querySelector('#stars');
         let moon = this.$el.querySelector('#moon');
         let mountain_behind = this.$el.querySelector('#mountain_behind');
         let text = this.$el.querySelector('#text');
-        // let btn = this.$el.querySelector('#btn');
+        let btn = this.$el.querySelector('#btn');
         let mountain_front = this.$el.querySelector('#mountain_front');
 
         //给窗口添加鼠标滚动事件
         window.addEventListener('scroll', () => {
             let value = window.scrollY;
-            stars.style.left = value * 0.25 + 'px';
+            // stars.style.left = value * 0.25 + 'px';
             moon.style.top = value * 1.2 + 'px';
             mountain_behind.style.top = value * 0.5 + 'px';
             text.style.marginRight = value * 4 + 'px';
             text.style.marginTop = value * 0.5 + 'px';
-            // btn.style.marginRight = value * 1.5 + 'px';
-            // btn.style.marginTop = value * 0.5 + 'px';
+            btn.style.marginRight = value * 1.5 + 'px';
+            btn.style.marginTop = value * 0.5 + 'px';
         });
     }
 };
-
 </script>
 
 
 <style scoped>
-.id {
-
-}
-
-
 bg {
-    width: 100vw;
     background-color: #000; /* 设置黑色背景 */
     color: #fff; /* 设置文本颜色为白色，以便于对比 */
 }
@@ -160,8 +112,8 @@ header ul li a.active{
 }
 section{
     position: relative;
-    width: 100vw;
-    //height: 100vh;
+    width: 100%;
+    height: 100vh;
     padding: 100px;
     display: flex;
     justify-content: center;
@@ -212,16 +164,6 @@ section #btn{
     font-size: 1.5em;
     z-index: 10;
     display: inline-block;
-}
-.sec_new{
-    position: relative;
-    padding: 100px;
-    background-color: #cccccc;
-    z-index: 200;
-    width: 85vw;
-    height: 200vh;
-    opacity: 0.9;
-    border-radius: 10px;
 }
 .sec{
     position: relative;
