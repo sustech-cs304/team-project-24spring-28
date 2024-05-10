@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import {ref} from 'vue'
+import { ElLoading } from 'element-plus'
 import postCard from '@/components/User/pages/post/components/postsSquare/postCard.vue'
 import {
     ArrowLeft,
@@ -9,11 +10,50 @@ import {
     Search,
     Share,
 } from "@element-plus/icons";
-import MarkdownEdit from "@/components/User/pages/post/components/postsSquare/markdownEdit.vue";
+// import MarkdownEdit from "@/components/User/pages/post/components/postsSquare/markdownEdit.vue";
 import SimplePost from "@/components/Modules/SimplePost.vue";
+import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor';
+import '@kangc/v-md-editor/lib/style/codemirror-editor.css';
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';
+// highlightjs
+import hljs from 'highlight.js';
+
+// codemirror 编辑器的相关资源
+import Codemirror from 'codemirror';
+// mode
+import 'codemirror/mode/markdown/markdown';
+import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/css/css';
+import 'codemirror/mode/htmlmixed/htmlmixed';
+import 'codemirror/mode/vue/vue';
+// edit
+import 'codemirror/addon/edit/closebrackets';
+import 'codemirror/addon/edit/closetag';
+import 'codemirror/addon/edit/matchbrackets';
+// placeholder
+import 'codemirror/addon/display/placeholder';
+// active-line
+import 'codemirror/addon/selection/active-line';
+// scrollbar
+import 'codemirror/addon/scroll/simplescrollbars';
+import 'codemirror/addon/scroll/simplescrollbars.css';
+// style
+import 'codemirror/lib/codemirror.css';
+
+VMdEditor.Codemirror = Codemirror;
+VMdEditor.use(githubTheme, {
+    Hljs: hljs,
+});
+
 
 const count = ref(0)
+const fullscreenLoading = ref(false)
+
 const editDialogVisible = ref(false)
+const shareDialogVisible = ref(false)
+const imageDialogVisible = ref(false)
+
 
 const load = () => {
     count.value += 10
@@ -21,24 +61,78 @@ const load = () => {
 
 const handleEditPost = () => {
     editDialogVisible.value = true;
+    imageDialogVisible.value = false;
 }
+const handleSharePost = () => {
+    shareDialogVisible.value = true;
+}
+
+const handleImageUpload = () => {
+    imageDialogVisible.value = true;
+    editDialogVisible.value = false;
+}
+
+const postUpload = () => {
+    fullscreenLoading.value = true
+    setTimeout(() => {
+        fullscreenLoading.value = false
+    }, 2000)
+    imageDialogVisible.value = false;
+    editDialogVisible.value = false;
+}
+
+const fullScreenLoading = () => {
+
+}
+
 const markdownText = ref('')
+
 </script>
 
 <template>
+    <el-dialog
+        v-model="shareDialogVisible"
+        title="Share Post"
+        width="30%"
+    >
+        <!-- Share Dialog Content -->
+        <span>This is the content of the share dialog.</span>
+        <!-- Footer Buttons -->
+        <template #footer>
+            <el-button @click="shareDialogVisible = false">Cancel</el-button>
+            <el-button type="primary" @click="shareDialogVisible = false">Confirm</el-button>
+        </template>
+    </el-dialog>
+
     <el-dialog
         v-model="editDialogVisible"
         title="Start mine!"
         width="1300"
         :before-close="handleClose"
     >
-<!--        <span>This is a message</span>-->
-        <markdown-edit v-model="markdownText"></markdown-edit>
+        <div></div>
+        <v-md-editor v-model="markdownText" height="400px"></v-md-editor>
+        <el-dialog
+            v-model="imageDialogVisible"
+            width="500"
+            title="Start mine!"
+            append-to-body
+        >
+            <span>This is the inner Dialog</span>
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="handleEditPost">Back</el-button>
+                    <el-button type="primary" @click="postUpload"  v-loading.fullscreen.lock="fullscreenLoading">
+                        Upload
+                    </el-button>
+                </div>
+            </template>
+        </el-dialog>
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="editDialogVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="editDialogVisible = false">
-                    Confirm
+                <el-button @click="editDialogVisible = false">Back</el-button>
+                <el-button type="primary" @click="handleImageUpload">
+                    Next
                 </el-button>
             </div>
         </template>
@@ -48,7 +142,7 @@ const markdownText = ref('')
     <div class="common-layout-all">
         <el-row :class="main-header">
             header
-            <el-backtop :right="10" :bottom="10" />
+            <el-backtop :right="10" :bottom="10"/>
         </el-row>
         <el-row :class="main-main" gutter="10">
             <el-col :span="3">
@@ -63,8 +157,9 @@ const markdownText = ref('')
                                 <el-col :span="4">
                                     <el-button-group class="ml-4">
                                         <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
-                                        <el-button type="primary" :icon="Share"/>
-                                        <el-button type="primary" :icon="Delete"/>
+                                        <el-button type="primary" :icon="Share" @click="handleSharePost"/>
+
+                                        <el-button type="primary" :icon="Delete" @click="postUpload" v-loading.fullscreen.lock="fullscreenLoading"/>
                                     </el-button-group>
                                 </el-col>
                                 <el-col :span="20">
