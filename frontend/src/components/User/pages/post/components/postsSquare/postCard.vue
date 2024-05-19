@@ -3,6 +3,7 @@ import { Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import InfoBox from "@/components/User/pages/post/components/infoBox.vue";
+import SimplePost from "@/components/Modules/SimplePost.vue";
 
 const router = useRouter();
 

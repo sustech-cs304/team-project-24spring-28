@@ -2,36 +2,68 @@
     <div class="bg">
         <el-row :class="main-header">header</el-row>
         <el-row :class="main-main" gutter="10">
-            <section>
-                <div class="sec_new">
-                    <el-row>
-                        <el-col span="8">
-                            <div class="profile">
-                                <el-avatar
-                                    :size="250"
-                                    :src="avatar"
-                                    shape="square"
-                                    style="margin-bottom: 8px; opacity: 1"
-                                />
-                                <!--                        <img :src="$props.avatar" alt="Avatar" class="avatar">-->
-                                <h1>{{$props.name}}</h1>
-                                <p style="margin: 0; font-size: 14px; color: var(--el-color-info)">@{{$props.id }}</p>
-                                <p>{{$props.bio}}</p>
-                            </div>
-                        </el-col>
-                        <el-col span="16">
+                <section>
+                    <div class="sec_new">
+                        <el-row>
+                            <el-col span="8">
+                                <div class="profile">
+                                    <el-avatar
+                                        :size="250"
+                                        :src="avatar"
+                                        shape="square"
+                                        style="margin-bottom: 8px; opacity: 1"
+                                    />
+                                    <!--                        <img :src="$props.avatar" alt="Avatar" class="avatar">-->
+                                    <h1>{{$props.name}}</h1>
+                                    <p style="margin: 0; font-size: 14px; color: var(--el-color-info)">@{{$props.id }}</p>
+                                    <p>{{$props.bio}}</p>
+                                </div>
+                            </el-col>
+                            <el-col span="16">
 
-                        </el-col>
-                    </el-row>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col span="12">
+                                <el-scrollbar :noresize="false" style="width: 70vw">
+                                    <div class="scrollbar-flex-content">
+                                        <SimplePost
+                                            v-for="post in posts"
+                                            :key="post.id + 'b'"
+                                            :link="post.link"
+                                            :title="post.title"
+                                            :content="post.content"
+                                            :image="post.image"
+                                            :eventLink="post.eventLink"
+                                            :eventSmallImage="post.eventSmallImage"
+                                            :eventName="post.eventName"
+                                            :eventId="post.eventId"
+                                            :eventBio="post.eventBio"
+                                        />
+                                    </div>
+                                </el-scrollbar>
+                            </el-col>
+                            <el-col span="12">
+                                <el-scrollbar style="width: 70vw">
+                                    <div class="scrollbar-flex-content">
+                                        <p v-for="item in 50" :key="item" class="scrollbar-demo-item">
+                                            {{ item }}
+                                        </p>
+                                    </div>
+                                </el-scrollbar>
+                            </el-col>
 
-                </div>
-                <img src="@/components/User/pages/profile/images/stars.png" alt="" id="stars">
-                <img src="@/components/User/pages/profile/images/moon.png" alt="" id="moon">
-                <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
-                <div id="text">Moon Light</div>
-                <!--            <a href="#" id="btn">explore</a>-->
-                <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
-            </section>
+                        </el-row>
+                    </div>
+                    <img src="@/components/User/pages/profile/images/stars.png" alt="" id="stars">
+                    <img src="@/components/User/pages/profile/images/moon.png" alt="" id="moon">
+                    <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
+                    <div id="text">Moon Light</div>
+                    <!--            <a href="#" id="btn">explore</a>-->
+                    <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
+                </section>
+
+
         </el-row>
         <el-row :class="main-footer">footer</el-row>
 <!--        <div class="sec">-->
@@ -46,8 +78,10 @@
 
 <script>
 import {defineProps} from "vue";
+import SimplePost from "@/components/Modules/SimplePost.vue";
 
 export default {
+    components: {SimplePost},
     props: {
         avatar: {
             type: String,
@@ -90,7 +124,17 @@ export default {
             // btn.style.marginRight = value * 1.5 + 'px';
             // btn.style.marginTop = value * 0.5 + 'px';
         });
-    }
+    },
+    data() {
+        return {
+            posts: [
+                { id: 1, title: 'Post 1', content: 'Content of post 1', eventName: 'event1'},
+                { id: 2, title: 'Post 2', content: 'Content of post 2', eventName: 'event2' },
+                { id: 3, title: 'Post 3', content: 'Content of post 3', eventName: 'event3' },
+                // 添加更多 post 对象
+            ]
+        };
+    },
 };
 
 </script>
@@ -237,5 +281,22 @@ section #btn{
 .sec p{
     color: #fff;
     font-size: 1.2em;
+}
+
+.scrollbar-flex-content {
+    display: flex;
+}
+.scrollbar-demo-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 50px;
+    margin: 10px;
+    text-align: center;
+    border-radius: 4px;
+    background: var(--el-color-danger-light-9);
+    color: var(--el-color-danger);
 }
 </style>
