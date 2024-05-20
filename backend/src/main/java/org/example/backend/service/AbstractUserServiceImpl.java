@@ -20,6 +20,12 @@ public class AbstractUserServiceImpl implements AbstractUserService {
     }
 
     @Override
+    public boolean saveUser(AbstractUser abstractUser) {
+        abstractUserRepository.save(abstractUser);
+        return true;
+    }
+
+    @Override
     public boolean deleteUserById(long id) {
         return true;
     }

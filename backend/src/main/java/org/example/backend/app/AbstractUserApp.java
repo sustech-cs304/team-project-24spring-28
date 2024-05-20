@@ -2,6 +2,8 @@ package org.example.backend.app;
 
 import org.example.backend.config.MyException;
 import org.example.backend.domain.AbstractUser;
+import org.example.backend.domain.Admin;
+import org.example.backend.domain.User;
 import org.example.backend.service.AbstractUserService;
 import org.example.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +34,26 @@ public class AbstractUserApp {
         }
         System.out.println(user.getId());
         return JwtUtil.getToken(String.valueOf(user.getId()), password);
+    }
+
+    @PostMapping("/signUp")
+    public boolean signUp(@RequestParam int typeId, @RequestParam String username, @RequestParam String password, @RequestParam String name) {
+        AbstractUser user;
+        if (typeId == 0) {
+            user = new User();
+        } else if (typeId == 1){
+            user = new Admin();
+        } else {
+            return false;
+        }
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setName(name);
+        try {
+            abstractUserService.saveUser(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

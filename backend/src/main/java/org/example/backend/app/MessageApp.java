@@ -75,11 +75,11 @@ public class MessageApp {
 //        return new Response(true, 0, "success");
 //    }
 
-    @GetMapping("/invAndApp")
-    public List<Message> getInvitations(@RequestHeader("Authorization") String token) {
-        long userId = JwtUtil.getIdByToken(token);
-        return messageService.findMessageByToIdAndType(userId, "Invitation");
-    }
+//    @GetMapping("/invAndApp")
+//    public List<Message> getInvitations(@RequestHeader("Authorization") String token) {
+//        long userId = JwtUtil.getIdByToken(token);
+//        return messageService.findMessageByToIdAndType(userId, "Invitation");
+//    }
 
     @GetMapping("/notice")
     public List<Message> getNotices(@RequestHeader("Authorization") String token) {
@@ -90,6 +90,48 @@ public class MessageApp {
     @GetMapping("/chat")
     public List<AbstractUserDto> getChatMessages(@RequestHeader("Authorization") String token) {
         long userId = JwtUtil.getIdByToken(token);
+        List<Message> fromMessages = messageService.findMessageByFromIdAndType(userId, "Chat");
+        List<Message> toMessages = messageService.findMessageByToIdAndType(userId, "Chat");
+        Map<Long, Boolean> map = new HashMap<>();
+        Set<Long> seen = new HashSet<>();
+        List<AbstractUserDto> result = new ArrayList<>();
+        for (Message message : toMessages) {
+            if (map.containsKey(message.getFrom().getId())) {
+                map.put(message.getFrom().getId(), map.get(message.getFrom().getId()) && message.isRead());
+            } else {
+                map.put(message.getFrom().getId(), message.isRead());
+            }
+        }
+        for (Message message : fromMessages) {
+            if (!map.containsKey(message.getTo().getId())) {
+                map.put(message.getTo().getId(), true);
+            }
+        }
+        for (Message message : fromMessages) {
+            if (seen.contains(message.getTo().getId())) {
+                continue;
+            }
+            seen.add(message.getTo().getId());
+            AbstractUserDto abstractUserDto = new AbstractUserDto();
+            abstractUserDto.setId(message.getTo().getId());
+            abstractUserDto.setName(message.getTo().getName());
+            abstractUserDto.setHasUnread(!map.get(message.getTo().getId()));
+            result.add(abstractUserDto);
+        }
+        for (Message message : toMessages) {
+            if (seen.contains(message.getFrom().getId())) {
+                continue;
+            }
+            seen.add(message.getFrom().getId());
+            AbstractUserDto abstractUserDto = new AbstractUserDto();
+            abstractUserDto.setId(message.getFrom().getId());
+            abstractUserDto.setName(message.getFrom().getName());
+            abstractUserDto.setHasUnread(!map.get(message.getFrom().getId()));
+            result.add(abstractUserDto);
+        }
+        return result;
+    }
+    public List<AbstractUserDto> getChatMessages(@RequestParam("id") long userId) {
         List<Message> fromMessages = messageService.findMessageByFromIdAndType(userId, "Chat");
         List<Message> toMessages = messageService.findMessageByToIdAndType(userId, "Chat");
         Map<Long, Boolean> map = new HashMap<>();
@@ -145,11 +187,38 @@ public class MessageApp {
         fromMessages.sort(Comparator.comparing(Message::getTime));
         return fromMessages;
     }
+    public List<Message> getChatText(@RequestParam("id") long userId, @RequestParam("userId") long friendId) {
+        List<Message> fromMessages = messageService.findMessageByFromIdAndToIdAndType(userId, friendId, "Chat");
+        List<Message> toMessages = messageService.findMessageByFromIdAndToIdAndType(friendId, userId, "Chat");
+        for (Message message : toMessages) {
+            message.setRead(true);
+            messageService.updateMessage(message);
+        }
+        fromMessages.addAll(toMessages);
+        fromMessages.sort(Comparator.comparing(Message::getTime));
+        return fromMessages;
+    }
 
     @PostMapping("/sendChat")
     public boolean sendChat(@RequestHeader("Authorization") String token, @RequestParam("userId") long friendId, @RequestParam("content") String content, @RequestParam("time") String time) {
         try {
             long userId = JwtUtil.getIdByToken(token);
+            Message message = new Message();
+            message.setFrom(abstractUserService.findUserById(userId));
+            message.setTo(abstractUserService.findUserById(friendId));
+            message.setType("Chat");
+            message.setContent(content);
+            message.setTime(LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            message.setRead(false);
+            messageService.saveMessage(message);
+            WebSocketServer.sendMessageToUser(friendId, content);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean sendChat(@RequestParam("id") long userId, @RequestParam("userId") long friendId, @RequestParam("content") String content, @RequestParam("time") String time) {
+        try {
             Message message = new Message();
             message.setFrom(abstractUserService.findUserById(userId));
             message.setTo(abstractUserService.findUserById(friendId));
@@ -224,18 +293,39 @@ public class MessageApp {
         return fromMessages;
     }
 
-    @GetMapping("/exchange")
-    public List<Message> getExchange(@RequestHeader("Authorization") String token) {
-        long userId = JwtUtil.getIdByToken(token);
-        List<Message> fromMessages = messageService.findMessageByFromIdAndType(userId, "Exchange");
-        List<Message> toMessages = messageService.findMessageByToIdAndType(userId, "Exchange");
-        fromMessages.addAll(toMessages);
-        return fromMessages;
-    }
+//    @GetMapping("/exchange")
+//    public List<Message> getExchange(@RequestHeader("Authorization") String token) {
+//        long userId = JwtUtil.getIdByToken(token);
+//        List<Message> fromMessages = messageService.findMessageByFromIdAndType(userId, "Exchange");
+//        List<Message> toMessages = messageService.findMessageByToIdAndType(userId, "Exchange");
+//        fromMessages.addAll(toMessages);
+//        return fromMessages;
+//    }
 
     @PostMapping("/read")
     public boolean readMessages(@RequestHeader("Authorization") String token, @RequestParam("messageType") String type, @RequestParam(value = "userId", defaultValue = "-1") long id) {
         long userId = JwtUtil.getIdByToken(token);
+        StringBuilder parsedType = new StringBuilder(type);
+        parsedType.setCharAt(0, Character.toUpperCase(parsedType.charAt(0)));
+        if (parsedType.toString().equalsIgnoreCase("Chat")) {
+            if (id == -1) {
+                return false;
+            }
+            List<Message> messages = messageService.findMessageByFromIdAndToIdAndType(id, userId, parsedType.toString());
+            for (Message message : messages) {
+                message.setRead(true);
+                messageService.updateMessage(message);
+            }
+        } else {
+            List<Message> messages = messageService.findMessageByToIdAndType(userId, parsedType.toString());
+            for (Message message : messages) {
+                message.setRead(true);
+                messageService.updateMessage(message);
+            }
+        }
+        return true;
+    }
+    public boolean readMessages(@RequestParam("id") long userId, @RequestParam("messageType") String type, @RequestParam(value = "userId", defaultValue = "-1") long id) {
         StringBuilder parsedType = new StringBuilder(type);
         parsedType.setCharAt(0, Character.toUpperCase(parsedType.charAt(0)));
         if (parsedType.toString().equalsIgnoreCase("Chat")) {
@@ -262,18 +352,25 @@ public class MessageApp {
         long userId = JwtUtil.getIdByToken(token);
         return !messageService.findMessageByToIdAndRead(userId, false).isEmpty();
     }
+    public boolean hasAnyUnread(@RequestParam("id") long userId) {
+        return !messageService.findMessageByToIdAndRead(userId, false).isEmpty();
+    }
 
     @GetMapping("/hasUnread")
     public String hasUnread(@RequestHeader("Authorization") String token) {
         long userId = JwtUtil.getIdByToken(token);
-        String[] types = {"Chat", "Notice", "Invitation", "Exchange", "Comment"};
+        String[] types = {"Chat", "Notice", "Comment"};
         JSONObject jsonObject = new JSONObject();
         for (String type : types) {
-            if (type.equals("Invitation")) {
-                jsonObject.put("invAndApp", !messageService.findMessageByToIdAndTypeAndRead(userId, type, false).isEmpty());
-            } else {
-                jsonObject.put(type.toLowerCase(), !messageService.findMessageByToIdAndTypeAndRead(userId, type, false).isEmpty());
-            }
+            jsonObject.put(type.toLowerCase(), !messageService.findMessageByToIdAndTypeAndRead(userId, type, false).isEmpty());
+        }
+        return jsonObject.toString();
+    }
+    public String hasUnread(@RequestParam("id") long userId) {
+        String[] types = {"Chat", "Notice", "Comment"};
+        JSONObject jsonObject = new JSONObject();
+        for (String type : types) {
+            jsonObject.put(type.toLowerCase(), !messageService.findMessageByToIdAndTypeAndRead(userId, type, false).isEmpty());
         }
         return jsonObject.toString();
     }

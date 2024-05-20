@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/comment")
 public class CommentApp {
-    private final EventCommentService eventCommentService;
-    private final
+//    private final EventCommentService eventCommentService;
+//    private final
 }

@@ -30,7 +30,8 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
 
     @Override
     public List<ReplyComment> findAllByUserId(long id) {
-        return replyCommentRepository.findAllByStudentId(id);
+        return null;
+//        return replyCommentRepository.findAllByStudentId(id);
     }
 
     @Override
