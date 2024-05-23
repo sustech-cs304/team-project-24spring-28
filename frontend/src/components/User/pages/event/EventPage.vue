@@ -5,9 +5,11 @@ import Comment from '@/components/Modules/comment/Comment.vue'
 import Avatar from '@/components/Modules/avatar/Avatar.vue'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import SimplePost from "@/components/Modules/SimplePost.vue";
+import AxiosInstance from "@/utils/axios";
 
 import {useRoute, useRouter} from "vue-router";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
+import axiosInstance from "@/utils/axios";
 const router = useRouter()
 const route = useRoute()
 
@@ -42,6 +44,7 @@ let limitCount = ref('')
 
 // select attributes
 //TODO: select attributes
+let selectConstraint = ref('')
 
 // form attributes
 let definedForm = ref([])
@@ -101,105 +104,156 @@ function formApply() {
 }
 
 onMounted(() => {
+  axiosInstance.get('/event/detail', {
+    params: {
+      id: eventId
+    }
+  }).then(response => {
+    let temp = response.data.data
+    title.value = temp.title
+    eventName.value = temp.eventName
+    authorId.value = temp.authorId
+    authorName.value = temp.authorName
+    applyStartTime.value = temp.applyStartTime
+    applyEndTime.value = temp.applyEndTime
+    startTime.value = temp.startTime
+    endTime.value = temp.endTime
+    grade.value = temp.score
+    posterUrl.value = temp.posterUrl
+
+
+
+    stars.value = '⭐'
+    for (let i = 1; i < grade.value; i++) {
+      stars.value += '⭐'
+    }
+
+    text.value = temp.introduction
+
+    eventType = temp.eventType
+    if (eventType === 'count') {
+      currentCount.value = temp.currentCount
+      let limit = temp.limitCount
+      if (limit === -1) {
+        limitCount.value = '无限制'
+      } else {
+        limitCount.value = limit.toString()
+      }
+    } else if (eventType === 'select') {
+      selectConstraint.value = temp.selectConstraint
+    } else if (eventType === 'form') {
+      // TODO: need to be checked the correctness
+      definedForm.value = temp.definedForm
+      for (let i = 0; i < definedForm.value.length; i++) {
+        appliedForm.value.push({
+          id: definedForm.value[i].id,
+          name: definedForm.value[i].name,
+          value: ''
+        })
+      }
+    }
+
+    // TODO: need to be checked the correctness
+    postList.value = temp.postList
+
+  }).catch(error => {
+    console.error(error);
+  });
   // get event info
-  title.value = '某某活动马上就要开始了！'
-  eventName.value = '活动某某'
-  authorId.value = '123456'
-  authorName.value = 'Lamptales'
-  applyStartTime.value = '2024-4-4 00:00:00'
-  applyEndTime.value = '2024-4-14 00:00:00'
-  startTime.value = '2024-4-16 00:00:00'
-  endTime.value = '2024-4-26 00:00:00'
-  liked.value = true
-  let score = 4
-  posterUrl.value = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
-
-  eventType = 'form'
-
-  currentCount.value = 5
-  let limit = -1
-  if (limit === -1) {
-    limitCount.value = '无限制'
-  } else {
-    limitCount.value = limit.toString()
-  }
-
-  definedForm.value = [
-    {
-      id: 0,
-      name: '姓名',
-      type: 'input',
-      required: true
-    },
-    {
-      id: 1,
-      name: '学号',
-      type: 'input',
-      required: true
-    },
-    {
-      id: 2,
-      name: '性别',
-      type: 'select',
-      options: ['男', '女'],
-      required: true
-    }
-  ]
-
-  for (let i = 0; i < definedForm.value.length; i++) {
-    appliedForm.value.push({
-      id: definedForm.value[i].id,
-      name: definedForm.value[i].name,
-      value: ''
-    })
-  }
+  // title.value = '某某活动马上就要开始了！'
+  // eventName.value = '活动某某'
+  // authorId.value = '123456'
+  // authorName.value = 'Lamptales'
+  // applyStartTime.value = '2024-4-4 00:00:00'
+  // applyEndTime.value = '2024-4-14 00:00:00'
+  // startTime.value = '2024-4-16 00:00:00'
+  // endTime.value = '2024-4-26 00:00:00'
+  // liked.value = true
+  // let score = 4
+  // posterUrl.value = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
+  //
+  // eventType = 'form'
 
 
-  stars.value = '⭐'
-  for (let i = 1; i < score; i++) {
-    stars.value += '⭐'
-  }
+  // currentCount.value = 5
+  // let limit = -1
+  // if (limit === -1) {
+  //   limitCount.value = '无限制'
+  // } else {
+  //   limitCount.value = limit.toString()
+  // }
+
+  // definedForm.value = [
+  //   {
+  //     id: 0,
+  //     name: '姓名',
+  //     type: 'input',
+  //     required: true
+  //   },
+  //   {
+  //     id: 1,
+  //     name: '学号',
+  //     type: 'input',
+  //     required: true
+  //   },
+  //   {
+  //     id: 2,
+  //     name: '性别',
+  //     type: 'select',
+  //     options: ['男', '女'],
+  //     required: true
+  //   }
+  // ]
+  //
+  // for (let i = 0; i < definedForm.value.length; i++) {
+  //   appliedForm.value.push({
+  //     id: definedForm.value[i].id,
+  //     name: definedForm.value[i].name,
+  //     value: ''
+  //   })
+  // }
 
 
-  text.value = '<p align="left">\n' +
-      '    English ｜ <a href="README.md">中文</a>\n' +
-      '</p>\n' +
-      '<br>\n' +
-      '\n' +
-      '<h1 align="center">\n' +
-      '  Llama-Chinese\n' +
-      '</h1>\n' +
-      '<p align="center" width="100%">\n' +
-      '  <img src="https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg" alt="Llama" style="width: 20%; display: block; margin: auto;"></a>\n' +
-      '</p>\n' +
-      '<p align="center">\n' +
-      '  <font face="黑体" color=orange size="6"> The Best Chinese Llama Large Language Model </font>\n' +
-      '</p>\n' +
-      '<p align="center">\n' +
-      '  <a href="https://llama.family">Online: llama.family</a>\n' +
-      '</p>\n' +
-      '<p align="center">\n' +
-      '  <a href="https://huggingface.co/FlagAlpha/Atom-7B-Chat">Open-source Chinese Pre-trained LLM Atom based on Llama2</a>\n' +
-      '</p>\n' +
-      '\n'
+  // stars.value = '⭐'
+  // for (let i = 1; i < score; i++) {
+  //   stars.value += '⭐'
+  // }
+  //
+  //
+  // text.value = '<p align="left">\n' +
+  //     '    English ｜ <a href="README.md">中文</a>\n' +
+  //     '</p>\n' +
+  //     '<br>\n' +
+  //     '\n' +
+  //     '<h1 align="center">\n' +
+  //     '  Llama-Chinese\n' +
+  //     '</h1>\n' +
+  //     '<p align="center" width="100%">\n' +
+  //     '  <img src="https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg" alt="Llama" style="width: 20%; display: block; margin: auto;"></a>\n' +
+  //     '</p>\n' +
+  //     '<p align="center">\n' +
+  //     '  <font face="黑体" color=orange size="6"> The Best Chinese Llama Large Language Model </font>\n' +
+  //     '</p>\n' +
+  //     '<p align="center">\n' +
+  //     '  <a href="https://llama.family">Online: llama.family</a>\n' +
+  //     '</p>\n' +
+  //     '<p align="center">\n' +
+  //     '  <a href="https://huggingface.co/FlagAlpha/Atom-7B-Chat">Open-source Chinese Pre-trained LLM Atom based on Llama2</a>\n' +
+  //     '</p>\n' +
+  //     '\n'
 
-  postList.value = [
-    {
-      title: 'Title1',
-      author: 'Author1',
-      time: '2024-4-4',
-    },
-    {
-      title: 'Title2',
-      author: 'Author2',
-      time: '2024-4-4',
-    },
-    {
-      title: 'Title3',
-      author: 'Author3',
-      time: '2024-4-4',
-    }
-  ]
+  // postList.value = [
+  //   {
+  //     id: '1'
+  //   },
+  //   {
+  //     id: '2'
+  //   },
+  //   {
+  //     id: '3'
+  //   }
+  // ]
+
 })
 
 
@@ -261,7 +315,7 @@ function showGrade(newGrade) {
       </div>
 
       <div v-for="post in postList">
-        <simple-post></simple-post>
+        <simple-post :id="post.id"></simple-post>
       </div>
     </div>
 
