@@ -14,6 +14,7 @@ import mainPage from "@/components/User/pages/main/mainPage.vue"
 import searchPage from "@/components/User/pages/main/searchPage.vue";
 import signUp from "@/components/User/pages/main/signUp.vue";
 import Profile from "@/components/User/pages/profile/profile.vue";
+import ProfileExample from "@/components/User/pages/profile/profileExample.vue";
 
 const routes = [
     {path: '/', component: Login},
@@ -22,6 +23,7 @@ const routes = [
     {path: '/square/post', component: Post},
 
     {path: '/profile', component: Profile},
+    {path: '/profileTest', component: ProfileExample},
 
     {path: '/event', component: EventPage},
     {path: '/event/create', component: CreateEvent},

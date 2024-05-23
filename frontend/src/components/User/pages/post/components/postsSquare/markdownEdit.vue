@@ -1,4 +1,5 @@
 <script setup>
+import { ref,watch } from 'vue'
 import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor';
 import '@kangc/v-md-editor/lib/style/codemirror-editor.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
@@ -33,6 +34,10 @@ VMdEditor.use(githubTheme, {
     Hljs: hljs,
 });
 const text = ref('')
+// 监视text的变化，并将其更新到markdownText
+watch(() => text.value, (newValue) => {
+    markdownText.value = newValue
+})
 </script>
 
 <template>

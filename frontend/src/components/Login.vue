@@ -120,6 +120,10 @@ function toProfile() {
     router.push({path: '/profile'})
 }
 
+function toProfileTest() {
+    router.push({path: '/profileTest'})
+}
+
 function toMain() {
   router.push({path: '/main'})
 }
@@ -227,6 +231,9 @@ function toMyEvent() {
       <button type="submit" @click="toProfile">
           toProfile
       </button>
+      <button type="submit" @click="toProfileTest">
+          toProfileTest
+      </button>
     <button type="submit" @click="toWriteEvent">
       toWriteEvent
     </button>
@@ -238,7 +245,7 @@ function toMyEvent() {
     <button type="submit" @click="toMessage">
       toMessage
     </button>
-    
+
     <button type="submit" @click="toEventCardTest">
       toCardTest
     </button>
