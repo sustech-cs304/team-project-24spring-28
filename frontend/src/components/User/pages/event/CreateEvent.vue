@@ -110,7 +110,7 @@ function deleteForm(id) {
     if (definedForm.value[i].id === id) {
       definedForm.value.splice(i, 1)
       found = true
-      if (definedForm.value.length !== 0) {
+      if (definedForm.value.length !== 0 && id < definedForm.value.length) {
         definedForm.value[i].id -= 1
       }
     }
