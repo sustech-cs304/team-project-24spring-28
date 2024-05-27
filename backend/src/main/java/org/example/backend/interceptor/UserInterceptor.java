@@ -3,6 +3,7 @@ package org.example.backend.interceptor;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.backend.domain.AbstractUser;
+import org.example.backend.domain.User;
 import org.example.backend.domain.enums.UserType;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.example.backend.util.JwtUtil;
@@ -16,7 +17,7 @@ public class UserInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         AbstractUser abstractUser = JwtUtil.verifyToken(token);
         assert abstractUser != null;
-        if (abstractUser.getUserType() != UserType.User) {
+        if (abstractUser instanceof User) {
             System.out.println(request.getRequestURL());
             System.out.println("no authority");
             throw new MyException(3, "no authority");
