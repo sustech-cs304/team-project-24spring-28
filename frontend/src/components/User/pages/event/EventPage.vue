@@ -27,6 +27,7 @@ let endTime = ref('')
 let grade = ref(0)
 let posterUrl = ref('')
 let text = ref('')
+let commentBlockId = ref('')
 
 let postList = ref([])
 
@@ -96,6 +97,16 @@ function formApply() {
     }
   }
 
+  let temp = new FormData()
+  temp.append('eventId', eventId)
+  if (eventType === 'count') {
+  } else if (eventType === 'select') {
+  } else if (eventType === 'form') {
+    for (let i = 0; i < appliedForm.value.length; i++) {
+      temp.append(appliedForm.value[i].name, appliedForm.value[i].value)
+    }
+  }
+
   for (let i = 0; i < appliedForm.value.length; i++) {
     appliedForm.value[i].value = ''
   }
@@ -120,7 +131,7 @@ onMounted(() => {
     endTime.value = temp.endTime
     grade.value = temp.score
     posterUrl.value = temp.posterUrl
-
+    commentBlockId.value = temp.commentBlockId
 
 
     stars.value = '⭐'
@@ -297,7 +308,7 @@ function showGrade(newGrade) {
         <v-md-preview :text="text"></v-md-preview>
       </div>
 
-      <comment comment-block-id="1"></comment>
+      <comment :comment-block-id="commentBlockId"></comment>
 
 
     </div>
