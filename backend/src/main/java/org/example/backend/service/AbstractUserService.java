@@ -15,4 +15,6 @@ public interface AbstractUserService {
     List<AbstractUser> findAllUser();
 
     AbstractUser findUserById(long id);
+
+    AbstractUser findUserByUsername(String username);
 }

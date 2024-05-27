@@ -37,23 +37,19 @@ public class AbstractUserApp {
     }
 
     @PostMapping("/signUp")
-    public boolean signUp(@RequestParam int typeId, @RequestParam String username, @RequestParam String password, @RequestParam String name) {
-        AbstractUser user;
-        if (typeId == 0) {
-            user = new User();
-        } else if (typeId == 1){
-            user = new Admin();
-        } else {
-            return false;
+    public boolean signUp(@RequestParam String username, @RequestParam String password) {
+        AbstractUser user = new User();
+        if (abstractUserService.findUserByUsername(username) != null) {
+            throw new MyException(5, "username already exists");
         }
         user.setUsername(username);
         user.setPassword(password);
-        user.setName(name);
+        user.setName(username);
         try {
             abstractUserService.saveUser(user);
             return true;
         } catch (Exception e) {
-            return false;
+            throw new MyException(6, "sign up failed");
         }
     }
 }
