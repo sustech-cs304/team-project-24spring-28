@@ -5,7 +5,6 @@ import Comment from '@/components/Modules/comment/Comment.vue'
 import Avatar from '@/components/Modules/avatar/Avatar.vue'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import SimplePost from "@/components/Modules/SimplePost.vue";
-import AxiosInstance from "@/utils/axios";
 
 import {useRoute, useRouter} from "vue-router";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
