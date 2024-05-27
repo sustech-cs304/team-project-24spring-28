@@ -55,6 +55,21 @@ const appliedForm = ref([])
 function clickLike() {
   liked.value = !liked.value
   console.log(liked.value)
+  let temp = new FormData()
+  temp.append('id', eventId)
+  if (liked.value) {
+    axiosInstance.post('/event/favor', temp).then(response => {
+      console.log(response)
+    }).catch(error => {
+      console.error(error)
+    })
+  } else {
+    axiosInstance.post('/event/unfavor', temp).then(response => {
+      console.log(response)
+    }).catch(error => {
+      console.error(error)
+    })
+  }
 }
 
 function clickWrite() {
@@ -79,6 +94,20 @@ function clickCancel() {
 }
 
 function countApply() {
+  // currentCount.value += 1
+  // alert('报名成功！')
+  // countVisible.value = false
+  if (currentCount.value >= limitCount.value) {
+    alert('报名人数已满！')
+    return
+  }
+  let temp = new FormData()
+  temp.append('id', eventId)
+  axiosInstance.post('/event/apply', temp).then(response => {
+    console.log(response)
+  }).catch(error => {
+    console.error(error)
+  })
   currentCount.value += 1
   alert('报名成功！')
   countVisible.value = false
@@ -98,14 +127,21 @@ function formApply() {
   }
 
   let temp = new FormData()
-  temp.append('eventId', eventId)
-  if (eventType === 'count') {
-  } else if (eventType === 'select') {
-  } else if (eventType === 'form') {
-    for (let i = 0; i < appliedForm.value.length; i++) {
-      temp.append(appliedForm.value[i].name, appliedForm.value[i].value)
-    }
+  temp.append('id', eventId)
+  let formValues = []
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    formValues.push({
+      id: appliedForm.value[i].id,
+      value: appliedForm.value[i].value
+    })
   }
+  temp.append('formValues', JSON.stringify(formValues))
+
+  axiosInstance.post('/event/apply', temp).then(response => {
+    console.log(response)
+  }).catch(error => {
+    console.error(error)
+  })
 
   for (let i = 0; i < appliedForm.value.length; i++) {
     appliedForm.value[i].value = ''
@@ -270,7 +306,17 @@ onMounted(() => {
 
 function showGrade(newGrade) {
   console.log(newGrade)
+
+  let temp = new FormData()
+  temp.append('id', eventId)
+  temp.append('grade', newGrade)
+  axiosInstance.post('/event/score', temp).then(response => {
+    console.log(response)
+  }).catch(error => {
+    console.error(error)
+  })
 }
+
 </script>
 
 <template>
