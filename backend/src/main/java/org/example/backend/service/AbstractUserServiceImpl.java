@@ -39,4 +39,9 @@ public class AbstractUserServiceImpl implements AbstractUserService {
     public AbstractUser findUserById(long id) {
         return abstractUserRepository.findById(id);
     }
+
+    @Override
+    public AbstractUser findUserByUsername(String username) {
+        return abstractUserRepository.findByUsername(username);
+    }
 }
