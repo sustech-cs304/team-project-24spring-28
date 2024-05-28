@@ -3,6 +3,11 @@ pipeline {
     agent any
 
     stages {
+        stage('Preprocess') {
+            steps {
+                sh 'cd /backend'
+            }
+        }
         stage('Build') {
             steps {
                 sh 'echo "Building...."'
