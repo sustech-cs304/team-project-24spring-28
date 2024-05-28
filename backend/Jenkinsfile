@@ -3,20 +3,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Preprocess') {
-            steps {
-                sh 'cd backend'
-            }
-        }
         stage('Build') {
             steps {
                 sh 'echo "Building...."'
+                sh 'cd backend'
                 sh 'mvn -B -DskipTests clean package'
             }
         }
         stage('Test') {
             steps {
                 sh 'echo "Testing...."'
+                sh 'cd backend'
                 sh 'mvn test'
             }
         }
