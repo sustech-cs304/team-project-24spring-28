@@ -1,14 +1,16 @@
 package org.example.backend.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
-    private String postLink;
 
     private String postTitle;
 
@@ -22,4 +24,12 @@ public class Post {
 
     private int likes;
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Post) {
+            return this.id == ((Post) obj).getId();
+        } else {
+            return false;
+        }
+    }
 }

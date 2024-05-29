@@ -11,6 +11,9 @@ public class User extends AbstractUser {
     private List<Event> favouriteEvents;
 
     @ManyToMany
+    private List<Post> favouritePosts;
+
+    @ManyToMany
     @JoinTable(name = "score",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
@@ -30,5 +33,13 @@ public class User extends AbstractUser {
 
     public void setFavouriteEvents(List<Event> favouriteEvents) {
         this.favouriteEvents = favouriteEvents;
+    }
+
+    public List<Post> getFavouritePosts() {
+        return favouritePosts;
+    }
+
+    public void setFavouritePosts(List<Post> favouritePosts) {
+        this.favouritePosts = favouritePosts;
     }
 }

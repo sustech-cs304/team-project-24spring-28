@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventDto {
+    private long id;
     private String title;
     private String eventName;
     private long authorId;
@@ -41,6 +42,7 @@ public class EventDto {
 
     // postList grade liked are not set
     public EventDto(Event event) {
+        this.id = event.getId();
         this.title = event.getTitle();
         this.eventName = event.getName();
         this.authorId = event.getAuthor().getId();
