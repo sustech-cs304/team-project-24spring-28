@@ -28,8 +28,8 @@ public class PostApp {
 
     @PostMapping("/releasePost")
     public Long releasePost(@RequestHeader("Authorization") String token, @RequestParam("postTitle") String postTitle, @RequestParam("postContent") String postContent, @RequestParam("postRelevantEvent") String eventId) {
-        long userId = JwtUtil.getIdByToken(token);
-        AbstractUser user = abstractUserService.findUserById(userId);
+//        long userId = JwtUtil.getIdByToken(token);
+        AbstractUser user = JwtUtil.verifyToken(token);
         Post post = new Post();
         post.setPostTitle(postTitle);
         post.setPostContent(postContent);

@@ -22,7 +22,6 @@ public class Event {
     private EventType type;
     private String introduction;
     private String text;
-    private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String posterUrl;
@@ -116,13 +115,6 @@ public class Event {
         this.introduction = introduction;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 
     public LocalDateTime getStartTime() {
         return startTime;

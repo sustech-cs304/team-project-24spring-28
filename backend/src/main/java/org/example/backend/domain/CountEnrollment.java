@@ -9,7 +9,7 @@ import java.util.List;
 public class CountEnrollment extends AbstractEnrollment {
 
     private long capacity;
-    private long count;
+    private long count = 0;
     @ManyToMany
     private List<User> participants;
 

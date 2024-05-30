@@ -13,6 +13,9 @@ public class User extends AbstractUser {
     @ManyToMany
     private List<Post> favouritePosts;
 
+    @OneToMany(mappedBy = "user")
+    private List<EnrollForm> enrollForms;
+
     @ManyToMany
     @JoinTable(name = "score",
             joinColumns = {@JoinColumn(name = "user_id")},

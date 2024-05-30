@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import org.example.backend.dto.DefinedFormDto;
 
 @Entity
 public class DefinedFormEntry {
@@ -15,6 +16,8 @@ public class DefinedFormEntry {
 
     private String type;
     private boolean required;
+
+
 
     public long getEntryId() {
         return entryId;

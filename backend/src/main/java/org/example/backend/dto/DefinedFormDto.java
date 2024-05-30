@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.backend.domain.DefinedFormEntry;
 
+import javax.swing.*;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,4 +24,14 @@ public class DefinedFormDto {
         this.type = definedFormEntry.getType();
         this.required = definedFormEntry.isRequired();
     }
+
+    public DefinedFormEntry toDefinedFormEntry() {
+        DefinedFormEntry definedFormEntry = new DefinedFormEntry();
+        definedFormEntry.setEntryId(this.entryId);
+        definedFormEntry.setName(this.name);
+        definedFormEntry.setType(this.type);
+        definedFormEntry.setRequired(this.required);
+        return definedFormEntry;
+    }
+
 }
