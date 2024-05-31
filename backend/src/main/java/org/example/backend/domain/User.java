@@ -1,12 +1,15 @@
 package org.example.backend.domain;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
 
 @Entity
 @DiscriminatorValue(value = "User")
 public class User extends AbstractUser {
+    @OneToOne
+    private Permission permission = new Permission();
     @ManyToMany
     private List<Event> favouriteEvents;
 
@@ -24,6 +27,14 @@ public class User extends AbstractUser {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
     private List<Event> scoredEvents;
+
+    public Permission getPermission() {
+        return permission;
+    }
+
+    public void setPermission(Permission permission) {
+        this.permission = permission;
+    }
 
     public List<AbstractEnrollment> getEnrollments() {
         return enrollments;

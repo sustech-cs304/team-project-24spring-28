@@ -10,6 +10,7 @@ import org.example.backend.dto.DefinedFormDto;
 import org.example.backend.dto.EventBriefDto;
 import org.example.backend.dto.EventDto;
 import org.example.backend.dto.EventPostDto;
+import org.example.backend.service.AbstractEnrollmentService;
 import org.example.backend.service.EventService;
 import org.example.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,15 @@ import java.util.List;
 public class EventApp {
     @Autowired
     EventService eventService;
+    @Autowired
+    AbstractEnrollmentService abstractEnrollmentService;
 
     @PostMapping("/create")
     public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam EventPostDto eventPostDto) {
         User user = (User) JwtUtil.verifyToken(token);
+        if(!user.getPermission().isCanCreate()){
+            throw new MyException(-1, "Permission denied");
+        }
         Event event = new Event();
         event.setTitle(eventPostDto.getTitle());
         event.setName(eventPostDto.getName());
@@ -89,10 +95,30 @@ public class EventApp {
         User user = (User) JwtUtil.verifyToken(token);
         Event event = eventService.findEventById(eventId);
         EnrollForm enrollForm = new EnrollForm();
-        enrollForm.setUser(user);
-        enrollForm.setFormEnrollment((FormEnrollment) event.getAbstractEnrollment());
-        enrollForm.setFormValues(formValues);
-        return eventService.saveEnrollForm(enrollForm);
+        AbstractEnrollment abstractEnrollment = event.getAbstractEnrollment();
+        if(abstractEnrollment instanceof CountEnrollment countEnrollment){
+            if(countEnrollment.getCount() >= countEnrollment.getCapacity()){
+                throw new MyException(-1, "Capacity full");
+            }else{
+                countEnrollment.setCount(countEnrollment.getCount() + 1);
+                List<User> participants = countEnrollment.getParticipants();
+                participants.add(user);
+            }
+        }
+        if (abstractEnrollment instanceof FormEnrollment formEnrollment) {
+            if (formValues.size() != formEnrollment.getDefinedFormEntries().size()) {
+                throw new MyException(-1, "Form values not match");
+            }else{
+                List<User> participants = formEnrollment.getParticipants();
+                participants.add(user);
+                enrollForm.setUser(user);
+                enrollForm.setFormEnrollment((FormEnrollment) event.getAbstractEnrollment());
+                enrollForm.setFormValues(formValues);
+                eventService.saveEnrollForm(enrollForm);
+            }
+        }
+        abstractEnrollmentService.updateAbstractEnrollment(abstractEnrollment);
+        return true;
     }
 
     @GetMapping("/getExcel")

@@ -1,12 +1,27 @@
 package org.example.backend.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import lombok.Data;
 import org.checkerframework.checker.signature.qual.Identifier;
 
+@Entity
 public class Permission {
-    private boolean canCreate;
-    private boolean canEnroll;
-    private boolean canComment;
+    @Id
+    @OneToOne(mappedBy = "permission")
+    private User user;
+    private boolean canCreate = false;
+    private boolean canEnroll = false;
+    private boolean canComment = false;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public boolean isCanCreate() {
         return canCreate;
