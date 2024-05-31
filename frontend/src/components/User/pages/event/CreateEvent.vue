@@ -3,6 +3,8 @@ import { ref, reactive, onMounted } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
+import axiosInstance from "@/utils/axios";
+
 
 let imageUrl = ref('')
 
@@ -51,8 +53,18 @@ const rules = reactive({
 
 function beforeUpload(file) {
   console.log(file.name)
-  imageUrl.value = URL.createObjectURL(file.raw)
-  console.log(imageUrl)
+  let temp = new FormData()
+  temp.append('file', file.raw)
+  axiosInstance.post('/image/upload', temp).then((res) => {
+    console.log(res.data)
+    imageUrl.value = res.data.data
+    // cat the host and the path
+    // imageUrl.value = axiosInstance.defaults.url + imageUrl.value
+  }).catch((err) => {
+    console.log(err)
+  })
+  // imageUrl.value = URL.createObjectURL(file.raw)
+  console.log(imageUrl.value)
   return false
 }
 
@@ -200,6 +212,47 @@ function editSelectCancel() {
   editSelectVisible.value = false
 }
 
+function createEventClick() {
+  // console.log(form)
+  // console.log(mdText)
+  let temp = new FormData()
+  temp.append('title', form.title)
+  temp.append('name', form.name)
+  temp.append('applyStartTime', form.applyStartTime)
+  temp.append('applyEndTime', form.applyEndTime)
+  temp.append('startTime', form.startTime)
+  temp.append('endTime', form.endTime)
+  temp.append('introduction', form.introduction)
+  temp.append('imageUrl', imageUrl.value)
+  temp.append('mdText', mdText.value)
+  if (form.type === '1') {
+    temp.append('limitCount', form.limitCount)
+  } else if (form.type === '2') {
+    temp.append('seatSet', form.seatSet)
+  } else {
+    // TODO: check the correctness
+    temp.append('definedForm', JSON.stringify(definedForm.value))
+  }
+  axiosInstance.post('/event/create', temp).then((res) => {
+    console.log(res.data)
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
+function mdUploadImage(event, insertImage, files) {
+  let temp = new FormData()
+  temp.append('file', files[0])
+  axiosInstance.post('/image/upload', temp).then((res) => {
+    insertImage({
+      url: res.data.data,
+      desc: 'Description'
+    })
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
 
 onMounted(() => {
   definedForm.value = [
@@ -331,11 +384,16 @@ onMounted(() => {
       >活动正文</p>
     </div>
     <div style="width: 90%; display: flex; flex-direction: row; justify-content: center; margin-left: 50px">
-      <v-md-editor v-model="mdText"></v-md-editor>
+      <v-md-editor
+          v-model="mdText"
+          @upload-image="mdUploadImage"
+          :disabled-menus="[]"
+      ></v-md-editor>
     </div>
 
     <div style="margin-top: 30px; display: flex; flex-direction: row; justify-content: center;">
-      <el-button type="primary">发起活动</el-button>
+      <el-button type="primary" @click="createEventClick"
+      >发起活动</el-button>
     </div>
   </div>
 
