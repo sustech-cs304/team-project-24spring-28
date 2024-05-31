@@ -24,9 +24,8 @@ pipeline {
                 sh 'echo "Deploying...."'
                 dir('backend') {
                     sh 'mvn package -DskipTests'
-                    sh 'docker stop backend'
-                    sh 'docker rm backend'
-                    sh 'docker rmi backend'
+                    sh 'docker ps -aq --filter "name=backend" | xargs -r docker rm -f'
+                    sh 'docker images -aq backend | xargs -r docker rmi'
                     sh 'docker build -t backend .'
                     sh 'docker run -d --name backend --network cs304 -p 8082:8082 backend'
                 }
