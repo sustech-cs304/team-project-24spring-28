@@ -17,10 +17,29 @@ public class User extends AbstractUser {
     private List<EnrollForm> enrollForms;
 
     @ManyToMany
+    private List<AbstractEnrollment> enrollments;
+
+    @ManyToMany
     @JoinTable(name = "score",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
     private List<Event> scoredEvents;
+
+    public List<AbstractEnrollment> getEnrollments() {
+        return enrollments;
+    }
+
+    public void setEnrollments(List<AbstractEnrollment> enrollments) {
+        this.enrollments = enrollments;
+    }
+
+    public List<EnrollForm> getEnrollForms() {
+        return enrollForms;
+    }
+
+    public void setEnrollForms(List<EnrollForm> enrollForms) {
+        this.enrollForms = enrollForms;
+    }
 
     public List<Event> getScoredEvents() {
         return scoredEvents;

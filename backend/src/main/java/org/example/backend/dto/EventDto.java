@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.backend.domain.AbstractEnrollment;
-import org.example.backend.domain.CountEnrollment;
-import org.example.backend.domain.Event;
-import org.example.backend.domain.FormEnrollment;
+import org.example.backend.domain.*;
 import org.example.backend.domain.enums.EventType;
 
 import java.time.LocalDateTime;
@@ -40,7 +37,7 @@ public class EventDto {
     private List<DefinedFormDto> definedForm;
     private long[] postList;
 
-    // postList grade liked are not set
+    // grade liked are not set
     public EventDto(Event event) {
         this.id = event.getId();
         this.title = event.getTitle();
@@ -54,6 +51,7 @@ public class EventDto {
         this.postUrl = event.getPosterUrl();
         this.text = event.getText();
         this.eventType = event.getType();
+        this.postList = event.getPosts().stream().mapToLong(Post::getId).toArray();
         AbstractEnrollment enrollment = event.getAbstractEnrollment();
         if (enrollment instanceof CountEnrollment) {
             this.enrollmentType = "count";

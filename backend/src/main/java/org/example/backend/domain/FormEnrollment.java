@@ -11,8 +11,7 @@ import java.util.List;
 public class FormEnrollment extends AbstractEnrollment {
     @OneToOne
     Event event;
-    @ManyToMany
-    private List<User> participants;
+
     @OneToMany
     private List<DefinedFormEntry> definedFormEntries;
     @OneToMany(mappedBy = "formEnrollment")
@@ -40,14 +39,5 @@ public class FormEnrollment extends AbstractEnrollment {
 
     public void setDefinedFormEntries(List<DefinedFormEntry> definedFormEntries) {
         this.definedFormEntries = definedFormEntries;
-    }
-
-
-    public List<User> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<User> participants) {
-        this.participants = participants;
     }
 }

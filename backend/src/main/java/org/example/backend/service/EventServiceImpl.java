@@ -3,8 +3,10 @@ package org.example.backend.service;
 import org.checkerframework.checker.units.qual.A;
 import org.example.backend.api.EnrollFormRepository;
 import org.example.backend.api.EventRepository;
+import org.example.backend.api.ScoreRepository;
 import org.example.backend.domain.EnrollForm;
 import org.example.backend.domain.Event;
+import org.example.backend.domain.Score;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,10 @@ public class EventServiceImpl implements EventService {
     EventRepository eventRepository;
     @Autowired
     EnrollFormRepository enrollFormRepository;
+
+    @Autowired
+    ScoreRepository scoreRepository;
+
 
     @Override
     public boolean saveEvent(Event event) {
@@ -53,6 +59,25 @@ public class EventServiceImpl implements EventService {
     @Override
     public boolean saveEnrollForm(EnrollForm enrollForm) {
         enrollFormRepository.save(enrollForm);
+        return true;
+    }
+
+    @Override
+    public long getScore(long userId, long eventId) {
+        Score score = scoreRepository.findScoreByUserIdAndEventId(userId, eventId);
+        if (score == null) {
+            return 0;
+        }
+        return score.getScore();
+    }
+
+    @Override
+    public boolean saveScore(long userId, long eventId, long score) {
+        Score scoreObj = new Score();
+        scoreObj.setUserId(userId);
+        scoreObj.setEventId(eventId);
+        scoreObj.setScore(score);
+        scoreRepository.save(scoreObj);
         return true;
     }
 }
