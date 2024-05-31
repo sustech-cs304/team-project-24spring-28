@@ -9,4 +9,6 @@ public interface EventCommentRepository extends JpaRepository<EventComment, Long
     List<EventComment> findEventCommentByEventId(long id);
 
     List<EventComment> findAllByUserId(long id);
+
+    List<EventComment> findEventCommentByPostId(long postId);
 }

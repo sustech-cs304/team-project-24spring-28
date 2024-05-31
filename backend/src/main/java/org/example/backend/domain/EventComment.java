@@ -18,6 +18,14 @@ public class EventComment extends Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
     public Event getEvent() {
         return event;
     }
