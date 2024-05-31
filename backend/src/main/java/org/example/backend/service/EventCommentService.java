@@ -15,4 +15,6 @@ public interface EventCommentService {
     List<EventComment> findAllById(Long[] ids);
 
     List<EventComment> findAllByUserId(long id);
+
+    List<EventComment> findEventCommentByPostId(long postId);
 }

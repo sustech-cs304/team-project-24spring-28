@@ -27,13 +27,22 @@ public class Event {
     private String posterUrl;
     private float score;
     private long scoreCount;
-
+    @OneToMany(mappedBy = "event")
+    private List<Post> posts;
     @ManyToMany(mappedBy = "favouriteEvents")
     private List<User> collectors;
 
     @OneToOne
     @JoinColumn(name = "abstractEnrollment_id")
     private AbstractEnrollment abstractEnrollment;
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
 
     public String getText() {
         return text;

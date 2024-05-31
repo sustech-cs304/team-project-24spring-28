@@ -36,4 +36,9 @@ public class EventCommentServiceImpl implements EventCommentService {
     public List<EventComment> findAllByUserId(long id) {
         return eventCommentRepository.findAllByUserId(id);
     }
+
+    @Override
+    public List<EventComment> findEventCommentByPostId(long postId) {
+        return eventCommentRepository.findEventCommentByPostId(postId);
+    }
 }

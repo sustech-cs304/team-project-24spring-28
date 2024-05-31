@@ -57,12 +57,16 @@ public class EventApp {
     }
 
     @GetMapping("/detail")
-    public EventDto getEvent(@RequestParam("id") long eventId) {
+    public EventDto getEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
+        User user = (User) JwtUtil.verifyToken(token);
         Event event = eventService.findEventById(eventId);
         if (event == null) {
             return null;
         }
-        return new EventDto(event);
+        EventDto eventDto = new EventDto(event);
+        eventDto.setLiked(user.getFavouriteEvents().contains(event));
+        eventDto.setGrade(eventService.getScore(user.getId(), eventId));
+        return eventDto;
     }
 
     @GetMapping("/brief")
@@ -93,7 +97,7 @@ public class EventApp {
 
     @GetMapping("/getExcel")
     @ResponseBody
-    public void getExcel(@RequestParam("id") long id, HttpServletResponse response){
+    public void getExcel(@RequestParam("id") long id, HttpServletResponse response) {
         Event event = eventService.findEventById(id);
         AbstractEnrollment abstractEnrollment = event.getAbstractEnrollment();
         if (!(abstractEnrollment instanceof CountEnrollment) && !(abstractEnrollment instanceof FormEnrollment)) {
@@ -126,7 +130,7 @@ public class EventApp {
                 for (int i = 0; i < headers.size(); i++) {
                     row.createCell(i).setCellValue(headers.get(i));
                 }
-                List<User> participants = ((CountEnrollment) abstractEnrollment).getParticipants();
+                List<User> participants = abstractEnrollment.getParticipants();
                 for (User participant : participants) {
                     row = sheet.createRow(++rowNum);
                     row.createCell(0).setCellValue(participant.getUsername());
@@ -139,5 +143,62 @@ public class EventApp {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @PostMapping("/favor")
+    public boolean favorEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
+        User user = (User) JwtUtil.verifyToken(token);
+        Event event = eventService.findEventById(eventId);
+        List<Event> favoriteEvents = user.getFavouriteEvents();
+        if (!favoriteEvents.contains(event)) {
+            favoriteEvents.add(event);
+        } else {
+            throw new MyException(-1, "Event already favored");
+        }
+        user.setFavouriteEvents(favoriteEvents);
+        return eventService.updateEvent(event);
+    }
+
+    @PostMapping("/unfavor")
+    public boolean unfavorEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
+        User user = (User) JwtUtil.verifyToken(token);
+        Event event = eventService.findEventById(eventId);
+        List<Event> favoriteEvents = user.getFavouriteEvents();
+        if (favoriteEvents.contains(event)) {
+            favoriteEvents.remove(event);
+        } else {
+            throw new MyException(-1, "Event not favored");
+        }
+        user.setFavouriteEvents(favoriteEvents);
+        return eventService.updateEvent(event);
+    }
+
+    @PostMapping("/grade")
+    public boolean gradeEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam("grade") int grade) {
+        User user = (User) JwtUtil.verifyToken(token);
+        Event event = eventService.findEventById(eventId);
+        List<Event> scoredEvents = user.getScoredEvents();
+        if (!scoredEvents.contains(event)) {
+            event.setScore((event.getScore() * event.getScoreCount() + grade) / (event.getScoreCount() + 1));
+            event.setScoreCount(event.getScoreCount() + 1);
+        } else {
+            long previousScore = eventService.getScore(user.getId(), eventId);
+            event.setScore((event.getScore() * event.getScoreCount() - previousScore + grade) / event.getScoreCount());
+        }
+        eventService.saveScore(user.getId(), eventId, grade);
+        eventService.updateEvent(event);
+        return true;
+    }
+
+    @GetMapping("/applied")
+    public long[] getAppliedEvents(@RequestHeader("Authorization") String token) {
+        User user = (User) JwtUtil.verifyToken(token);
+        return user.getEnrollments().stream().mapToLong(enrollment -> enrollment.getEvent().getId()).toArray();
+    }
+
+    @GetMapping("favored")
+    public long[] getFavoredEvents(@RequestHeader("Authorization") String token) {
+        User user = (User) JwtUtil.verifyToken(token);
+        return user.getFavouriteEvents().stream().mapToLong(Event::getId).toArray();
     }
 }
