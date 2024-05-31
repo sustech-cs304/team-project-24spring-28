@@ -1,10 +1,42 @@
+<template>
+    <el-card style="width: 25vw; max-height: 30vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover" @click="goToPost">
+        <el-row>
+            <el-col :span="24">
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="22">
+                        <span class="title">
+                            {{ postTitle }}
+                        </span>
+                    </el-col>
+                    <el-col>
+                        <event-card :poster="eventSmallImage" :name="eventName"></event-card>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="5">
+                    <el-col :span="8">
+                        <el-row style="margin-bottom: 5px"></el-row>
+                        <el-row>
+                            <img :src="postImage" style="width: 6vw"/>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="16">
+                        <span class="content">
+                            {{ postContent }}
+                        </span>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+    </el-card>
+</template>
+
 <script setup>
 import { Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
-import InfoBox from "@/components/User/pages/post/components/infoBox.vue";
+import { defineProps, ref, onMounted } from "vue";
+import axios from 'axios';
 import EventCard from "@/components/User/pages/post/components/postDetail/eventCard.vue";
-import {defineProps} from "vue";
 
 const router = useRouter();
 
@@ -14,100 +46,51 @@ const ShareIcon = Share;
 const StarFilledIcon = StarFilled;
 
 function goToPost() {
-    // router.push({ path: '/square/post' });
-
-    let url = router.resolve({path: '/square/post'}).href;
+    let url = router.resolve({ path: '/square/post' }).href;
     window.open(url, '_blank');
 }
 
 const props = defineProps({
-    link: { // 帖子的链接
+    postID: {
         type: String,
-        default: '/square/post'
-    },
-    title: { // 帖子的标题
-        type: String,
-        default: 'Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title'
-    },
-    content: { // 帖子的内容
-        type: String,
-        default: 'content content content content content content content content'
-    },
-    image: { // 帖子的图片
-        type: String,
-        default: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
-    },
-    eventLink: { // 帖子关联的活动的链接
-        type: String,
-        default: '/event'
-    },
-    eventSmallImage: { // 帖子关联的活动的缩略图
-        type: String,
-        default: ''
-    },
-    eventName: { // 帖子关联的活动名
-        type: String,
-        default: 'Default Event Name'
-    },
-    eventId: {
-        type: String,
-        default: '666666'
-    },
-    eventBio: {
-        type: String,
-        default: 'no bio'
+        default: '0'
     }
+});
 
+// Create refs for post data
+const postTitle = ref('Loading...');
+const postContent = ref('Loading content...');
+const postImage = ref('https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png');
+const eventLink = ref('');
+const eventSmallImage = ref('');
+const eventName = ref('Loading event...');
+const eventId = ref('');
+const eventBio = ref('');
+
+// Fetch post data from API
+onMounted(async () => {
+    try {
+        const response = await axios.post('/api/post/getFullPost', { postID: props.postID });
+        const data = response.data;
+
+        // Update refs with fetched data
+        postTitle.value = data.title;
+        postContent.value = data.content;
+        postImage.value = data.image;
+        eventLink.value = data.eventLink;
+        eventSmallImage.value = data.eventSmallImage;
+        eventName.value = data.eventName;
+        eventId.value = data.eventId;
+        eventBio.value = data.eventBio;
+    } catch (error) {
+        console.error('Error fetching post data:', error);
+    }
 });
 </script>
 
-<template>
-    <!--    <el-card class="card-box" shadow="never">-->
-    <el-card style="width: 25vw; max-height: 30vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover" @click="goToPost">
-        <!--            <template #header>Yummy hamburger</template>-->
-        <el-row>
-            <el-col :span="24">
-                <el-row style="margin-bottom: 10px;">
-                    <el-col :span="22">
-                            <span class="title">
-                                {{props.title}}
-                            </span>
-                    </el-col>
-                    <el-col>
-                        <event-card poster="" :name="props.eventName"></event-card>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="5">
-                    <el-col :span="8">
-                        <el-row style="margin-bottom: 5px">
-<!--                            <el-tag type="primary">Event</el-tag>-->
-                        </el-row>
-                        <el-row>
-                            <img
-                                src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                                style="width: 6vw"/>
-                        </el-row>
-                    </el-col>
-                    <el-col :span="16">
-                    <span class="content">
-                        {{ props.content }}
-                    </span>
-                    </el-col>
-                </el-row>
-            </el-col>
-        </el-row>
-    </el-card>
-
-    <el-row>
-
-    </el-row>
-</template>
-
 <style scoped>
 .card-box{
-//border: none;
     padding: 0 !important;
-
     margin: 0 !important;
 }
 .button-left {

@@ -40,6 +40,7 @@ import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 // style
 import 'codemirror/lib/codemirror.css';
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
 VMdEditor.Codemirror = Codemirror;
 VMdEditor.use(githubTheme, {
@@ -156,8 +157,11 @@ const markdownText = ref('')
 
 
     <div class="common-layout-all">
-        <el-row :class="main-header">
-            header
+        <el-row >
+            <el-col :span="24">
+                <header-for-all/>
+            </el-col>
+
             <el-backtop :right="10" :bottom="10"/>
         </el-row>
         <el-row :class="main-main" gutter="10">
@@ -174,7 +178,6 @@ const markdownText = ref('')
                                     <el-button-group class="ml-4">
                                         <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
                                         <el-button type="primary" :icon="Share" @click="handleSharePost"/>
-
                                         <el-button type="primary" :icon="Delete" @click="postUpload" v-loading.fullscreen.lock="fullscreenLoading"/>
                                     </el-button-group>
                                 </el-col>
