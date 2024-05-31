@@ -2,6 +2,7 @@ package org.example.backend.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 import org.checkerframework.checker.signature.qual.Identifier;
@@ -9,11 +10,12 @@ import org.checkerframework.checker.signature.qual.Identifier;
 @Entity
 public class Permission {
     @Id
-    @OneToOne(mappedBy = "permission")
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
-    private boolean canCreate = false;
-    private boolean canEnroll = false;
-    private boolean canComment = false;
+    private boolean canCreate;
+    private boolean canEnroll;
+    private boolean canComment;
 
     public User getUser() {
         return user;

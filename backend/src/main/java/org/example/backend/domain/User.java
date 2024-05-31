@@ -1,15 +1,14 @@
 package org.example.backend.domain;
 
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
 
 import java.util.List;
 
 @Entity
 @DiscriminatorValue(value = "User")
 public class User extends AbstractUser {
-    @OneToOne
-    private Permission permission = new Permission();
+    @OneToOne(mappedBy = "user")
+    private Permission permission;
     @ManyToMany
     private List<Event> favouriteEvents;
 
