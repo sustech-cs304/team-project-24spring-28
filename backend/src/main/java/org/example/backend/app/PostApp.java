@@ -1,5 +1,6 @@
 package org.example.backend.app;
 
+import org.example.backend.config.MyException;
 import org.example.backend.domain.AbstractUser;
 import org.example.backend.domain.Event;
 import org.example.backend.domain.Post;
@@ -78,7 +79,7 @@ public class PostApp {
         long userId = JwtUtil.getIdByToken(token);
         AbstractUser user = abstractUserService.findUserById(userId);
         if (!(user instanceof User)) {
-            throw new RuntimeException("Only user can collect post");
+            throw new MyException(0, "Only user can collect post");
         }
         ((User) user).getFavouritePosts().add(post);
         return abstractUserService.saveUser(user);
@@ -90,7 +91,7 @@ public class PostApp {
         long userId = JwtUtil.getIdByToken(token);
         AbstractUser user = abstractUserService.findUserById(userId);
         if (!(user instanceof User)) {
-            throw new RuntimeException("Only user can discollect post");
+            throw new MyException(1, "Only user can discollect post");
         }
         ((User) user).getFavouritePosts().remove(post);
         return abstractUserService.saveUser(user);
