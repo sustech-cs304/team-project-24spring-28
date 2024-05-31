@@ -119,7 +119,7 @@ function formApply() {
   }
 
   for (let i = 0; i < appliedForm.value.length; i++) {
-    if (appliedForm.value[i].value === '') {
+    if (appliedForm.value[i].value === '' && definedForm.value[i].required) {
       alert('请填写：' + appliedForm.value[i].name)
       return
     }
@@ -127,12 +127,16 @@ function formApply() {
 
   let temp = new FormData()
   temp.append('id', eventId)
+
+  // TODO: check the correctness
   let formValues = []
   for (let i = 0; i < appliedForm.value.length; i++) {
-    formValues.push({
-      id: appliedForm.value[i].id,
-      value: appliedForm.value[i].value
-    })
+    // formValues.push({
+    //   id: appliedForm.value[i].id,
+    //   value: appliedForm.value[i].value
+    // })
+    // example: ["王煜然", "12110330", "", "男"]
+    formValues.push(appliedForm.value[i])
   }
   temp.append('formValues', JSON.stringify(formValues))
 
@@ -176,7 +180,7 @@ onMounted(() => {
 
     text.value = temp.introduction
 
-    eventType = temp.eventType
+    eventType = temp.enrollmentType
     if (eventType === 'count') {
       currentCount.value = temp.currentCount
       let limit = temp.limitCount

@@ -65,7 +65,7 @@ function checkLoginType() {
       } else if (res.data.data.type === 0) {
         initWebsocket()
         localStorage.setItem('userId', res.data.data.id)
-        router.push({path: '/student'})
+        router.push({path: '/main'})
       }
     }).catch((err) => {
       console.log(err)
