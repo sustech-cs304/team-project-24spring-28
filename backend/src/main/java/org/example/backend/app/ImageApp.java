@@ -59,4 +59,9 @@ public class ImageApp {
         fileInputStream.close();
     }
 
+    @GetMapping("{url}")
+    public void getImage(@PathVariable String url, HttpServletResponse response) throws Exception {
+        downloadImage(url, response);
+    }
+
 }
