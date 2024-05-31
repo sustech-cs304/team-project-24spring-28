@@ -93,6 +93,9 @@ public class EventApp {
     @PostMapping("/apply")
     public boolean applyEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam("formValues") List<String> formValues) {
         User user = (User) JwtUtil.verifyToken(token);
+        if(!user.getPermission().isCanEnroll()){
+            throw new MyException(-1, "Permission denied");
+        }
         Event event = eventService.findEventById(eventId);
         EnrollForm enrollForm = new EnrollForm();
         AbstractEnrollment abstractEnrollment = event.getAbstractEnrollment();
