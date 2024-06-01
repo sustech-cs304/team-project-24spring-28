@@ -11,6 +11,7 @@ import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
 import axios from 'axios';
 import {useRoute} from "vue-router";
+import axiosInstance from "@/utils/axios";
 
 const route = useRoute(); // 初始化 route
 
@@ -21,22 +22,17 @@ const userData = ref({});
 const eventData = ref({});
 
 onMounted(async () => {
-    try {
-        const response = await axios.post('/api/post/getFullPost', { postID });
-        postData.value = response.data;
-        userData.value = {
-            userID: response.data.userID,
-            username: response.data.username,
-            userBio: response.data.userBio,
-            userAvatar: response.data.userAvatar,
-        };
-        eventData.value = {
-            eventID: response.data.postRelevantEventID,
-            // Add other event data here if necessary
-        };
-    } catch (error) {
-        console.error('Failed to fetch post data:', error);
-    }
+    axiosInstance.get('/post/getFullPost', {
+        params: {
+            postID: postID
+        }
+    }).then(response => {
+
+
+
+    }).catch(error => {
+        console.error(error);
+    });
 });
 
 // Right side buttons functionality
@@ -128,7 +124,7 @@ const toggleCollapse = () => {
                         <el-row>
                             <!--comment-->
                             <el-col>
-                                <comment ref="commentSection" />
+                                <comment ref="commentSection" :post-id="Number(postID)" />
                                 <el-card style="height: 1000px"></el-card>
                                 <el-card></el-card>
                                 <el-card></el-card>

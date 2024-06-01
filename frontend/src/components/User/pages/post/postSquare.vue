@@ -117,6 +117,9 @@ const postUpload = async () => {
     } finally {
         fullscreenLoading.value = false;
         imageDialogVisible.value = false;
+        bindingEventID.value = "";
+        postTitle.value = "";
+        markdownText.value = "";
     }
 }
 
@@ -250,18 +253,14 @@ const handleUploadImage = async (event, insertImage, files) => {
                 <el-row>
                     <el-col :span="24">
                         <div>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
+                            <postCard :post-i-d="5"></postCard>
+                            <postCard :post-i-d="6"></postCard>
+<!--                            <postCard :post-i-d="1"></postCard>-->
+<!--                            <postCard :post-i-d="2"></postCard>-->
+<!--                            <postCard :post-i-d="3"></postCard>-->
+<!--                            <postCard :post-i-d="4"></postCard>-->
+
+
                         </div>
                     </el-col>
                 </el-row>

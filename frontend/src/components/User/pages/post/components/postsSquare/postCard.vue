@@ -1,4 +1,5 @@
 <script setup>
+import { ref, onMounted } from 'vue'
 import { Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
@@ -12,10 +13,69 @@ const PointerIcon = Pointer;
 const ShareIcon = Share;
 const StarFilledIcon = StarFilled;
 
-function goToPost() {
-    // router.push({ path: '/square/post' });
+const props = defineProps({
+    postID: {
+        type: String,
+        default: '666666'
+    },
+});
 
-    let url = router.resolve({path: '/square/post'}).href;
+// const postID = ref("666666")
+const postLink = ref("666666")
+const postTitle = ref("default title")
+const postContent = ref("default content")
+const postRelevantEventID = ref("1")
+const postLikeAmount = ref("666")
+const postCollectAmount = ref("666")
+const postCommentAmount = ref("666")
+const username = ref("default username")
+const userID = ref("666666")
+const userBio = ref("default userBio")
+const userAvatar = ref("")
+
+const eventTitle = ref("default event")
+const posterUrl = ref("https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png")
+
+async function fetchData() {
+    try {
+        const response = await axiosInstance.get(`/post/getFullPost?postID=${props.postID}`);
+        const postData = response.data;
+
+        postTitle.value = postData.postTitle;
+        postContent.value = postData.postContent;
+        postLikeAmount.value = postData.postLikeAmount;
+        postCollectAmount.value = postData.postCollectAmount;
+        postCommentAmount.value = postData.postCommentAmount;
+        username.value = postData.username;
+        userID.value = postData.userID;
+        userBio.value = postData.userBio;
+        userAvatar.value = postData.userAvatar;
+
+        // Fetch event details
+        await fetchEventDetails(postData.postRelevantEventID);
+    } catch (error) {
+        console.error('Error fetching post data:', error);
+    }
+}
+
+async function fetchEventDetails(eventID) {
+    try {
+        const response = await axiosInstance.get(`/event/detail?id=${eventID}`);
+        const eventData = response.data;
+
+        eventTitle.value = eventData.title;
+        posterUrl.value = eventData.posterUrl;
+    } catch (error) {
+        console.error('Error fetching event details:', error);
+    }
+}
+
+onMounted(() => {
+    fetchData();
+});
+
+function goToPost() {
+    let url = router.resolve({ path: '/square/post', query: { id: props.postID } }).href;
     window.open(url, '_blank');
 }
 </script>
@@ -29,29 +89,24 @@ function goToPost() {
                     <el-row style="margin-bottom: 10px;">
                         <el-col :span="22">
                             <span class="title">
-                                Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title
+                                {{postTitle}}
                             </span>
                         </el-col>
                     </el-row>
                     <el-row :gutter="5">
                         <el-col :span="8">
                             <el-row style="margin-bottom: 5px">
-                                <el-tag type="primary">Event</el-tag>
+                                <el-tag type="primary">{{eventTitle}}</el-tag>
                             </el-row>
                             <el-row>
                                 <img
-                                    src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+                                    src="{{posterUrl}}"
                                     style="width: 6vw"/>
                             </el-row>
                         </el-col>
                         <el-col :span="16">
                     <span class="content">
-                        content content content content content content content content
-                        content content content content content content content content
-                        content content content content content content content content
-                        content content content content content content content content
-                        content content content content content content content content
-                        content content content content content content content content
+                        {{postContent}}
                     </span>
                         </el-col>
                     </el-row>
@@ -59,13 +114,13 @@ function goToPost() {
                 <el-col :span="4">
                     <el-row>
                         <el-col :span="12">
-                            <info-box :given-number="1" :background="'@/assets/Like/like.png'"></info-box>
+                            <info-box :given-number="Number(postLikeAmount)" :background="'@/assets/Like/like.png'"></info-box>
                         </el-col>
                         <el-col :span="12">
-                            <info-box></info-box>
+                            <info-box :given-number="Number(postCollectAmount)"></info-box>
                         </el-col>
                         <el-col :span="12">
-                            <info-box :given-number="32456"></info-box>
+                            <info-box :given-number="Number(postCommentAmount)"></info-box>
                         </el-col>
                         <el-col :span="12">
                             <info-box></info-box>
