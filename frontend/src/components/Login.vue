@@ -32,7 +32,8 @@ const loginFormInTemp = ref(null)
 const instance = getCurrentInstance();
 
 function initWebsocket() {
-  let baseUrl = 'ws://' + window.location.host.split(':')[0] + ':8082' + '/websocket/' + localStorage.getItem("token")
+  // let baseUrl = 'ws://' + window.location.host.split(':')[0] + ':8082' + '/websocket/' + localStorage.getItem("token")
+  let baseUrl = 'ws://' + '10.16.88.247' + ':8082' + '/websocket/' + localStorage.getItem("token")
   console.log(localStorage.getItem("token"))
   app.use(VueNativeSock,
       baseUrl, {
@@ -54,15 +55,15 @@ function initWebsocket() {
 function checkLoginType() {
   if (localStorage.getItem('token') != null) {
     console.log('reinit')
-    axiosInstance.get('/user', {
+    axiosInstance.get('/userInfo', {
       headers: {
         Authorization: localStorage.getItem('token')
       }
     }).then((res) => {
       console.log(res.data)
-      if (res.data.data.type === 1) {
+      if (res.data.data.userType === 'Admin') {
         router.push({path: '/admin'})
-      } else if (res.data.data.type === 0) {
+      } else if (res.data.data.userType === 'User') {
         initWebsocket()
         localStorage.setItem('userId', res.data.data.id)
         router.push({path: '/main'})
