@@ -22,6 +22,8 @@ public class Event {
     private User author;
     private EventType type;
     private String introduction;
+
+    @Column(columnDefinition = "TEXT")
     private String text;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

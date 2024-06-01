@@ -32,7 +32,7 @@ public class EventApp {
     AbstractEnrollmentService abstractEnrollmentService;
 
     @PostMapping("/create")
-    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam String applyStartTime, @RequestParam String applyEndTime, @RequestParam String startTime, @RequestParam String endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam long limitCount, @RequestParam(required = false) List<DefinedFormDto> definedForm) {
+    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam String applyStartTime, @RequestParam String applyEndTime, @RequestParam String startTime, @RequestParam String endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam(required = false) long limitCount, @RequestParam(required = false) List<DefinedFormDto> definedForm) {
         User user = (User) JwtUtil.verifyToken(token);
         if (!user.getPermission().isCanCreate()) {
             throw new MyException(-1, "Permission denied");

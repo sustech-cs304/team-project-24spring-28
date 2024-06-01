@@ -16,6 +16,7 @@ public class Post {
 
     private String postTitle;
 
+    @Column(columnDefinition = "TEXT")
     private String postContent;
 
     @ManyToOne
