@@ -212,27 +212,48 @@ function editSelectCancel() {
   editSelectVisible.value = false
 }
 
+// turn Sat Jul 06 2024 00:00:00 GMT+0800 (中国标准时间) to 2024-07-06 00:00:00
+function formatTime(str) {
+  let temp = new Date(str)
+  let year = temp.getFullYear()
+  let month = temp.getMonth() + 1
+  let day = temp.getDate()
+  let hour = temp.getHours()
+  let minute = temp.getMinutes()
+  let second = temp.getSeconds()
+  return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+}
+
 function createEventClick() {
   // console.log(form)
   // console.log(mdText)
   let temp = new FormData()
   temp.append('title', form.title)
   temp.append('name', form.name)
-  temp.append('applyStartTime', form.applyStartTime)
-  temp.append('applyEndTime', form.applyEndTime)
-  temp.append('startTime', form.startTime)
-  temp.append('endTime', form.endTime)
+  temp.append('applyStartTime', formatTime(form.applyStartTime))
+  temp.append('applyEndTime', formatTime(form.applyEndTime))
+  temp.append('startTime', formatTime(form.startTime))
+  temp.append('endTime', formatTime(form.endTime))
   temp.append('introduction', form.introduction)
   temp.append('imageUrl', imageUrl.value)
   temp.append('mdText', mdText.value)
   if (form.type === '1') {
-    temp.append('limitCount', form.limitCount)
+    temp.append('enrollmentType', 'count')
+    if (form.limitCount === '') {
+      temp.append('limitCount', 0)
+    } else {
+      temp.append('limitCount', Number(form.limitCount))
+    }
+    // add empty definedForm
+    temp.append('definedForm', JSON.stringify([]))
   } else if (form.type === '2') {
+    temp.append('enrollmentType', 'select')
     temp.append('seatSet', form.seatSet)
   } else {
-    // TODO: check the correctness
     temp.append('definedForm', JSON.stringify(definedForm.value))
   }
+  // console.log(form.startTime)
+  // console.log(temp.get('startTime'))
   axiosInstance.post('/event/create', temp).then((res) => {
     console.log(res.data)
   }).catch((err) => {
