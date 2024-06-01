@@ -43,7 +43,10 @@ public class PostApp {
     @GetMapping("/getFullPost")
     public PostDto getFullPost(@RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
-        return constructPostDto(post);
+        PostDto postDto = constructPostDto(post);
+        postDto.setLikeOrNot(post.getLikeUsers().contains(post.getUser()));
+        postDto.setCollectOrNot(((User) post.getUser()).getFavouritePosts().contains(post));
+        return postDto;
     }
 
     private PostDto constructPostDto(Post post) {
@@ -62,14 +65,22 @@ public class PostApp {
     @PostMapping("/likeThePost")
     public boolean likeThePost(@RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
-        post.setLikes(post.getLikes() + 1);
+        List<AbstractUser> likeUsers = post.getLikeUsers();
+        if (likeUsers.contains(post.getUser())) {
+            return true;
+        }
+        likeUsers.add(post.getUser());
         return postService.savePost(post);
     }
 
     @PostMapping("/dislikeThePost")
     public boolean dislikeThePost(@RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
-        post.setLikes(post.getLikes() - 1);
+        List<AbstractUser> likeUsers = post.getLikeUsers();
+        if (!likeUsers.contains(post.getUser())) {
+            return false;
+        }
+        likeUsers.remove(post.getUser());
         return postService.savePost(post);
     }
 
