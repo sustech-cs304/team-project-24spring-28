@@ -29,6 +29,8 @@ public class Post {
     @ManyToMany
     private List<AbstractUser> likeUsers;
 
+    private int postCollectAmount;
+
     @OneToMany(mappedBy = "post")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<EventComment> comments;
