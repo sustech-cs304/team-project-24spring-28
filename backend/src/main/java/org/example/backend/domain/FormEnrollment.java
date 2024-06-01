@@ -11,7 +11,6 @@ import java.util.List;
 public class FormEnrollment extends AbstractEnrollment {
     @OneToOne
     Event event;
-
     @OneToMany
     private List<DefinedFormEntry> definedFormEntries;
     @OneToMany(mappedBy = "formEnrollment")
