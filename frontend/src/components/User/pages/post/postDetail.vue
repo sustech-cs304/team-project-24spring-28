@@ -7,6 +7,7 @@ import Comment from '@/components/Modules/comment/Comment.vue';
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import {ref} from 'vue';
 import EventCard from "@/components/User/pages/post/components/postDetail/eventCard.vue";
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 // variable
 let name = "ggb"
 
@@ -139,7 +140,8 @@ const toggleCollapse = () => {
 <template>
     <div class="common-layout-all">
         <el-row :class="main-header">
-            header
+            <el-col :span="24"><header-for-all/></el-col>
+
             <el-backtop :right="10" :bottom="10"/>
         </el-row>
         <el-row :class="main-main" gutter="10">

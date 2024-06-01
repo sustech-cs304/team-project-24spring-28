@@ -12,6 +12,7 @@
                     <el-button class="profile-avatar">
                         <div class="block">
                             <el-avatar :size="40" :src="props.avatar" />
+
                         </div>
                     </el-button>
                     <el-button  class="profile-name">
@@ -25,6 +26,7 @@
                 class="demo-rich-conent"
                 style="display: flex; gap: 16px; flex-direction: column"
             >
+
                 <el-avatar
                     :size="60"
                     src="{{props.avatar}}"
