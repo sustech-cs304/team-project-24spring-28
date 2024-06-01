@@ -17,6 +17,7 @@ import org.example.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,33 +33,34 @@ public class EventApp {
     AbstractEnrollmentService abstractEnrollmentService;
 
     @PostMapping("/create")
-    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam String applyStartTime, @RequestParam String applyEndTime, @RequestParam String startTime, @RequestParam String endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam(required = false) long limitCount, @RequestParam(required = false) List<DefinedFormDto> definedForm) {
+//    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam String applyStartTime, @RequestParam String applyEndTime, @RequestParam String startTime, @RequestParam String endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam(required = false) long limitCount, @RequestParam(required = false) List<DefinedFormDto> definedForm) {
+    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestBody EventPostDto eventPostDto) {
         User user = (User) JwtUtil.verifyToken(token);
         if (!user.getPermission().isCanCreate()) {
             throw new MyException(-1, "Permission denied");
         }
         Event event = new Event();
-        event.setTitle(title);
-        event.setName(name);
+        event.setTitle(eventPostDto.getTitle());
+        event.setName(eventPostDto.getName());
         event.setAuthor(user);
-        event.setIntroduction(introduction);
-        event.setPosterUrl(imageUrl);
-        event.setText(mdText);
-        event.setStartTime(LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        event.setEndTime(LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        switch (enrollmentType) {
+        event.setIntroduction(eventPostDto.getIntroduction());
+        event.setPosterUrl(eventPostDto.getImageUrl());
+        event.setText(eventPostDto.getMdText());
+        event.setStartTime(LocalDateTime.parse(eventPostDto.getStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        event.setEndTime(LocalDateTime.parse(eventPostDto.getEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        switch (eventPostDto.getEnrollmentType()) {
             case "count":
                 CountEnrollment countEnrollment = new CountEnrollment();
-                countEnrollment.setStartTime(LocalDateTime.parse(applyStartTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                countEnrollment.setEndTime(LocalDateTime.parse(applyEndTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                countEnrollment.setCapacity(limitCount);
+                countEnrollment.setStartTime(LocalDateTime.parse(eventPostDto.getApplyStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                countEnrollment.setEndTime(LocalDateTime.parse(eventPostDto.getApplyEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                countEnrollment.setCapacity(eventPostDto.getLimitCount());
                 event.setAbstractEnrollment(countEnrollment);
                 break;
             case "form":
                 FormEnrollment formEnrollment = new FormEnrollment();
-                formEnrollment.setStartTime(LocalDateTime.parse(applyStartTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                formEnrollment.setEndTime(LocalDateTime.parse(applyEndTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-                formEnrollment.setDefinedFormEntries(definedForm.stream().map(DefinedFormDto::toDefinedFormEntry).toList());
+                formEnrollment.setStartTime(LocalDateTime.parse(eventPostDto.getApplyStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                formEnrollment.setEndTime(LocalDateTime.parse(eventPostDto.getApplyEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                formEnrollment.setDefinedFormEntries(eventPostDto.getDefinedForm().stream().map(DefinedFormDto::toDefinedFormEntry).toList());
                 event.setAbstractEnrollment(formEnrollment);
                 break;
         }

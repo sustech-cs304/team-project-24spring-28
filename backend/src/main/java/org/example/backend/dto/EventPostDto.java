@@ -18,10 +18,10 @@ public class EventPostDto {
     private String title;
     private String name;
     private String enrollmentType;
-    private LocalDateTime applyStartTime;
-    private LocalDateTime applyEndTime;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private String applyStartTime;
+    private String applyEndTime;
+    private String startTime;
+    private String endTime;
     private String imageUrl;
     private String introduction;
     private String mdText;
