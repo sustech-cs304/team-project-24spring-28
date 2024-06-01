@@ -2,6 +2,7 @@ package org.example.backend.domain;
 
 import jakarta.persistence.*;
 import org.example.backend.domain.enums.EventType;
+import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Event {
     private List<User> collectors;
 
     @OneToOne
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     @JoinColumn(name = "abstractEnrollment_id")
     private AbstractEnrollment abstractEnrollment;
 

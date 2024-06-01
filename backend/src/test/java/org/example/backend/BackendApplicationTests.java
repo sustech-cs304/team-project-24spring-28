@@ -5,6 +5,7 @@ import org.example.backend.domain.AbstractUser;
 import org.example.backend.domain.Admin;
 import org.example.backend.domain.Permission;
 import org.example.backend.domain.User;
+import org.example.backend.dto.GlobalResponse;
 import org.example.backend.service.AbstractUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,8 +73,8 @@ class BackendApplicationTests {
     @Test
     void MessageTest() {
         // preform login
-        String token1 = restTemplate.postForObject("http://localhost:" + port + "/login?username=1&password=1", null, String.class);
-        String token2 = restTemplate.postForObject("http://localhost:" + port + "/login?username=2&password=2", null, String.class);
+        String token1 = (String) restTemplate.postForObject("http://localhost:" + port + "/login?username=1&password=1", null, GlobalResponse.class).getData();
+        String token2 = (String) restTemplate.postForObject("http://localhost:" + port + "/login?username=2&password=2", null, GlobalResponse.class).getData();
         // test the sendChat api
         try {
             mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/message/sendChat")
@@ -96,7 +97,7 @@ class BackendApplicationTests {
     @Test
     void EventTest() {
         // preform login
-        String token = restTemplate.postForObject("http://localhost:" + port + "/login?username=5&password=5", null, String.class);
+        String token = (String) restTemplate.postForObject("http://localhost:" + port + "/login?username=3&password=3", null, GlobalResponse.class).getData();
         // test the releaseEvent api
         try {
             mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/event/create")
@@ -112,7 +113,6 @@ class BackendApplicationTests {
                     .param("mdText", "")
                     .param("enrollmentType", "count")
                     .param("limitCount", "100")
-//                    .param("definedForm", "")
             ).andExpect(MockMvcResultMatchers.status().isOk());
         } catch (Exception e) {
             throw new RuntimeException(e);
