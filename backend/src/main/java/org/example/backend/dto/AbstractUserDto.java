@@ -15,6 +15,8 @@ public class AbstractUserDto {
     String password;
     UserType userType;
     Boolean hasUnread;
+    String bio;
+    String avatar;
 
     public AbstractUserDto() {
     }
@@ -29,5 +31,6 @@ public class AbstractUserDto {
         if (abstractUser instanceof User){
             this.userType = UserType.User;
         }
+        this.avatar = abstractUser.getAvatar();
     }
 }
