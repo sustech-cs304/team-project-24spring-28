@@ -1,7 +1,7 @@
 <script setup>
 import  {reactive, ref} from "vue";
-import {useRouter} from "vue-router";
 import axiosInstance from "@/utils/axios";
+import {useRouter} from "vue-router";
 
 const router = useRouter()
 
@@ -30,7 +30,7 @@ const registerFormInTemp = ref(null)
 const register = () => {
   registerFormInTemp.value.validate((valid) => {
     if (valid) {
-      axiosInstance.post('//signUp', {
+      axiosInstance.post('/signUp', {
             username: registerForm.username,
             password: registerForm.password
           },
@@ -41,15 +41,13 @@ const register = () => {
           }
       ).then((res) => {
         console.log(res)
-        if (res.data.data && res.data.data.length > 0) {
+        if (res.data.data) {
           console.log('registration success')
-          localStorage.setItem('token', res.data.data)
-          localStorage.setItem('username', registerForm.username)
-
-          console.log(localStorage.getItem('token'))
+          alert('registration success')
+          router.push({path: '/'})
         } else {
           console.log('registration failed')
-          alert('Username or password is incorrect')
+          alert('registration failed, username already exist')
         }
       }).catch((err) => {
         console.log(err)
@@ -76,7 +74,7 @@ const register = () => {
     <h1 style="font-size: 30px; text-align: center">
       南科大活动中心
     </h1>
-    <el-form :model="registerForm" :rules="rules" ref="loginFormInTemp">
+    <el-form :model="registerForm" :rules="rules" ref="registerFormInTemp">
       <el-form-item label="username" prop="username" style="margin-left: 100px; margin-top: 30px; margin-bottom: 30px">
         <el-input v-model="registerForm.username" style="max-width: 300px; height: 30px"></el-input>
       </el-form-item>

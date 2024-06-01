@@ -25,6 +25,14 @@ public class CommentApp {
         this.replyCommentService = replyCommentService;
     }
 
+    @GetMapping(value = "/event", params = {"postId"})
+    public List<EventCommentDto> getEventCommentByPostId(long postId) {
+        List<EventCommentDto> eventCommentDtos = new ArrayList<>();
+        for (EventComment eventComment : eventCommentService.findEventCommentByPostId(postId)) {
+            eventCommentDtos.add(new EventCommentDto(eventComment));
+        }
+        return eventCommentDtos;
+    }
     @GetMapping(value = "/event", params = {"eventId"})
     public List<EventCommentDto> getEventCommentByEventId(long eventId) {
         List<EventCommentDto> eventCommentDtos = new ArrayList<>();

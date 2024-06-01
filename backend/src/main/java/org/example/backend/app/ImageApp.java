@@ -21,6 +21,8 @@ public class ImageApp {
     @Value("${image-server.path}")
     String basePath;
 
+    private final String IMAGE_PATH = "http://10.16.88.247:8082/image";
+
     @PostMapping("/upload")
     public String uploadImage(@RequestParam("file") MultipartFile file) throws Exception{
         File dir = new File(basePath);
@@ -36,7 +38,7 @@ public class ImageApp {
         Path path = Paths.get(basePath, filename);
         logger.info("Image saved, url: " + path);
         file.transferTo(path.toAbsolutePath());
-        return filename;
+        return IMAGE_PATH + "/" + filename;
     }
 
     @GetMapping("/download")
@@ -57,6 +59,11 @@ public class ImageApp {
         //关闭资源
         outputStream.close();
         fileInputStream.close();
+    }
+
+    @GetMapping("{url}")
+    public void getImage(@PathVariable String url, HttpServletResponse response) throws Exception {
+        downloadImage(url, response);
     }
 
 }

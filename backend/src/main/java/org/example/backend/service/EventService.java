@@ -19,4 +19,8 @@ public interface EventService {
     List<Event> findEventByAuthorId(long authorId);
 
     boolean saveEnrollForm(EnrollForm enrollForm);
+
+    long getScore(long userId, long eventId);
+
+    boolean saveScore(long userId, long eventId, long score);
 }

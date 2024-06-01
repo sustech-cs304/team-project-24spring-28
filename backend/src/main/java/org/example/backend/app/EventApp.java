@@ -10,12 +10,16 @@ import org.example.backend.dto.DefinedFormDto;
 import org.example.backend.dto.EventBriefDto;
 import org.example.backend.dto.EventDto;
 import org.example.backend.dto.EventPostDto;
+import org.example.backend.service.AbstractEnrollmentService;
+import org.example.backend.service.AbstractUserService;
 import org.example.backend.service.EventService;
 import org.example.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,32 +28,37 @@ import java.util.List;
 public class EventApp {
     @Autowired
     EventService eventService;
+    @Autowired
+    AbstractEnrollmentService abstractEnrollmentService;
 
     @PostMapping("/create")
-    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam EventPostDto eventPostDto) {
+    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam String applyStartTime, @RequestParam String applyEndTime, @RequestParam String startTime, @RequestParam String endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam long limitCount, @RequestParam(required = false) List<DefinedFormDto> definedForm) {
         User user = (User) JwtUtil.verifyToken(token);
+        if (!user.getPermission().isCanCreate()) {
+            throw new MyException(-1, "Permission denied");
+        }
         Event event = new Event();
-        event.setTitle(eventPostDto.getTitle());
-        event.setName(eventPostDto.getName());
+        event.setTitle(title);
+        event.setName(name);
         event.setAuthor(user);
-        event.setIntroduction(eventPostDto.getIntroduction());
-        event.setText(eventPostDto.getMdText());
-        event.setStartTime(eventPostDto.getStartTime());
-        event.setEndTime(eventPostDto.getEndTime());
-        event.setPosterUrl(eventPostDto.getImageUrl());
-        switch (eventPostDto.getEnrollmentType()) {
+        event.setIntroduction(introduction);
+        event.setPosterUrl(imageUrl);
+        event.setText(mdText);
+        event.setStartTime(LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        event.setEndTime(LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        switch (enrollmentType) {
             case "count":
                 CountEnrollment countEnrollment = new CountEnrollment();
-                countEnrollment.setStartTime(eventPostDto.getApplyStartTime());
-                countEnrollment.setEndTime(eventPostDto.getApplyEndTime());
-                countEnrollment.setCapacity(eventPostDto.getLimitCount());
+                countEnrollment.setStartTime(LocalDateTime.parse(applyStartTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                countEnrollment.setEndTime(LocalDateTime.parse(applyEndTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                countEnrollment.setCapacity(limitCount);
                 event.setAbstractEnrollment(countEnrollment);
                 break;
             case "form":
                 FormEnrollment formEnrollment = new FormEnrollment();
-                formEnrollment.setStartTime(eventPostDto.getApplyStartTime());
-                formEnrollment.setEndTime(eventPostDto.getApplyEndTime());
-                formEnrollment.setDefinedFormEntries(eventPostDto.getDefinedForm().stream().map(DefinedFormDto::toDefinedFormEntry).toList());
+                formEnrollment.setStartTime(LocalDateTime.parse(applyStartTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                formEnrollment.setEndTime(LocalDateTime.parse(applyEndTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                formEnrollment.setDefinedFormEntries(definedForm.stream().map(DefinedFormDto::toDefinedFormEntry).toList());
                 event.setAbstractEnrollment(formEnrollment);
                 break;
         }
@@ -57,12 +66,16 @@ public class EventApp {
     }
 
     @GetMapping("/detail")
-    public EventDto getEvent(@RequestParam("id") long eventId) {
+    public EventDto getEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
+        User user = (User) JwtUtil.verifyToken(token);
         Event event = eventService.findEventById(eventId);
         if (event == null) {
             return null;
         }
-        return new EventDto(event);
+        EventDto eventDto = new EventDto(event);
+        eventDto.setLiked(user.getFavouriteEvents().contains(event));
+        eventDto.setGrade(eventService.getScore(user.getId(), eventId));
+        return eventDto;
     }
 
     @GetMapping("/brief")
@@ -83,17 +96,40 @@ public class EventApp {
     @PostMapping("/apply")
     public boolean applyEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam("formValues") List<String> formValues) {
         User user = (User) JwtUtil.verifyToken(token);
+        if (!user.getPermission().isCanEnroll()) {
+            throw new MyException(-1, "Permission denied");
+        }
         Event event = eventService.findEventById(eventId);
         EnrollForm enrollForm = new EnrollForm();
-        enrollForm.setUser(user);
-        enrollForm.setFormEnrollment((FormEnrollment) event.getAbstractEnrollment());
-        enrollForm.setFormValues(formValues);
-        return eventService.saveEnrollForm(enrollForm);
+        AbstractEnrollment abstractEnrollment = event.getAbstractEnrollment();
+        if (abstractEnrollment instanceof CountEnrollment countEnrollment) {
+            if (countEnrollment.getCount() >= countEnrollment.getCapacity()) {
+                throw new MyException(-1, "Capacity full");
+            } else {
+                countEnrollment.setCount(countEnrollment.getCount() + 1);
+                List<User> participants = countEnrollment.getParticipants();
+                participants.add(user);
+            }
+        }
+        if (abstractEnrollment instanceof FormEnrollment formEnrollment) {
+            if (formValues.size() != formEnrollment.getDefinedFormEntries().size()) {
+                throw new MyException(-1, "Form values not match");
+            } else {
+                List<User> participants = formEnrollment.getParticipants();
+                participants.add(user);
+                enrollForm.setUser(user);
+                enrollForm.setFormEnrollment((FormEnrollment) event.getAbstractEnrollment());
+                enrollForm.setFormValues(formValues);
+                eventService.saveEnrollForm(enrollForm);
+            }
+        }
+        abstractEnrollmentService.updateAbstractEnrollment(abstractEnrollment);
+        return true;
     }
 
     @GetMapping("/getExcel")
     @ResponseBody
-    public void getExcel(@RequestParam("id") long id, HttpServletResponse response){
+    public void getExcel(@RequestParam("id") long id, HttpServletResponse response) {
         Event event = eventService.findEventById(id);
         AbstractEnrollment abstractEnrollment = event.getAbstractEnrollment();
         if (!(abstractEnrollment instanceof CountEnrollment) && !(abstractEnrollment instanceof FormEnrollment)) {
@@ -126,7 +162,7 @@ public class EventApp {
                 for (int i = 0; i < headers.size(); i++) {
                     row.createCell(i).setCellValue(headers.get(i));
                 }
-                List<User> participants = ((CountEnrollment) abstractEnrollment).getParticipants();
+                List<User> participants = abstractEnrollment.getParticipants();
                 for (User participant : participants) {
                     row = sheet.createRow(++rowNum);
                     row.createCell(0).setCellValue(participant.getUsername());
@@ -139,5 +175,62 @@ public class EventApp {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @PostMapping("/favor")
+    public boolean favorEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
+        User user = (User) JwtUtil.verifyToken(token);
+        Event event = eventService.findEventById(eventId);
+        List<Event> favoriteEvents = user.getFavouriteEvents();
+        if (!favoriteEvents.contains(event)) {
+            favoriteEvents.add(event);
+        } else {
+            throw new MyException(-1, "Event already favored");
+        }
+        user.setFavouriteEvents(favoriteEvents);
+        return eventService.updateEvent(event);
+    }
+
+    @PostMapping("/unfavor")
+    public boolean unfavorEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
+        User user = (User) JwtUtil.verifyToken(token);
+        Event event = eventService.findEventById(eventId);
+        List<Event> favoriteEvents = user.getFavouriteEvents();
+        if (favoriteEvents.contains(event)) {
+            favoriteEvents.remove(event);
+        } else {
+            throw new MyException(-1, "Event not favored");
+        }
+        user.setFavouriteEvents(favoriteEvents);
+        return eventService.updateEvent(event);
+    }
+
+    @PostMapping("/grade")
+    public boolean gradeEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam("grade") int grade) {
+        User user = (User) JwtUtil.verifyToken(token);
+        Event event = eventService.findEventById(eventId);
+        List<Event> scoredEvents = user.getScoredEvents();
+        if (!scoredEvents.contains(event)) {
+            event.setScore((event.getScore() * event.getScoreCount() + grade) / (event.getScoreCount() + 1));
+            event.setScoreCount(event.getScoreCount() + 1);
+        } else {
+            long previousScore = eventService.getScore(user.getId(), eventId);
+            event.setScore((event.getScore() * event.getScoreCount() - previousScore + grade) / event.getScoreCount());
+        }
+        eventService.saveScore(user.getId(), eventId, grade);
+        eventService.updateEvent(event);
+        return true;
+    }
+
+    @GetMapping("/applied")
+    public long[] getAppliedEvents(@RequestHeader("Authorization") String token) {
+        User user = (User) JwtUtil.verifyToken(token);
+        return user.getEnrollments().stream().mapToLong(enrollment -> enrollment.getEvent().getId()).toArray();
+    }
+
+    @GetMapping("favored")
+    public long[] getFavoredEvents(@RequestHeader("Authorization") String token) {
+        User user = (User) JwtUtil.verifyToken(token);
+        return user.getFavouriteEvents().stream().mapToLong(Event::getId).toArray();
     }
 }

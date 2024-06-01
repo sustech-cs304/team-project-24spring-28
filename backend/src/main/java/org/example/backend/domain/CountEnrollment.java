@@ -10,8 +10,6 @@ public class CountEnrollment extends AbstractEnrollment {
 
     private long capacity;
     private long count = 0;
-    @ManyToMany
-    private List<User> participants;
 
     public long getCapacity() {
         return capacity;
@@ -27,13 +25,5 @@ public class CountEnrollment extends AbstractEnrollment {
 
     public void setCapacity(long capacity) {
         this.capacity = capacity;
-    }
-
-    public List<User> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<User> participants) {
-        this.participants = participants;
     }
 }
