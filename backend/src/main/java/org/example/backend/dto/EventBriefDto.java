@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.backend.domain.Event;
+import org.example.backend.domain.enums.EventType;
 
 import java.time.LocalDateTime;
 
@@ -14,7 +15,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class EventBriefDto {
     private String title;
+    private long eventId;
     private String eventName;
+    private EventType eventType;
     private long authorId;
     private String authorName;
     private LocalDateTime applyStartTime;
@@ -27,7 +30,9 @@ public class EventBriefDto {
 
     public EventBriefDto(Event event) {
         this.title = event.getTitle();
+        this.eventId = event.getId();
         this.eventName = event.getName();
+        this.eventType = event.getType();
         this.authorId = event.getAuthor().getId();
         this.authorName = event.getAuthor().getName();
         this.applyStartTime = event.getAbstractEnrollment().getStartTime();

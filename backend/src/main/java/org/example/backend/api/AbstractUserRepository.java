@@ -9,4 +9,5 @@ public interface AbstractUserRepository extends JpaRepository<AbstractUser, Long
     AbstractUser findById(long id);
 
     AbstractUser findByUsername(String username);
+
 }

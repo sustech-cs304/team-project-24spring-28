@@ -19,4 +19,5 @@ public interface EventCommentService {
     List<EventComment> findEventCommentByPostId(long postId);
 
     boolean deleteEventComment(long commentId);
+
 }

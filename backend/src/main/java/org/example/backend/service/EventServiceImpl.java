@@ -5,9 +5,7 @@ import org.example.backend.api.AbstractEnrollmentRepository;
 import org.example.backend.api.EnrollFormRepository;
 import org.example.backend.api.EventRepository;
 import org.example.backend.api.ScoreRepository;
-import org.example.backend.domain.EnrollForm;
-import org.example.backend.domain.Event;
-import org.example.backend.domain.Score;
+import org.example.backend.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +20,9 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     ScoreRepository scoreRepository;
+
     @Autowired
     AbstractEnrollmentRepository abstractEnrollmentRepository;
-
 
     @Override
     public boolean saveEvent(Event event) {
@@ -92,6 +90,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public boolean appliedByUser(long userId, long eventId) {
-        return abstractEnrollmentRepository.findAbstractEnrollmentByParticipantsIdAndEventId(userId, eventId) != null;
+        return abstractEnrollmentRepository.findAbstractEnrollmentByEventIdAndParticipantsId(eventId, userId) != null;
     }
 }

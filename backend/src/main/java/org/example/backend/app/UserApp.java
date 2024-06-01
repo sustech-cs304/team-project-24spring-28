@@ -16,10 +16,11 @@ public class UserApp {
     @Autowired
     private EventCommentService eventCommentService;
     @Autowired
+    CommentService commentService;
+    @Autowired
     private AbstractUserService abstractUserService;
     @Autowired
     private ReplyCommentService replyCommentService;
-
     @Autowired
     private EventService eventService;
     @Autowired
@@ -51,58 +52,32 @@ public class UserApp {
         return true;
     }
 
-//    @PostMapping(value = "/reply")
-//    boolean replyComment(@RequestHeader("Authorization") String token, @RequestParam long commentId, @RequestParam String comment) {
-//        long userId = JwtUtil.getIdByToken(token);
-//        User user = (User) abstractUserService.findUserById(userId);
-//        EventComment tempComment = eventCommentService.findEventCommentById(commentId);
-//        ReplyComment replyComment = new ReplyComment();
-//        replyComment.setUser(user);
-//        replyComment.setComment(comment);
-//        if (tempComment == null) {
-//            ReplyComment toComment = replyCommentService.findReplyCommentById(commentId);
-//            if(toComment == null){
-//                return false;
-//            }
-//            replyComment.setToComment(toComment);
-//            replyComment.setUnderComment(toComment.getUnderComment());
-//            replyCommentService.saveReplyComment(replyComment);
-//            toComment.getReplyComments().add(replyComment);
-//            // message
-//
-//        } else {
-//
-//        }
-//
-//        if (tempComment == null) {
-//            ReplyComment toComment = replyCommentService.findReplyCommentById(commentId);
-//            if (toComment == null) {
-//                return false;
-//            }
-//            replyComment.setToComment(toComment);
-//            replyComment.setUnderComment(toComment.getUnderComment());
-//            replyCommentService.saveReplyComment(replyComment);
-//            toComment.getReplyComments().add(replyComment);
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("roomId", toComment.getUnderComment().getRoom().getId());
-//            jsonObject.put("roomName", getRoomName(toComment.getUnderComment().getRoom()));
-//            jsonObject.put("commentContent", toComment.getComment());
-//            jsonObject.put("oriComment", replyComment.getComment());
-//            messageService.saveMessage(new Message("Comment", toComment.getStudent(), student, false, LocalDateTime.now(), jsonObject.toString()));
-//            return commentService.updateComment(toComment);
-//        } else {
-//            replyComment.setUnderComment(tempComment);
-//            replyComment.setToComment(tempComment);
-//            replyCommentService.saveReplyComment(replyComment);
-//            tempComment.getReplyComments().add(replyComment);
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put("roomId", tempComment.getRoom().getId());
-//            jsonObject.put("roomName", getRoomName(tempComment.getRoom()));
-//            jsonObject.put("commentContent", tempComment.getComment());
-//            jsonObject.put("oriComment", replyComment.getComment());
-//            messageService.saveMessage(new Message("Comment", tempComment.getStudent(), student, false, LocalDateTime.now(), jsonObject.toString()));
-//            return commentService.updateComment(tempComment);
-//        }
-//    }
-
+    @PostMapping(value = "/reply")
+    boolean replyComment(@RequestHeader("Authorization") String token, @RequestParam long commentId, @RequestParam String comment) {
+        long userId = JwtUtil.getIdByToken(token);
+        User user = (User) abstractUserService.findUserById(userId);
+        EventComment tempComment = eventCommentService.findEventCommentById(commentId);
+        ReplyComment replyComment = new ReplyComment();
+        replyComment.setUser(user);
+        replyComment.setComment(comment);
+        if (tempComment == null) {
+            ReplyComment toComment = replyCommentService.findReplyCommentById(commentId);
+            if (toComment == null) {
+                return false;
+            }
+            replyComment.setToComment(toComment);
+            replyComment.setUnderComment(toComment.getUnderComment());
+            replyCommentService.saveReplyComment(replyComment);
+            toComment.getReplyComments().add(replyComment);
+            // message
+            return commentService.updateComment(toComment);
+        } else {
+            replyComment.setUnderComment(tempComment);
+            replyComment.setToComment(tempComment);
+            replyCommentService.saveReplyComment(replyComment);
+            tempComment.getReplyComments().add(replyComment);
+            // message
+            return commentService.updateComment(tempComment);
+        }
+    }
 }
