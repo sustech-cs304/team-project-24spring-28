@@ -1,7 +1,9 @@
 package org.example.backend.service;
 
 import org.example.backend.api.AbstractUserRepository;
+import org.example.backend.api.UserRepository;
 import org.example.backend.domain.AbstractUser;
+import org.example.backend.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import java.util.List;
 public class AbstractUserServiceImpl implements AbstractUserService {
     @Autowired
     private AbstractUserRepository abstractUserRepository;
+    @Autowired
+    private UserRepository userRepository;
 //    @Autowired
 //    JedisService jedisService;
 
@@ -43,5 +47,10 @@ public class AbstractUserServiceImpl implements AbstractUserService {
     @Override
     public AbstractUser findUserByUsername(String username) {
         return abstractUserRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 }

@@ -23,4 +23,6 @@ public interface EventService {
     long getScore(long userId, long eventId);
 
     boolean saveScore(long userId, long eventId, long score);
+
+    boolean deleteEvent(long eventId);
 }

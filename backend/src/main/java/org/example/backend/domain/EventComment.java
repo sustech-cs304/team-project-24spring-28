@@ -1,14 +1,17 @@
 package org.example.backend.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+
+import java.util.List;
 
 @Entity
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
 public class EventComment extends Comment {
+    @OneToMany(mappedBy = "underComment")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<ReplyComment> replyComments;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")

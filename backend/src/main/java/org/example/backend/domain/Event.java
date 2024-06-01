@@ -31,7 +31,11 @@ public class Event {
     private float score = 0;
     private long scoreCount = 0;
     @OneToMany(mappedBy = "event")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private List<Post> posts;
+    @OneToMany(mappedBy = "event")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<EventComment> comments;
     @ManyToMany(mappedBy = "favouriteEvents")
     private List<User> collectors;
 

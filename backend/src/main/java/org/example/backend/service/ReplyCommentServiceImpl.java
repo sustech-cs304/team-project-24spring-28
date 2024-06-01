@@ -38,4 +38,10 @@ public class ReplyCommentServiceImpl implements ReplyCommentService {
     public List<ReplyComment> findAllUnderId(long id) {
         return replyCommentRepository.findAllByUnderCommentId(id);
     }
+
+    @Override
+    public boolean deleteReplyComment(long commentId) {
+        replyCommentRepository.deleteById(commentId);
+        return true;
+    }
 }

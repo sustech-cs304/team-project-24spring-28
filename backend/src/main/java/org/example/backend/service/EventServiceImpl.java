@@ -80,4 +80,10 @@ public class EventServiceImpl implements EventService {
         scoreRepository.save(scoreObj);
         return true;
     }
+
+    @Override
+    public boolean deleteEvent(long eventId) {
+        eventRepository.deleteById(eventId);
+        return true;
+    }
 }
