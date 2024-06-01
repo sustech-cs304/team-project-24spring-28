@@ -1,6 +1,7 @@
 package org.example.backend.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ import java.util.List;
 @DiscriminatorValue(value = "User")
 public class User extends AbstractUser {
     @OneToOne(mappedBy = "user")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Permission permission;
     @ManyToMany
     private List<Event> favouriteEvents;

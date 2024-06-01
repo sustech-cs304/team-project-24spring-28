@@ -11,6 +11,7 @@ import org.example.backend.dto.EventBriefDto;
 import org.example.backend.dto.EventDto;
 import org.example.backend.dto.EventPostDto;
 import org.example.backend.service.AbstractEnrollmentService;
+import org.example.backend.service.AbstractUserService;
 import org.example.backend.service.EventService;
 import org.example.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class EventApp {
     AbstractEnrollmentService abstractEnrollmentService;
 
     @PostMapping("/create")
-    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam LocalDateTime applyStartTime, @RequestParam LocalDateTime applyEndTime, @RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam long limitCount, @RequestParam List<DefinedFormDto> definedForm) {
+    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam String applyStartTime, @RequestParam String applyEndTime, @RequestParam String startTime, @RequestParam String endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam long limitCount, @RequestParam(required = false) List<DefinedFormDto> definedForm) {
         User user = (User) JwtUtil.verifyToken(token);
         if (!user.getPermission().isCanCreate()) {
             throw new MyException(-1, "Permission denied");
@@ -42,20 +44,20 @@ public class EventApp {
         event.setIntroduction(introduction);
         event.setPosterUrl(imageUrl);
         event.setText(mdText);
-        event.setStartTime(startTime);
-        event.setEndTime(endTime);
+        event.setStartTime(LocalDateTime.parse(startTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        event.setEndTime(LocalDateTime.parse(endTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         switch (enrollmentType) {
             case "count":
                 CountEnrollment countEnrollment = new CountEnrollment();
-                countEnrollment.setStartTime(applyStartTime);
-                countEnrollment.setEndTime(applyEndTime);
+                countEnrollment.setStartTime(LocalDateTime.parse(applyStartTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                countEnrollment.setEndTime(LocalDateTime.parse(applyEndTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 countEnrollment.setCapacity(limitCount);
                 event.setAbstractEnrollment(countEnrollment);
                 break;
             case "form":
                 FormEnrollment formEnrollment = new FormEnrollment();
-                formEnrollment.setStartTime(applyStartTime);
-                formEnrollment.setEndTime(applyEndTime);
+                formEnrollment.setStartTime(LocalDateTime.parse(applyStartTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                formEnrollment.setEndTime(LocalDateTime.parse(applyEndTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 formEnrollment.setDefinedFormEntries(definedForm.stream().map(DefinedFormDto::toDefinedFormEntry).toList());
                 event.setAbstractEnrollment(formEnrollment);
                 break;

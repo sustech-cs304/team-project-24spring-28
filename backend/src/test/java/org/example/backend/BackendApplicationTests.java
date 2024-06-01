@@ -54,8 +54,19 @@ class BackendApplicationTests {
             user.setPassword(String.valueOf(i));
             user.setName("user" + i);
             user.setBio("user" + i);
+            Permission permission = new Permission();
+            permission.setUser(user);
+            permission.setCanCreate((i & 1) == 1);
+            permission.setCanEnroll((i & 2) == 2);
+            permission.setCanComment((i & 4) == 4);
+            user.setPermission(permission);
             abstractUserService.saveUser(user);
         }
+    }
+
+    @Test
+    void LoginTest() {
+        String token = restTemplate.postForObject("http://localhost:" + port + "/login?username=1&password=1", null, String.class);
     }
 
     @Test
@@ -65,12 +76,52 @@ class BackendApplicationTests {
         String token2 = restTemplate.postForObject("http://localhost:" + port + "/login?username=2&password=2", null, String.class);
         // test the sendChat api
         try {
-            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/message/sendChat").header("Authorization", token1)
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/message/sendChat")
+                    .header("Authorization", token1)
                     .param("userId", "2")
-                    .param("content", "hello")
-                    .param("time", "2021-05-01 00:00:00")).andExpect(MockMvcResultMatchers.status().isOk());
+                    .param("content", "hello2")
+                    .param("time", "2021-05-01 00:00:00")
+            ).andExpect(MockMvcResultMatchers.status().isOk());
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/message/sendChat")
+                    .header("Authorization", token2)
+                    .param("userId", "1")
+                    .param("content", "hello1")
+                    .param("time", "2021-05-02 00:00:00")
+            ).andExpect(MockMvcResultMatchers.status().isOk());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    void EventTest() {
+        // preform login
+        String token = restTemplate.postForObject("http://localhost:" + port + "/login?username=5&password=5", null, String.class);
+        // test the releaseEvent api
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/event/create")
+                    .header("Authorization", token)
+                    .param("title", "event1")
+                    .param("name", "event-name1")
+                    .param("applyStartTime", "2021-06-05 00:00:00")
+                    .param("applyEndTime", "2021-06-14 00:00:00")
+                    .param("startTime", "2021-06-15 00:00:00")
+                    .param("endTime", "2021-06-16 00:00:00")
+                    .param("introduction", "event-introduction1")
+                    .param("imageUrl", "")
+                    .param("mdText", "")
+                    .param("enrollmentType", "count")
+                    .param("limitCount", "100")
+//                    .param("definedForm", "")
+            ).andExpect(MockMvcResultMatchers.status().isOk());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void PostTest() {
+
+    }
+
 }
