@@ -14,4 +14,6 @@ public class PostDto {
     private long username;
     private String userBio;
     private String userAvatar;
+    private boolean likeOrNot;
+    private boolean collectOrNot;
 }
