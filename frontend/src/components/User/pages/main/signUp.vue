@@ -30,7 +30,7 @@ const registerFormInTemp = ref(null)
 const register = () => {
   registerFormInTemp.value.validate((valid) => {
     if (valid) {
-      axiosInstance.post('//signUp', {
+      axiosInstance.post('/signUp', {
             username: registerForm.username,
             password: registerForm.password
           },
@@ -45,7 +45,6 @@ const register = () => {
           console.log('registration success')
           localStorage.setItem('token', res.data.data)
           localStorage.setItem('username', registerForm.username)
-
           console.log(localStorage.getItem('token'))
         } else {
           console.log('registration failed')
