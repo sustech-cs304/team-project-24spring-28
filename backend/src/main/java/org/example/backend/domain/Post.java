@@ -3,6 +3,7 @@ package org.example.backend.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -27,6 +28,12 @@ public class Post {
 
     @ManyToMany
     private List<AbstractUser> likeUsers;
+
+    private int postCollectAmount;
+
+    @OneToMany(mappedBy = "post")
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+    private List<EventComment> comments;
 
     @Override
     public boolean equals(Object obj) {

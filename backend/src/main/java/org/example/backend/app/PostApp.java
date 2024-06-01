@@ -1,13 +1,11 @@
 package org.example.backend.app;
 
 import org.example.backend.config.MyException;
-import org.example.backend.domain.AbstractUser;
-import org.example.backend.domain.Event;
-import org.example.backend.domain.Post;
-import org.example.backend.domain.User;
+import org.example.backend.domain.*;
 import org.example.backend.dto.EventDto;
 import org.example.backend.dto.PostDto;
 import org.example.backend.service.AbstractUserService;
+import org.example.backend.service.EventCommentService;
 import org.example.backend.service.EventService;
 import org.example.backend.service.PostService;
 import org.example.backend.util.JwtUtil;
@@ -26,6 +24,8 @@ public class PostApp {
     private AbstractUserService abstractUserService;
     @Autowired
     private EventService eventService;
+    @Autowired
+    private EventCommentService eventCommentService;
 
     @PostMapping("/releasePost")
     public Long releasePost(@RequestHeader("Authorization") String token, @RequestParam("postTitle") String postTitle, @RequestParam("postContent") String postContent, @RequestParam("postRelevantEvent") String eventId) {
@@ -50,15 +50,21 @@ public class PostApp {
     }
 
     private PostDto constructPostDto(Post post) {
+        AbstractUser user = post.getUser();
         PostDto postDto = new PostDto();
         postDto.setPostID(post.getId());
         postDto.setPostTitle(post.getPostTitle());
         postDto.setPostContent(post.getPostContent());
         postDto.setPostLink(String.valueOf(post.getId()));
         postDto.setPostRelevantEventID(post.getEvent().getId());
-        postDto.setUsername(post.getUser().getId());
-        postDto.setUserBio(post.getUser().getBio());
-        postDto.setUserAvatar(post.getUser().getAvatar());
+        postDto.setPostLikeAmount(post.getLikeUsers().size());
+        postDto.setPostCollectAmount(post.getPostCollectAmount());
+        postDto.setPostCommentAmount(eventCommentService.findEventCommentByPostId(post.getId()).size());
+        postDto.setUsername(user.getUsername());
+        postDto.setUserBio(user.getBio());
+        postDto.setUserAvatar(user.getAvatar());
+        postDto.setLikeOrNot(post.getLikeUsers().contains(user));
+        postDto.setCollectOrNot(((User) user).getFavouritePosts().contains(post));
         return postDto;
     }
 
@@ -93,6 +99,7 @@ public class PostApp {
             throw new MyException(0, "Only user can collect post");
         }
         ((User) user).getFavouritePosts().add(post);
+        post.setPostCollectAmount(post.getPostCollectAmount() + 1);
         return abstractUserService.saveUser(user);
     }
 
@@ -105,6 +112,7 @@ public class PostApp {
             throw new MyException(1, "Only user can discollect post");
         }
         ((User) user).getFavouritePosts().remove(post);
+        post.setPostCollectAmount(post.getPostCollectAmount() - 1);
         return abstractUserService.saveUser(user);
     }
 
