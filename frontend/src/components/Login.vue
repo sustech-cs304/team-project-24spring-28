@@ -117,7 +117,7 @@ function toSignUp() {
 // add your test button function here
 
 function toProfile() {
-    router.push({path: '/profile'})
+    router.push({path: '/profile', query: {userID: 1}})
 }
 
 function toProfileTest() {
@@ -137,14 +137,14 @@ function toAdmin() {
 }
 
 function toSquare() {
-    router.push({path: '/square'})
+    router.push({path: '/square', query: {eventID: 1}})
   // let url = router.resolve({path: '/square'}).href
   // window.open(url, '_blank')
 }
 
 function toPost() {
     // router.push({path: '/post'})
-  let url = router.resolve({path: '/square/post'}).href
+  let url = router.resolve({path: '/square/post', query: {id: 1}}).href
   window.open(url, '_blank')
 }
 

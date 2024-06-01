@@ -82,6 +82,7 @@ onMounted(async () => {
         eventName.value = data.eventName;
         eventId.value = data.eventId;
         eventBio.value = data.eventBio;
+        console.log(response.data)
     } catch (error) {
         console.error('Error fetching post data:', error);
     }

@@ -11,7 +11,7 @@ module.exports = defineConfig({
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://localhost:8082',
+                target: 'http://10.16.88.247:8082',
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {
@@ -19,6 +19,12 @@ module.exports = defineConfig({
                 }
             }
         },
+        // client: {
+        //     overlay: {
+        //         warnings: false,
+        //         errors: true,
+        //     },
+        // },
         // add to avoid refresh 404
         historyApiFallback: true,
     },
