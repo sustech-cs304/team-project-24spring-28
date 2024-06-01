@@ -3,12 +3,9 @@ import {useRoute, useRouter} from "vue-router";
 import {reactive, ref, onMounted, getCurrentInstance} from "vue";
 import axiosInstance from "@/utils/axios";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
-import NoticeEntity from "@/components/User/pages/message/NoticeEntity.vue"
 import Chat from "@/components/User/pages/message/chat/Chat.vue";
 import CommentEntity from "@/components/User/pages/message/CommentEntity.vue";
 import { formatTime } from "@/components/User/pages/message/utils";
-import Invitation from "@/components/User/pages/message/Invitation/Invitation.vue";
-import Exchange from "@/components/User/pages/message/exchange/Exchange.vue";
 
 
 const router = useRouter()
@@ -39,7 +36,7 @@ function press_button(messageType) {
 
 const instance = getCurrentInstance();
 
-const noticeData = ref([])
+// const noticeData = ref([])
 const commentData = ref([])
 
 
