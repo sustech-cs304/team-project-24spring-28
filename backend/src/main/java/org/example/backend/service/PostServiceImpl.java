@@ -33,4 +33,10 @@ public class PostServiceImpl implements PostService {
     public List<Post> findAllPosts() {
         return postRepository.findAll();
     }
+
+    @Override
+    public boolean deletePost(long postId) {
+        postRepository.deleteById(postId);
+        return true;
+    }
 }

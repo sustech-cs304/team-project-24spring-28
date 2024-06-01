@@ -13,4 +13,6 @@ public interface ReplyCommentService {
     List<ReplyComment> findAllById(Long[] ids);
     List<ReplyComment> findAllByUserId(long id);
     List<ReplyComment> findAllUnderId(long id);
+
+    boolean deleteReplyComment(long commentId);
 }
