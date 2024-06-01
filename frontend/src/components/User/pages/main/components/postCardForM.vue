@@ -2,6 +2,8 @@
 import { Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import InfoBox from "@/components/User/pages/post/components/infoBox.vue";
+import SimplePost from "@/components/Modules/SimplePost.vue";
 
 const router = useRouter();
 
@@ -56,55 +58,18 @@ function goToPost() {
                 </el-col>
                 <el-col :span="4">
                     <el-row>
-                        <el-col style="display: flex; flex-direction: column; justify-content: center;">
-                            <el-row style="margin-bottom: 5px">
-                                <el-button-group>
-                                    <el-button type="primary" :icon="Pointer" class="button-left">
-                                        点赞
-                                    </el-button>
-                                    <el-button type="primary" plain  class="button-right">
-                                        10
-                                    </el-button>
-                                </el-button-group>
-                            </el-row>
-                            <el-row style="margin-bottom: 5px">
-                                <el-button-group>
-                                    <el-button type="primary" :icon="StarFilled" class="button-left">
-                                        收藏
-                                    </el-button>
-                                    <el-button type="primary" plain class="button-right">
-                                        29
-                                    </el-button>
-                                </el-button-group>
-                            </el-row>
-                            <el-row style="margin-bottom: 5px">
-                                <el-button-group>
-                                    <el-button type="primary" :icon="Share" class="button-left">
-                                        分享
-                                    </el-button>
-                                    <el-button type="primary" plain class="button-right">
-                                        7
-                                    </el-button>
-                                </el-button-group>
-                            </el-row>
-                            <el-row >
-                                <el-button-group>
-                                    <el-button type="primary" :icon="ChatDotSquare" class="button-left">
-                                        评论
-                                    </el-button>
-                                    <el-button type="primary" plain class="button-right">
-                                        20
-                                    </el-button>
-                                </el-button-group>
-                            </el-row>
+                        <el-col :span="12">
+                            <info-box :given-number="1" :background="'@/assets/Like/like.png'"></info-box>
                         </el-col>
-
-                    </el-row>
-                    <el-row>
-
-                    </el-row>
-                    <el-row>
-
+                        <el-col :span="12">
+                            <info-box></info-box>
+                        </el-col>
+                        <el-col :span="12">
+                            <info-box :given-number="32456"></info-box>
+                        </el-col>
+                        <el-col :span="12">
+                            <info-box></info-box>
+                        </el-col>
                     </el-row>
                 </el-col>
             </el-row>
@@ -136,5 +101,18 @@ function goToPost() {
     font-weight: bold;
     font-size: 20px;
 }
-
+.box {
+    height: 8vh;
+    background-color: #ccc;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.number {
+    position: absolute;
+    color: white;
+    font-family: 'Arial Rounded MT Bold', sans-serif;
+}
 </style>

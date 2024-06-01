@@ -1,3 +1,4 @@
+
 <template>
   <div class="container">
     <!-- Header -->
@@ -17,12 +18,12 @@
     </div>
 
     <div>
-      <postCard></postCard>
-      <postCard></postCard>
-      <postCard></postCard>
-      <postCard></postCard>
-      <postCard></postCard>
-      <postCard></postCard>
+      <EventCard></EventCard>
+      <EventCard></EventCard>
+      <EventCard></EventCard>
+      <EventCard></EventCard>
+      <EventCard></EventCard>
+      <EventCard></EventCard>
     </div>
 
   </div>
@@ -31,8 +32,7 @@
 <script setup>
 import { ref } from 'vue';
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
-import postCard from "@/components/User/pages/post/components/postsSquare/postCard.vue";
-
+import EventCard from "@/components/User/pages/main/components/EventCard.vue";
 
 const searchInput = ref('');
 
