@@ -1,9 +1,14 @@
 <script setup>
 
-import {ref} from "vue";
+import {ref, onMounted} from "vue";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
+import axiosInstance from "@/utils/axios";
+import {useRoute, useRouter} from "vue-router";
 
-defineProps({
+const router = useRouter()
+const route = useRoute()
+
+const props = defineProps({
   id: {
     type: String,
     required: true
@@ -22,41 +27,73 @@ let startTime = ref('')
 let endTime = ref('')
 
 let score = ref(0)
+let stars = ref("")
 let posterUrl = ref('')
+
+function toEvent() {
+  router.push({path: '/event', query: {id: props.id}})
+}
+
+onMounted(() => {
+  axiosInstance.get('/event/brief', {
+    params: {
+      id: props.id
+    }
+  }).then(response => {
+    let temp = response.data.data
+    title = temp.title
+    eventName = temp.eventName
+    author = temp.authorName
+    authorId = temp.authorId
+    applyStartTime = temp.applyStartTime
+    applyEndTime = temp.applyEndTime
+    startTime = temp.startTime
+    endTime = temp.endTime
+    score = temp.score
+    introduction = temp.introduction
+    posterUrl = temp.posterUrl
+
+    stars = '⭐'
+    for (let i = 1; i < score; i++) {
+      stars = stars + '⭐'
+    }
+
+
+  }).catch(error => {
+    console.error(error);
+  });
+})
 
 // just for test
 score = '4'
-let stars = ref("")
-stars = '⭐'
-for (let i = 1; i < score; i++) {
-  stars = stars + '⭐'
-}
 
-title = '某某活动马上就要开始了！'
-eventName = '活动某某'
-author = 'Lamptales'
-authorId = '123456'
 
-applyStartTime = '2024-4-4 00:00:00'
-applyEndTime = '2024-4-14 00:00:00'
-startTime = '2024-4-16 00:00:00'
-endTime = '2024-4-26 00:00:00'
 
-introduction = '加入绝地潜兵的行列吧！😆 ' +
-    '成为维和部队的精英！🤠 ' +
-    '见识奇异的生命体👽 ' +
-    '让管理式民主惠及整个星系🤟 ' +
-    '成为英雄，' +
-    '成为传奇😃🤲😄 ' +
-    '成为绝地潜兵！😃'
-posterUrl = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
+// title = '某某活动马上就要开始了！'
+// eventName = '活动某某'
+// author = 'Lamptales'
+// authorId = '123456'
+//
+// applyStartTime = '2024-4-4 00:00:00'
+// applyEndTime = '2024-4-14 00:00:00'
+// startTime = '2024-4-16 00:00:00'
+// endTime = '2024-4-26 00:00:00'
+//
+// introduction = '加入绝地潜兵的行列吧！😆 ' +
+//     '成为维和部队的精英！🤠 ' +
+//     '见识奇异的生命体👽 ' +
+//     '让管理式民主惠及整个星系🤟 ' +
+//     '成为英雄，' +
+//     '成为传奇😃🤲😄 ' +
+//     '成为绝地潜兵！😃'
+// posterUrl = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
 
 
 </script>
 
 <template>
   <el-card style="border-radius: 0.5vw" shadow="hover">
-    <div class="warp">
+    <div class="warp" @click="toEvent">
       <div class="poster-warp">
         <img :src="posterUrl" alt="poster" style="width: 100%; height: auto;">
       </div>

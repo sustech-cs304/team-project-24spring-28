@@ -3,6 +3,8 @@ import { ref, reactive, onMounted } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
+import axiosInstance from "@/utils/axios";
+
 
 let imageUrl = ref('')
 
@@ -51,8 +53,18 @@ const rules = reactive({
 
 function beforeUpload(file) {
   console.log(file.name)
-  imageUrl.value = URL.createObjectURL(file.raw)
-  console.log(imageUrl)
+  let temp = new FormData()
+  temp.append('file', file.raw)
+  axiosInstance.post('/image/upload', temp).then((res) => {
+    console.log(res.data)
+    imageUrl.value = res.data.data
+    // cat the host and the path
+    // imageUrl.value = axiosInstance.defaults.url + imageUrl.value
+  }).catch((err) => {
+    console.log(err)
+  })
+  // imageUrl.value = URL.createObjectURL(file.raw)
+  console.log(imageUrl.value)
   return false
 }
 
@@ -110,7 +122,7 @@ function deleteForm(id) {
     if (definedForm.value[i].id === id) {
       definedForm.value.splice(i, 1)
       found = true
-      if (definedForm.value.length !== 0) {
+      if (definedForm.value.length !== 0 && id < definedForm.value.length) {
         definedForm.value[i].id -= 1
       }
     }
@@ -198,6 +210,68 @@ function editSelectApply() {
 
 function editSelectCancel() {
   editSelectVisible.value = false
+}
+
+// turn Sat Jul 06 2024 00:00:00 GMT+0800 (中国标准时间) to 2024-07-06 00:00:00
+function formatTime(str) {
+  let temp = new Date(str)
+  let year = temp.getFullYear()
+  let month = temp.getMonth() + 1
+  let day = temp.getDate()
+  let hour = temp.getHours()
+  let minute = temp.getMinutes()
+  let second = temp.getSeconds()
+  return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+}
+
+function createEventClick() {
+  // console.log(form)
+  // console.log(mdText)
+  let temp = new FormData()
+  temp.append('title', form.title)
+  temp.append('name', form.name)
+  temp.append('applyStartTime', formatTime(form.applyStartTime))
+  temp.append('applyEndTime', formatTime(form.applyEndTime))
+  temp.append('startTime', formatTime(form.startTime))
+  temp.append('endTime', formatTime(form.endTime))
+  temp.append('introduction', form.introduction)
+  temp.append('imageUrl', imageUrl.value)
+  temp.append('mdText', mdText.value)
+  if (form.type === '1') {
+    temp.append('enrollmentType', 'count')
+    if (form.limitCount === '') {
+      temp.append('limitCount', 0)
+    } else {
+      temp.append('limitCount', Number(form.limitCount))
+    }
+    // add empty definedForm
+    temp.append('definedForm', JSON.stringify([]))
+  } else if (form.type === '2') {
+    temp.append('enrollmentType', 'select')
+    temp.append('seatSet', form.seatSet)
+  } else {
+    temp.append('definedForm', JSON.stringify(definedForm.value))
+  }
+  // console.log(form.startTime)
+  // console.log(temp.get('startTime'))
+  axiosInstance.post('/event/create', temp).then((res) => {
+    console.log(res.data)
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
+function mdUploadImage(event, insertImage, files) {
+  let temp = new FormData()
+  temp.append('file', files[0])
+  axiosInstance.post('/image/upload', temp).then((res) => {
+    insertImage({
+      url: res.data.data,
+      desc: 'Description'
+    })
+  }).catch((err) => {
+    console.log(err)
+  })
 }
 
 
@@ -331,11 +405,16 @@ onMounted(() => {
       >活动正文</p>
     </div>
     <div style="width: 90%; display: flex; flex-direction: row; justify-content: center; margin-left: 50px">
-      <v-md-editor v-model="mdText"></v-md-editor>
+      <v-md-editor
+          v-model="mdText"
+          @upload-image="mdUploadImage"
+          :disabled-menus="[]"
+      ></v-md-editor>
     </div>
 
     <div style="margin-top: 30px; display: flex; flex-direction: row; justify-content: center;">
-      <el-button type="primary">发起活动</el-button>
+      <el-button type="primary" @click="createEventClick"
+      >发起活动</el-button>
     </div>
   </div>
 

@@ -9,9 +9,15 @@ const router = useRouter()
 const route = useRoute()
 
 const props = defineProps({
-  commentBlockId: {
+  postId: {
     type: Number,
-    required: true
+    required: false,
+    default: -1
+  },
+  eventId: {
+    type: Number,
+    required: false,
+    default: -1
   }
 })
 
@@ -27,7 +33,27 @@ const commentData = ref([])
 
 // TODO: edit in the future
 onMounted(() => {
-  // axiosInstance.get(`/comment/room`, {params: {roomId: roomId}}).then((res) => {
+  if (props.eventId !== -1) {
+    axiosInstance.get(`/comment/event`, {params: {eventId: props.eventId}}).then((res) => {
+      commentData.value = res.data.data
+      for (let i = 0; i < commentData.value.length; i++) {
+        axiosInstance.get(`/comment/under`, {
+              params: {
+                commentId: commentData.value[i].id
+              }
+            }
+        ).then((res) => {
+          commentData.value[i].subComments = res.data.data
+          console.log('commentData:', commentData)
+        }).catch((err) => {
+          console.log(err)
+        })
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+  // axiosInstance.get(`/comment/event`, {params: {roomId: roomId}}).then((res) => {
   //   commentData.value = res.data.data
   //   for (let i = 0; i < commentData.value.length; i++) {
   //     axiosInstance.get(`/comment/under`, {

@@ -3,21 +3,33 @@ import { ref, reactive, onMounted } from 'vue'
 import {useRouter} from "vue-router";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import EventCardBig from "@/components/Modules/event/EventCardBig.vue";
+import axiosInstance from "@/utils/axios";
 
 let favorList = ref([])
 let applyList = ref([])
 
 onMounted(() => {
-  for (let i = 0; i < 10; i++) {
-    favorList.value.push({
-      id: '123'
-    })
-  }
-  for (let i = 0; i < 10; i++) {
-    applyList.value.push({
-      id: '123'
-    })
-  }
+  // TODO: test the following code
+  axiosInstance.get('/user/favor').then((res) => {
+    favorList.value = res.data.data.eventList
+  }).catch((err) => {
+    console.log(err)
+  })
+  axiosInstance.get('/user/apply').then((res) => {
+    applyList.value = res.data.data.eventList
+  }).catch((err) => {
+    console.log(err)
+  })
+  // for (let i = 0; i < 10; i++) {
+  //   favorList.value.push({
+  //     id: '123'
+  //   })
+  // }
+  // for (let i = 0; i < 10; i++) {
+  //   applyList.value.push({
+  //     id: '123'
+  //   })
+  // }
 })
 
 </script>

@@ -19,6 +19,7 @@ const props = defineProps({
     type: String,
     required: true
   },
+  // TODO: remove roomId
   roomId: {
     type: Number,
     required: true
