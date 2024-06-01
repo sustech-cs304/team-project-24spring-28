@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,33 +30,33 @@ public class EventApp {
     AbstractEnrollmentService abstractEnrollmentService;
 
     @PostMapping("/create")
-    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam EventPostDto eventPostDto) {
+    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam LocalDateTime applyStartTime, @RequestParam LocalDateTime applyEndTime, @RequestParam LocalDateTime startTime, @RequestParam LocalDateTime endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam long limitCount, @RequestParam List<DefinedFormDto> definedForm) {
         User user = (User) JwtUtil.verifyToken(token);
-        if(!user.getPermission().isCanCreate()){
+        if (!user.getPermission().isCanCreate()) {
             throw new MyException(-1, "Permission denied");
         }
         Event event = new Event();
-        event.setTitle(eventPostDto.getTitle());
-        event.setName(eventPostDto.getName());
+        event.setTitle(title);
+        event.setName(name);
         event.setAuthor(user);
-        event.setIntroduction(eventPostDto.getIntroduction());
-        event.setText(eventPostDto.getMdText());
-        event.setStartTime(eventPostDto.getStartTime());
-        event.setEndTime(eventPostDto.getEndTime());
-        event.setPosterUrl(eventPostDto.getImageUrl());
-        switch (eventPostDto.getEnrollmentType()) {
+        event.setIntroduction(introduction);
+        event.setPosterUrl(imageUrl);
+        event.setText(mdText);
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        switch (enrollmentType) {
             case "count":
                 CountEnrollment countEnrollment = new CountEnrollment();
-                countEnrollment.setStartTime(eventPostDto.getApplyStartTime());
-                countEnrollment.setEndTime(eventPostDto.getApplyEndTime());
-                countEnrollment.setCapacity(eventPostDto.getLimitCount());
+                countEnrollment.setStartTime(applyStartTime);
+                countEnrollment.setEndTime(applyEndTime);
+                countEnrollment.setCapacity(limitCount);
                 event.setAbstractEnrollment(countEnrollment);
                 break;
             case "form":
                 FormEnrollment formEnrollment = new FormEnrollment();
-                formEnrollment.setStartTime(eventPostDto.getApplyStartTime());
-                formEnrollment.setEndTime(eventPostDto.getApplyEndTime());
-                formEnrollment.setDefinedFormEntries(eventPostDto.getDefinedForm().stream().map(DefinedFormDto::toDefinedFormEntry).toList());
+                formEnrollment.setStartTime(applyStartTime);
+                formEnrollment.setEndTime(applyEndTime);
+                formEnrollment.setDefinedFormEntries(definedForm.stream().map(DefinedFormDto::toDefinedFormEntry).toList());
                 event.setAbstractEnrollment(formEnrollment);
                 break;
         }
@@ -93,16 +94,16 @@ public class EventApp {
     @PostMapping("/apply")
     public boolean applyEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam("formValues") List<String> formValues) {
         User user = (User) JwtUtil.verifyToken(token);
-        if(!user.getPermission().isCanEnroll()){
+        if (!user.getPermission().isCanEnroll()) {
             throw new MyException(-1, "Permission denied");
         }
         Event event = eventService.findEventById(eventId);
         EnrollForm enrollForm = new EnrollForm();
         AbstractEnrollment abstractEnrollment = event.getAbstractEnrollment();
-        if(abstractEnrollment instanceof CountEnrollment countEnrollment){
-            if(countEnrollment.getCount() >= countEnrollment.getCapacity()){
+        if (abstractEnrollment instanceof CountEnrollment countEnrollment) {
+            if (countEnrollment.getCount() >= countEnrollment.getCapacity()) {
                 throw new MyException(-1, "Capacity full");
-            }else{
+            } else {
                 countEnrollment.setCount(countEnrollment.getCount() + 1);
                 List<User> participants = countEnrollment.getParticipants();
                 participants.add(user);
@@ -111,7 +112,7 @@ public class EventApp {
         if (abstractEnrollment instanceof FormEnrollment formEnrollment) {
             if (formValues.size() != formEnrollment.getDefinedFormEntries().size()) {
                 throw new MyException(-1, "Form values not match");
-            }else{
+            } else {
                 List<User> participants = formEnrollment.getParticipants();
                 participants.add(user);
                 enrollForm.setUser(user);
