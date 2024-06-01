@@ -1,10 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineProps } from 'vue'
 import { Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import InfoBox from "@/components/User/pages/post/components/infoBox.vue";
-import SimplePost from "@/components/Modules/SimplePost.vue";
 import axiosInstance from "@/utils/axios";
 
 const router = useRouter();
@@ -39,9 +38,7 @@ const posterUrl = ref("https://shadow.elemecdn.com/app/element/hamburger.9cf7b09
 
 async function fetchData() {
     try {
-        const response = await axiosInstance.get(`/post/getFullPost?postID=${props.postID}`).then(
-
-        );
+        const response = await axiosInstance.get(`/post/getFullPost?postID=${props.postID}`)
         const postData = response.data.data;
 
         postTitle.value = postData.postTitle;

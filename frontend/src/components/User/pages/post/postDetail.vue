@@ -154,7 +154,7 @@ const toggleCollapse = () => {
                                             <!--activity-->
                                             <el-col :span="4" />
                                             <el-col :span="8">
-                                                <event-card :name="postRelevantEventID"></event-card>
+                                                <event-card :id="postRelevantEventID"></event-card>
                                             </el-col>
                                         </el-row>
                                     </el-col>
