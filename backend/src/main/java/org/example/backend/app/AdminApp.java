@@ -7,6 +7,8 @@ import org.example.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin")
 public class AdminApp {
@@ -20,7 +22,10 @@ public class AdminApp {
     ReplyCommentService replyCommentService;
     @Autowired
     PostService postService;
-
+    @GetMapping("/user")
+    public List<User> getAllUsers() {
+        return abstractUserService.findAllUsers();
+    }
 
     @PostMapping("/permission")
     public boolean changePermission(long userId, @RequestParam("canCreate") boolean canCreate, @RequestParam("canEnroll") boolean canEnroll, @RequestParam("canComment") boolean canComment) {
