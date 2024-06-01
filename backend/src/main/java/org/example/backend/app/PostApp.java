@@ -134,4 +134,9 @@ public class PostApp {
         eventDto.setEventName(event.getName());
         return eventDto;
     }
+
+    @DeleteMapping("/delete/{postID}")
+    public boolean deletePost(@PathVariable("postID") String postId) {
+        return postService.deletePostById(Long.parseLong(postId));
+    }
 }
