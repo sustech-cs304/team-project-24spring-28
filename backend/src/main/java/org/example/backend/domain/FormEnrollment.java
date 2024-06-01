@@ -9,20 +9,10 @@ import java.util.List;
 
 @Entity
 public class FormEnrollment extends AbstractEnrollment {
-    @OneToOne
-    Event event;
     @OneToMany
     private List<DefinedFormEntry> definedFormEntries;
     @OneToMany(mappedBy = "formEnrollment")
     List<EnrollForm> enrollForms;
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
 
     public List<EnrollForm> getEnrollForms() {
         return enrollForms;

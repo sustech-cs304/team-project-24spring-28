@@ -1,10 +1,9 @@
 package org.example.backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.example.backend.dto.DefinedFormDto;
+
+import java.util.List;
 
 @Entity
 public class DefinedFormEntry {
@@ -15,9 +14,17 @@ public class DefinedFormEntry {
     private String name;
 
     private String type;
+    @ElementCollection
+    private List<String> options;
     private boolean required;
 
+    public List<String> getOptions() {
+        return options;
+    }
 
+    public void setOptions(List<String> options) {
+        this.options = options;
+    }
 
     public long getEntryId() {
         return entryId;

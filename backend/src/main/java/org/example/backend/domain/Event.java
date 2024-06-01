@@ -26,8 +26,8 @@ public class Event {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String posterUrl;
-    private float score;
-    private long scoreCount;
+    private float score = 0;
+    private long scoreCount = 0;
     @OneToMany(mappedBy = "event")
     private List<Post> posts;
     @ManyToMany(mappedBy = "favouriteEvents")

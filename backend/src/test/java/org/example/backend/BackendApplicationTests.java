@@ -1,10 +1,7 @@
 package org.example.backend;
 
 import org.example.backend.app.AbstractUserApp;
-import org.example.backend.domain.AbstractUser;
-import org.example.backend.domain.Admin;
-import org.example.backend.domain.Permission;
-import org.example.backend.domain.User;
+import org.example.backend.domain.*;
 import org.example.backend.dto.GlobalResponse;
 import org.example.backend.service.AbstractUserService;
 import org.junit.jupiter.api.Test;
@@ -19,6 +16,9 @@ import org.springframework.test.web.servlet.MockMvcResultMatchersDsl;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 // This will not start the server, but will start the application context
 //@SpringBootTest()
@@ -40,9 +40,68 @@ class BackendApplicationTests {
     @Test
     void contextLoads() {
     }
+
     @Test
-    void generateData(){
+    void generateData() {
+        // generate users
+        for (int i = 0; i < 8; i++) {
+            User user = new User();
+            user.setUsername(String.valueOf(i));
+            user.setPassword(String.valueOf(i));
+            user.setName("user" + i);
+            user.setBio("user" + i);
+            Permission permission = new Permission();
+            permission.setUser(user);
+            permission.setCanCreate((i & 1) == 1);
+            permission.setCanEnroll((i & 2) == 2);
+            permission.setCanComment((i & 4) == 4);
+            user.setPermission(permission);
+            abstractUserService.saveUser(user);
+
+            // generate events
+            // preform login user 7
+            String token = (String) restTemplate.postForObject("http://localhost:" + port + "/login?username=7&password=7", null, GlobalResponse.class).getData();
+            //add lecture
+            Event lecture = new Event();
+            CountEnrollment countEnrollment = new CountEnrollment();
+            lecture.setTitle("");
+            lecture.setName("");
+            lecture.setIntroduction("");
+            lecture.setText("");
+            lecture.setPosterUrl("");
+            lecture.setAuthor(user);
+            lecture.setStartTime(LocalDateTime.of(2021, 6, 15, 0, 0, 0));
+            lecture.setEndTime(LocalDateTime.of(2021, 6, 16, 0, 0, 0));
+            countEnrollment.setEvent(lecture);
+            countEnrollment.setStartTime(LocalDateTime.of(2021, 6, 1, 0, 0, 0));
+            countEnrollment.setEndTime(LocalDateTime.of(2024, 6, 1, 0, 0, 0));
+            countEnrollment.setCapacity(100);
+            lecture.setAbstractEnrollment(countEnrollment);
+
+            // add soccer
+            Event soccer = new Event();
+            FormEnrollment formEnrollment = new FormEnrollment();
+            soccer.setTitle("");
+            soccer.setName("");
+            soccer.setIntroduction("");
+            soccer.setText("");
+            soccer.setPosterUrl("");
+            soccer.setAuthor(user);
+            soccer.setStartTime(LocalDateTime.of(2021, 6, 15, 0, 0, 0));
+            soccer.setEndTime(LocalDateTime.of(2021, 6, 16, 0, 0, 0));
+            formEnrollment.setEvent(soccer);
+            formEnrollment.setStartTime(LocalDateTime.of(2021, 6, 1, 0, 0, 0));
+            formEnrollment.setEndTime(LocalDateTime.of(2024, 6, 1, 0, 0, 0));
+            soccer.setAbstractEnrollment(formEnrollment);
+            // add FormEntry
+            List<DefinedFormEntry> definedFormEntries = formEnrollment.getDefinedFormEntries();
+            DefinedFormEntry definedFormEntry = new DefinedFormEntry();
+            definedFormEntry.setEntryId(0);
+            definedFormEntry.setName("name");
+            definedFormEntry.setType("input");
+        }
     }
+
     @Test
     void userTest() {
         Admin admin = new Admin();
