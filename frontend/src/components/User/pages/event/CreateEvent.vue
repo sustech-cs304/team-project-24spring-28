@@ -214,14 +214,50 @@ function editSelectCancel() {
 
 // turn Sat Jul 06 2024 00:00:00 GMT+0800 (中国标准时间) to 2024-07-06 00:00:00
 function formatTime(str) {
-  let temp = new Date(str)
-  let year = temp.getFullYear()
-  let month = temp.getMonth() + 1
-  let day = temp.getDate()
-  let hour = temp.getHours()
-  let minute = temp.getMinutes()
-  let second = temp.getSeconds()
-  return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+  let date = str.toString().split(' ')
+  let month = ''
+  switch (date[1]) {
+    case 'Jan':
+      month = '01'
+      break
+    case 'Feb':
+      month = '02'
+      break
+    case 'Mar':
+      month = '03'
+      break
+    case 'Apr':
+      month = '04'
+      break
+    case 'May':
+      month = '05'
+      break
+    case 'Jun':
+      month = '06'
+      break
+    case 'Jul':
+      month = '07'
+      break
+    case 'Aug':
+      month = '08'
+      break
+    case 'Sep':
+      month = '09'
+      break
+    case 'Oct':
+      month = '10'
+      break
+    case 'Nov':
+      month = '11'
+      break
+    case 'Dec':
+      month = '12'
+      break
+  }
+  let day = date[2]
+  let year = date[3]
+  let time = date[4]
+  return year + '-' + month + '-' + day + ' ' + time
 }
 
 function createEventClick() {
@@ -244,11 +280,8 @@ function createEventClick() {
     } else {
       temp.append('limitCount', Number(form.limitCount))
     }
-    // add empty definedForm
-    temp.append('definedForm', JSON.stringify([]))
-  } else if (form.type === '2') {
-    temp.append('enrollmentType', 'select')
-    temp.append('seatSet', form.seatSet)
+  } else if (form.type === '3') {
+    temp.append('enrollmentType', 'form')
   } else {
     temp.append('definedForm', JSON.stringify(definedForm.value))
   }
