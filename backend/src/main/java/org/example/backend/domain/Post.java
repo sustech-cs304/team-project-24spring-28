@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity
@@ -22,7 +24,8 @@ public class Post {
     @ManyToOne
     private AbstractUser user;
 
-    private int likes;
+    @ManyToMany
+    private List<AbstractUser> likeUsers;
 
     @Override
     public boolean equals(Object obj) {
