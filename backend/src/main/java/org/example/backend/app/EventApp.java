@@ -39,33 +39,32 @@ public class EventApp {
         if (!user.getPermission().isCanCreate()) {
             throw new MyException(-1, "Permission denied");
         }
-        throw new MyException(-1, eventPostDto.getStartTime()+" "+eventPostDto.getTitle());
-//        Event event = new Event();
-//        event.setTitle(eventPostDto.getTitle());
-//        event.setName(eventPostDto.getName());
-//        event.setAuthor(user);
-//        event.setIntroduction(eventPostDto.getIntroduction());
-//        event.setPosterUrl(eventPostDto.getImageUrl());
-//        event.setText(eventPostDto.getMdText());
-//        event.setStartTime(LocalDateTime.parse(eventPostDto.getStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//        event.setEndTime(LocalDateTime.parse(eventPostDto.getEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//        switch (eventPostDto.getEnrollmentType()) {
-//            case "count":
-//                CountEnrollment countEnrollment = new CountEnrollment();
-//                countEnrollment.setStartTime(LocalDateTime.parse(eventPostDto.getApplyStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//                countEnrollment.setEndTime(LocalDateTime.parse(eventPostDto.getApplyEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//                countEnrollment.setCapacity(eventPostDto.getLimitCount());
-//                event.setAbstractEnrollment(countEnrollment);
-//                break;
-//            case "form":
-//                FormEnrollment formEnrollment = new FormEnrollment();
-//                formEnrollment.setStartTime(LocalDateTime.parse(eventPostDto.getApplyStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//                formEnrollment.setEndTime(LocalDateTime.parse(eventPostDto.getApplyEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-//                formEnrollment.setDefinedFormEntries(eventPostDto.getDefinedForm().stream().map(DefinedFormDto::toDefinedFormEntry).toList());
-//                event.setAbstractEnrollment(formEnrollment);
-//                break;
-//        }
-//        return eventService.saveEvent(event);
+        Event event = new Event();
+        event.setTitle(eventPostDto.getTitle());
+        event.setName(eventPostDto.getName());
+        event.setAuthor(user);
+        event.setIntroduction(eventPostDto.getIntroduction());
+        event.setPosterUrl(eventPostDto.getImageUrl());
+        event.setText(eventPostDto.getMdText());
+        event.setStartTime(LocalDateTime.parse(eventPostDto.getStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        event.setEndTime(LocalDateTime.parse(eventPostDto.getEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        switch (eventPostDto.getEnrollmentType()) {
+            case "count":
+                CountEnrollment countEnrollment = new CountEnrollment();
+                countEnrollment.setStartTime(LocalDateTime.parse(eventPostDto.getApplyStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                countEnrollment.setEndTime(LocalDateTime.parse(eventPostDto.getApplyEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                countEnrollment.setCapacity(eventPostDto.getLimitCount());
+                event.setAbstractEnrollment(countEnrollment);
+                break;
+            case "form":
+                FormEnrollment formEnrollment = new FormEnrollment();
+                formEnrollment.setStartTime(LocalDateTime.parse(eventPostDto.getApplyStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                formEnrollment.setEndTime(LocalDateTime.parse(eventPostDto.getApplyEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                formEnrollment.setDefinedFormEntries(eventPostDto.getDefinedForm().stream().map(DefinedFormDto::toDefinedFormEntry).toList());
+                event.setAbstractEnrollment(formEnrollment);
+                break;
+        }
+        return eventService.saveEvent(event);
     }
 
     @GetMapping("/all")
