@@ -2,6 +2,7 @@ package org.example.backend.service;
 
 
 import org.example.backend.domain.AbstractUser;
+import org.example.backend.domain.User;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface AbstractUserService {
     AbstractUser findUserById(long id);
 
     AbstractUser findUserByUsername(String username);
+
+    List<User> findAllUsers();
 }
