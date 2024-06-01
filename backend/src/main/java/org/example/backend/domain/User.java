@@ -20,7 +20,7 @@ public class User extends AbstractUser {
     @OneToMany(mappedBy = "user")
     private List<EnrollForm> enrollForms;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "participants")
     private List<AbstractEnrollment> enrollments;
 
     @ManyToMany

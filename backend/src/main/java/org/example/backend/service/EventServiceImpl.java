@@ -1,6 +1,7 @@
 package org.example.backend.service;
 
 import org.checkerframework.checker.units.qual.A;
+import org.example.backend.api.AbstractEnrollmentRepository;
 import org.example.backend.api.EnrollFormRepository;
 import org.example.backend.api.EventRepository;
 import org.example.backend.api.ScoreRepository;
@@ -21,6 +22,8 @@ public class EventServiceImpl implements EventService {
 
     @Autowired
     ScoreRepository scoreRepository;
+    @Autowired
+    AbstractEnrollmentRepository abstractEnrollmentRepository;
 
 
     @Override
@@ -85,5 +88,10 @@ public class EventServiceImpl implements EventService {
     public boolean deleteEvent(long eventId) {
         eventRepository.deleteById(eventId);
         return true;
+    }
+
+    @Override
+    public boolean appliedByUser(long userId, long eventId) {
+        return abstractEnrollmentRepository.findAbstractEnrollmentByParticipantsIdAndEventId(userId, eventId) != null;
     }
 }

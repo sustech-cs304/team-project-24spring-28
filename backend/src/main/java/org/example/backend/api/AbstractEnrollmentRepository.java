@@ -4,4 +4,5 @@ import org.example.backend.domain.AbstractEnrollment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AbstractEnrollmentRepository extends JpaRepository<AbstractEnrollment, Long> {
+    public AbstractEnrollment findAbstractEnrollmentByParticipantsIdAndEventId(long userId, long eventId);
 }

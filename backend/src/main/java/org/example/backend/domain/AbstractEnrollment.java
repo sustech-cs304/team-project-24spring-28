@@ -15,6 +15,9 @@ public class AbstractEnrollment {
     @OneToOne
     private Event event;
     @ManyToMany
+    @JoinTable(name = "enrollment_user",
+            joinColumns = {@JoinColumn(name = "enrollment_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> participants;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

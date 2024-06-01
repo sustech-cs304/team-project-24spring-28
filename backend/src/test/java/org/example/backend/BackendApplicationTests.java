@@ -195,6 +195,8 @@ class BackendApplicationTests {
         post.setPostContent("### 燃情回顾，大学足球联赛的感动瞬间！\n" + "\n" + "大学足球联赛圆满结束，让我们一起回顾这段充满激情与感动的足球之旅吧！\n" + "\n" + "\uD83C\uDFC6 **冠军**：恭喜「热血战队」荣获冠军，并斩获丰厚奖金￥5000和闪亮奖杯！他们的团队合作和顽强拼搏精神令人敬佩！\n" + "\n" + "\uD83E\uDD48 **亚军**：「风暴队」表现出色，力拼到最后一刻，最终获得亚军，并收获￥3000的奖金。他们的奋斗精神令人动容！\n" + "\n" + "\uD83E\uDD49 **季军**：「豪杰队」在比赛中展现出良好的技术和团队默契，获得了季军的殊荣，同时也获得了￥1000的奖金。\n" + "\n" + "每支参赛队伍都用汗水和激情书写了自己的足球梦想，在比赛中收获了友谊、团队精神和成长。正是这些感动瞬间，让大学足球联赛充满了意义与价值！\n" + "\n" + "我们期待着下一届的比赛，更多的激情，更多的荣耀！感谢每一位参与者的付出和支持，让我们一起见证足球梦想的绽放！\n" + "\n" + "[想了解更多关于足球赛事的信息，请点击这里！](https://soccer.hupu.com/)\n" + "\n" + "共同创造更多足球的辉煌瞬间！\uD83C\uDF1F");
         // save soccer post2
         postService.savePost(post);
+
+        System.out.println(restTemplate.postForObject("http://localhost:" + port + "/event/apply?id=1", null, GlobalResponse.class).getData());
     }
 
 
