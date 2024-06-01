@@ -40,7 +40,9 @@ class BackendApplicationTests {
     @Test
     void contextLoads() {
     }
-
+    @Test
+    void generateData(){
+    }
     @Test
     void userTest() {
         Admin admin = new Admin();
