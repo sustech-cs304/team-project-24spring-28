@@ -106,11 +106,15 @@ function countApply() {
   temp.append('id', eventId)
   axiosInstance.post('/event/apply', temp).then(response => {
     console.log(response)
+    if (response.data.code === 0) {
+      alert('报名成功！')
+      currentCount.value += 1
+    } else {
+      alert('报名失败！')
+    }
   }).catch(error => {
     console.error(error)
   })
-  currentCount.value += 1
-  alert('报名成功！')
   countVisible.value = false
 }
 
@@ -138,12 +142,17 @@ function formApply() {
     //   value: appliedForm.value[i].value
     // })
     // example: ["王煜然", "12110330", "", "男"]
-    formValues.push(appliedForm.value[i])
+    formValues.push(appliedForm.value[i].value)
   }
   temp.append('formValues', JSON.stringify(formValues))
 
   axiosInstance.post('/event/apply', temp).then(response => {
     console.log(response)
+    if (response.data.code === 0) {
+      alert('报名成功！')
+    } else {
+      alert('报名失败！')
+    }
   }).catch(error => {
     console.error(error)
   })
@@ -151,7 +160,6 @@ function formApply() {
   for (let i = 0; i < appliedForm.value.length; i++) {
     appliedForm.value[i].value = ''
   }
-  alert('报名成功！')
   formVisible.value = false
 }
 
