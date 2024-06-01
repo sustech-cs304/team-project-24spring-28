@@ -74,6 +74,7 @@ function clickLike() {
 
 function clickWrite() {
   console.log('write')
+  router.push({path: '/square', query: {eventID: eventId}})
 }
 
 function clickApply() {
