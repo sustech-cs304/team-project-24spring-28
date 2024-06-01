@@ -6,7 +6,8 @@ EXPOSE 8080
 COPY ./ /usr/src/myapp/frontend
 WORKDIR /usr/src/myapp/frontend
 
-RUN rm Jenkinsfile && \
-    rm Dockerfile && \
-    npm install && \
-    npm run serve
+RUN chmod 777 node_modules/.bin/vue-cli-service && \
+    rm Jenkinsfile && \
+    rm Dockerfile
+
+CMD ["npm", "run", "serve"]
