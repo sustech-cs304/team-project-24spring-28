@@ -41,4 +41,10 @@ public class EventCommentServiceImpl implements EventCommentService {
     public List<EventComment> findEventCommentByPostId(long postId) {
         return eventCommentRepository.findEventCommentByPostId(postId);
     }
+
+    @Override
+    public boolean deleteEventComment(long commentId) {
+        eventCommentRepository.deleteById(commentId);
+        return true;
+    }
 }

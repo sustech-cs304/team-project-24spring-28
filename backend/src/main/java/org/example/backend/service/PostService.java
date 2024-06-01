@@ -12,4 +12,6 @@ public interface PostService {
     Post findPostById(long id);
 
     List<Post> findAllPosts();
+
+    boolean deletePost(long postId);
 }
