@@ -11,7 +11,7 @@
                 <el-button-group >
                     <el-button class="profile-avatar">
                         <div class="block">
-                            <el-avatar shape="square" :size="40" :src="props.avatar" />
+                            <el-avatar :size="40" :src="props.avatar" />
                         </div>
                     </el-button>
                     <el-button  class="profile-name">

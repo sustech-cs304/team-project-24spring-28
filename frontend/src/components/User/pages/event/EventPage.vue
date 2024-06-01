@@ -1,0 +1,527 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import VMdPreview from '@kangc/v-md-editor/lib/preview'
+import Comment from '@/components/Modules/comment/Comment.vue'
+import Avatar from '@/components/Modules/avatar/Avatar.vue'
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
+import SimplePost from "@/components/Modules/SimplePost.vue";
+
+import {useRoute, useRouter} from "vue-router";
+import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
+const router = useRouter()
+const route = useRoute()
+
+const eventId = route.query.id
+console.log(eventId)
+
+let title = ref('')
+let eventName = ref('')
+let authorId = ref('')
+let authorName = ref('')
+let applyStartTime = ref('')
+let applyEndTime = ref('')
+let startTime = ref('')
+let endTime = ref('')
+let grade = ref(0)
+let posterUrl = ref('')
+let text = ref('')
+
+let postList = ref([])
+
+let liked = ref(false)
+let stars = ref('')
+
+let eventType = ''
+let countVisible = ref(false)
+let selectVisible = ref(false)
+let formVisible = ref(false)
+
+// count attributes
+let currentCount = ref(0)
+let limitCount = ref('')
+
+// select attributes
+//TODO: select attributes
+
+// form attributes
+let definedForm = ref([])
+const appliedForm = ref([])
+
+
+function clickLike() {
+  liked.value = !liked.value
+  console.log(liked.value)
+}
+
+function clickWrite() {
+  console.log('write')
+}
+
+function clickApply() {
+  if (eventType === 'count') {
+    console.log('count')
+    countVisible.value = true
+  } else if (eventType === 'select') {
+    selectVisible.value = true
+  } else if (eventType === 'form') {
+    formVisible.value = true
+  }
+}
+
+function clickCancel() {
+  countVisible.value = false
+  selectVisible.value = false
+  formVisible.value = false
+}
+
+function countApply() {
+  currentCount.value += 1
+  alert('报名成功！')
+  countVisible.value = false
+}
+
+function formApply() {
+  // console.log(appliedForm.value)
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
+  }
+
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    if (appliedForm.value[i].value === '') {
+      alert('请填写：' + appliedForm.value[i].name)
+      return
+    }
+  }
+
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    appliedForm.value[i].value = ''
+  }
+  alert('报名成功！')
+  formVisible.value = false
+}
+
+onMounted(() => {
+  // get event info
+  title.value = '某某活动马上就要开始了！'
+  eventName.value = '活动某某'
+  authorId.value = '123456'
+  authorName.value = 'Lamptales'
+  applyStartTime.value = '2024-4-4 00:00:00'
+  applyEndTime.value = '2024-4-14 00:00:00'
+  startTime.value = '2024-4-16 00:00:00'
+  endTime.value = '2024-4-26 00:00:00'
+  liked.value = true
+  let score = 4
+  posterUrl.value = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
+
+  eventType = 'form'
+
+  currentCount.value = 5
+  let limit = -1
+  if (limit === -1) {
+    limitCount.value = '无限制'
+  } else {
+    limitCount.value = limit.toString()
+  }
+
+  definedForm.value = [
+    {
+      id: 0,
+      name: '姓名',
+      type: 'input',
+      required: true
+    },
+    {
+      id: 1,
+      name: '学号',
+      type: 'input',
+      required: true
+    },
+    {
+      id: 2,
+      name: '性别',
+      type: 'select',
+      options: ['男', '女'],
+      required: true
+    }
+  ]
+
+  for (let i = 0; i < definedForm.value.length; i++) {
+    appliedForm.value.push({
+      id: definedForm.value[i].id,
+      name: definedForm.value[i].name,
+      value: ''
+    })
+  }
+
+
+  stars.value = '⭐'
+  for (let i = 1; i < score; i++) {
+    stars.value += '⭐'
+  }
+
+
+  text.value = '<p align="left">\n' +
+      '    English ｜ <a href="README.md">中文</a>\n' +
+      '</p>\n' +
+      '<br>\n' +
+      '\n' +
+      '<h1 align="center">\n' +
+      '  Llama-Chinese\n' +
+      '</h1>\n' +
+      '<p align="center" width="100%">\n' +
+      '  <img src="https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg" alt="Llama" style="width: 20%; display: block; margin: auto;"></a>\n' +
+      '</p>\n' +
+      '<p align="center">\n' +
+      '  <font face="黑体" color=orange size="6"> The Best Chinese Llama Large Language Model </font>\n' +
+      '</p>\n' +
+      '<p align="center">\n' +
+      '  <a href="https://llama.family">Online: llama.family</a>\n' +
+      '</p>\n' +
+      '<p align="center">\n' +
+      '  <a href="https://huggingface.co/FlagAlpha/Atom-7B-Chat">Open-source Chinese Pre-trained LLM Atom based on Llama2</a>\n' +
+      '</p>\n' +
+      '\n'
+
+  postList.value = [
+    {
+      title: 'Title1',
+      author: 'Author1',
+      time: '2024-4-4',
+    },
+    {
+      title: 'Title2',
+      author: 'Author2',
+      time: '2024-4-4',
+    },
+    {
+      title: 'Title3',
+      author: 'Author3',
+      time: '2024-4-4',
+    }
+  ]
+})
+
+
+function showGrade(newGrade) {
+  console.log(newGrade)
+}
+</script>
+
+<template>
+  <div>
+    <header-for-all/>
+  </div>
+  <div class="main">
+    <div class="left-body">
+      <div>
+        <h1 class="event-title">{{ title }}</h1>
+      </div>
+
+      <div class="name-time-wrap">
+        <p style="margin-top: 5px; margin-bottom: 5px; color: #3abbff;">{{ eventName }}</p>
+      </div>
+
+      <div style="margin-top: 10px; margin-left: 5px; font-size: 12px">
+        报名时间: {{applyStartTime}} - {{applyEndTime}}
+      </div>
+
+      <div style="margin-top: 10px; margin-left: 5px; font-size: 12px">
+        活动时间: {{applyStartTime}} - {{applyEndTime}}
+      </div>
+
+      <div>
+        <p style="margin-top: 10px"
+        >{{ stars }}</p>
+      </div>
+
+      <div>
+        <img :src="posterUrl"/>
+      </div>
+
+      <div>
+        <v-md-preview :text="text"></v-md-preview>
+      </div>
+
+      <comment comment-block-id="1"></comment>
+
+
+    </div>
+
+    <div class="right-panel">
+      <div class="author-wrap">
+        <avatar-with-name
+            :user-id="authorId"
+            :need-small="true"
+            size-small="60px"
+            name="LampTales"></avatar-with-name>
+      </div>
+      <div>
+        <p class="event-title">Related Posts</p>
+      </div>
+
+      <div v-for="post in postList">
+        <simple-post></simple-post>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-button">
+    <input type="checkbox"
+           :checked="liked"
+           id="favorite"
+           name="favorite-checkbox"
+           value="favorite-button"
+           class="liked-input"
+           @click="clickLike"
+    >
+    <label for="favorite" class="liked-label">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      <div class="action">
+        <span class="option-1">收藏</span>
+        <span class="option-2">已收藏</span>
+      </div>
+    </label>
+    <el-button type="primary"
+               @click="clickApply"
+                style="margin-left: 20px;"
+    >我要参加</el-button>
+    <el-button type="primary"
+               @click="clickWrite"
+               style="margin-left: 20px;"
+    >我想发帖</el-button>
+
+    <div class="rating" style="margin-left: 20px; margin-right: 20px">
+      <input value="5" name="rate" id="star5" type="radio" v-model="grade" @click="showGrade(5)"/>
+      <label title="text" for="star5"></label>
+      <input value="4" name="rate" id="star4" type="radio" v-model="grade" @click="showGrade(4)"/>
+      <label title="text" for="star4"></label>
+      <input value="3" name="rate" id="star3" type="radio" v-model="grade" @click="showGrade(3)"/>
+      <label title="text" for="star3"></label>
+      <input value="2" name="rate" id="star2" type="radio" v-model="grade" @click="showGrade(2)"/>
+      <label title="text" for="star2"></label>
+      <input value="1" name="rate" id="star1" type="radio" v-model="grade" @click="showGrade(1)"/>
+      <label title="text" for="star1"></label>
+    </div>
+  </div>
+
+  <el-dialog v-model="countVisible" title="活动报名">
+    <div>
+      <p
+      >当前报名人数: {{ currentCount }}/{{ limitCount }}</p>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="countApply">报名</el-button>
+      </div>
+      <div>
+        <el-button type="primary" @click="clickCancel">取消</el-button>
+      </div>
+    </div>
+
+  </el-dialog>
+
+  <el-dialog v-model="selectVisible" title="选座式活动">
+    <span>选座式活动</span>
+  </el-dialog>
+
+  <el-dialog v-model="formVisible" title="自定义报名活动">
+    <div>
+      <el-form>
+        <el-form-item v-for="item in definedForm" :key="item.name" :label="item.name">
+          <el-input v-if="item.type === 'input'" v-model="appliedForm[item.id].value"/>
+          <el-select v-else-if="item.type === 'select'" v-model="appliedForm[item.id].value">
+            <el-option
+                v-for="option in item.options"
+                :key="option"
+                :label="option"
+                :value="option"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: flex-end">
+      <div style="margin-right: 20px">
+        <el-button type="primary" @click="formApply">报名</el-button>
+      </div>
+      <div>
+        <el-button type="primary" @click="clickCancel">取消</el-button>
+      </div>
+    </div>
+  </el-dialog>
+</template>
+
+<style scoped>
+
+.main {
+  width: 99vw;
+  display: flex;
+  flex-direction: row;
+  overflow-y: scroll;
+  height: 82vh;
+}
+
+.event-title {
+  font-size: 20px;
+}
+
+.name-time-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+}
+
+.left-body {
+  width: 70%;
+  margin-left: 20px;
+}
+
+.right-panel {
+  margin-left: 20px;
+  width: 25%;
+}
+
+.author-wrap {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: auto;
+  margin-bottom: 60px;
+  margin-top: 20px;
+}
+
+.bottom-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  height: 7vh;
+  margin-right: 100px;
+  margin-left: 50px;
+}
+
+
+
+
+.rating:not(:checked) > input {
+  position: absolute;
+  appearance: none;
+}
+
+.rating:not(:checked) > label {
+  float: right;
+  cursor: pointer;
+  font-size: 30px;
+  color: #666;
+}
+
+.rating:not(:checked) > label:before {
+  content: '★';
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked + label:hover ~ label,
+.rating > input:checked ~ label:hover,
+.rating > input:checked ~ label:hover ~ label,
+.rating > label:hover ~ input:checked ~ label {
+  color: #e58e09;
+}
+
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+  color: #ff9e0b;
+}
+
+.rating > input:checked ~ label {
+  color: #ffa723;
+}
+
+
+
+
+.liked-label {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 15px 10px 10px;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 10px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  color: black;
+}
+
+.liked-input {
+  display: none;
+}
+
+.liked-input:checked + .liked-label svg {
+  fill: hsl(0deg 100% 50%);
+  stroke: hsl(0deg 100% 50%);
+  animation: heartButton 1s;
+}
+
+@keyframes heartButton {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.3);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(1.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.liked-input + .liked-label .action {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+}
+
+.liked-input + .liked-label .action span {
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+  transition: all .5s;
+}
+
+.liked-input + .liked-label .action span.option-1 {
+  transform: translate(0px,0%);
+  opacity: 1;
+}
+
+.liked-input:checked + .liked-label .action span.option-1 {
+  transform: translate(0px,-100%);
+  opacity: 0;
+}
+
+.liked-input + .liked-label .action span.option-2 {
+  transform: translate(0px,100%);
+  opacity: 0;
+}
+
+.liked-input:checked + .liked-label .action span.option-2 {
+  transform: translate(0px,0%);
+  opacity: 1;
+}
+</style>

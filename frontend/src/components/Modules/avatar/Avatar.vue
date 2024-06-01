@@ -158,36 +158,21 @@ let avatar_url = computed(() => {
 
 <style scoped>
 .header-entry-mini {
-  margin-top: 7px;
   z-index: 2;
   display: block;
-  width: 38px;
-  height: 38px;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .header-entry-small {
-  margin-left: 10px;
-  margin-top: 10px;
-  top: 13px;
-  left: 15px;
   z-index: 2;
   display: block;
-  width: 25px;
-  height: 25px;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .wrapper {
-  top: 10px;
-  left: 10px;
-  width: 45px;
-  height: 45px;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
+  position: relative;
 }
 
 .levitate {
@@ -197,7 +182,7 @@ let avatar_url = computed(() => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: relative;
+  position: absolute;
   align-content: center;
   align-items: center;
   border: 1px solid #cccccc;

@@ -2,38 +2,39 @@ import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import Login from "@/components/Login.vue";
 import Square from "@/components/User/pages/post/postSquare.vue"
 import Post from "@/components/User/pages/post/postDetail.vue"
+import Message from "@/components/User/pages/message/Message.vue"
 
+import EventPage from "@/components/User/pages/event/EventPage.vue"
+import CreateEvent from "@/components/User/pages/event/CreateEvent.vue";
+import ManageEvent from "@/components/User/pages/event/ManageEvent.vue";
+import MyEvent from "@/components/User/pages/event/MyEvent.vue";
+import ExamplePage from "@/components/Modules/event/ExamplePage.vue";
 
-// import MessageMain from "@/components/Student/pages/Message/Message.vue";
-// import Main from "@/components/Student/Main.vue";
-// import FindRoom from "@/components/Student/pages/FindRoom/FindRoom.vue";
-// import StudentEnd from "@/components/Student/pages/StudentEnd/StudentEnd.vue";
-// import Self from "@/components/Student/pages/Self/Self.vue";
-// import Bulletin from "@/components/Student/pages/Bulletin/Bulletin.vue";
-// import Admin from "@/components/Admin/Admin.vue";
-// import Team from "@/components/Student/pages/Team/Team.vue";
-// import detailInfo from "@/components/Student/pages/FindRoom/DetailPage/detailInfo.vue";
-// import Invite from "@/components/Student/pages/Invite/Invite.vue";
-// import Exchange from "@/components/Student/pages/Exchange/Exchange.vue";
-
-
+import mainPage from "@/components/User/pages/main/mainPage.vue"
+import searchPage from "@/components/User/pages/main/searchPage.vue";
+import signUp from "@/components/User/pages/main/signUp.vue";
+import Profile from "@/components/User/pages/profile/profile.vue";
+import ProfileExample from "@/components/User/pages/profile/profileExample.vue";
+import Admin from "@/components/Admin/AdminPage.vue";
 const routes = [
     {path: '/', component: Login},
+    {path: '/signup', component: signUp},
     {path: '/square', component: Square},
     {path: '/square/post', component: Post},
-    // These are the routes in the old code, you can take them as reference
-    // {path: '/main', name: 'main', component: Main},
-    // {path: '/student', name: 'student', component: StudentEnd},
-    // {path: '/message', name: 'message', component: MessageMain},
-    // {path: '/findroom', name: 'findRoom', component: FindRoom},
-    // {path: '/self', name: 'self', component: Self},
-    // {path: '/bulletin', name: 'bulletin', component: Bulletin},
-    // {path: `/detailInfo`, name: 'detailInfo', component: detailInfo},
-    // {path: '/bulletin', name: 'bulletin', component: Bulletin},
-    // {path: '/admin', name: 'admin', component: Admin},
-    // {path: '/team', name: 'team', component: Team},
-    // {path: '/invite', name: 'invite', component: Invite},
-    // {path: '/exchange', name: 'exchange', component: Exchange},
+
+    {path: '/profile', component: Profile},
+    {path: '/profileTest', component: ProfileExample},
+
+    {path: '/event', component: EventPage},
+    {path: '/event/create', component: CreateEvent},
+    {path: '/event/manage', component: ManageEvent},
+    {path: '/event/cardTest', component: ExamplePage},
+    {path: '/event/my', component: MyEvent},
+
+    {path: '/main', component: mainPage},
+    {path: '/search', component: searchPage},
+    {path: '/message', component: Message},
+    {path: '/admin', component: Admin}
 ]
 
 const router = createRouter({

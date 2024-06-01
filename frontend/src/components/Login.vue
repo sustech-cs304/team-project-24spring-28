@@ -116,6 +116,14 @@ function toSignUp() {
 // -------------------test button function-------------------
 // add your test button function here
 
+function toProfile() {
+    router.push({path: '/profile'})
+}
+
+function toProfileTest() {
+    router.push({path: '/profileTest'})
+}
+
 function toMain() {
   router.push({path: '/main'})
 }
@@ -138,6 +146,30 @@ function toPost() {
     // router.push({path: '/post'})
   let url = router.resolve({path: '/square/post'}).href
   window.open(url, '_blank')
+}
+
+function toEvent() {
+  router.push({path: '/event', query: {id: 1}})
+}
+
+function toWriteEvent() {
+  router.push({path: '/event/create'})
+}
+
+function toManageEvent() {
+  router.push({path: '/event/manage'})
+}
+
+function toMessage() {
+  router.push({path: '/message'})
+}
+
+function toEventCardTest() {
+  router.push({path: '/event/cardTest'})
+}
+
+function toMyEvent() {
+  router.push({path: '/event/my'})
 }
 
 
@@ -190,6 +222,36 @@ function toPost() {
 
     <button type="submit" @click="toPost">
       toPost
+    </button>
+
+    <button type="submit" @click="toEvent">
+      toEvent
+    </button>
+
+      <button type="submit" @click="toProfile">
+          toProfile
+      </button>
+      <button type="submit" @click="toProfileTest">
+          toProfileTest
+      </button>
+    <button type="submit" @click="toWriteEvent">
+      toWriteEvent
+    </button>
+
+    <button type="submit" @click="toManageEvent">
+      toManageEvent
+    </button>
+
+    <button type="submit" @click="toMessage">
+      toMessage
+    </button>
+
+    <button type="submit" @click="toEventCardTest">
+      toCardTest
+    </button>
+
+    <button type="submit" @click="toMyEvent">
+      toMyEvent
     </button>
 
     <!-- ------------- end of the test list --------------- -->

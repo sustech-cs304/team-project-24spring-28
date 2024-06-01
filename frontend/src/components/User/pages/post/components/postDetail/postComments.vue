@@ -2,6 +2,7 @@
 import { Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import Comment from '@/components/Modules/comment/Comment.vue'
 
 const router = useRouter();
 
@@ -14,17 +15,14 @@ const StarFilledIcon = StarFilled;
 
 <template>
     <!--    <el-card class="card-box" shadow="never">-->
+
     <el-card style=" max-height: 27vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover" >
         <!--            <template #header>Yummy hamburger</template>-->
         <el-row>
-            <el-col :span="20">
-                <el-row style="margin-bottom: 10px;">
-                    <el-col :span="22">
-                            <span >
-                                CommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsCommentsComments
-                            </span>
-                    </el-col>
-                </el-row>
+            <el-col :span="24">
+
+                        <comment comment-block-id="1"></comment>
+
 
             </el-col>
 
