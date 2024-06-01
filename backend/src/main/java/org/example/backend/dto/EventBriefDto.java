@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.backend.domain.AbstractEnrollment;
+import org.example.backend.domain.CountEnrollment;
 import org.example.backend.domain.Event;
+import org.example.backend.domain.FormEnrollment;
 import org.example.backend.domain.enums.EventType;
 
 import java.time.LocalDateTime;
@@ -17,7 +20,7 @@ public class EventBriefDto {
     private String title;
     private long eventId;
     private String eventName;
-    private EventType eventType;
+    private String enrollmentType;
     private long authorId;
     private String authorName;
     private LocalDateTime applyStartTime;
@@ -32,7 +35,6 @@ public class EventBriefDto {
         this.title = event.getTitle();
         this.eventId = event.getId();
         this.eventName = event.getName();
-        this.eventType = event.getType();
         this.authorId = event.getAuthor().getId();
         this.authorName = event.getAuthor().getName();
         this.applyStartTime = event.getAbstractEnrollment().getStartTime();
@@ -42,5 +44,12 @@ public class EventBriefDto {
         this.score = event.getScore();
         this.postUrl = event.getPosterUrl();
         this.introduction = event.getIntroduction();
+        AbstractEnrollment enrollment = event.getAbstractEnrollment();
+        if (enrollment instanceof CountEnrollment) {
+            this.enrollmentType = "count";
+        }
+        if (enrollment instanceof FormEnrollment) {
+            this.enrollmentType = "form";
+        }
     }
 }
