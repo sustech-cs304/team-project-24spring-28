@@ -5,6 +5,7 @@ import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import InfoBox from "@/components/User/pages/post/components/infoBox.vue";
 import SimplePost from "@/components/Modules/SimplePost.vue";
+import axiosInstance from "@/utils/axios";
 
 const router = useRouter();
 
@@ -38,8 +39,10 @@ const posterUrl = ref("https://shadow.elemecdn.com/app/element/hamburger.9cf7b09
 
 async function fetchData() {
     try {
-        const response = await axiosInstance.get(`/post/getFullPost?postID=${props.postID}`);
-        const postData = response.data;
+        const response = await axiosInstance.get(`/post/getFullPost?postID=${props.postID}`).then(
+
+        );
+        const postData = response.data.data;
 
         postTitle.value = postData.postTitle;
         postContent.value = postData.postContent;
@@ -51,6 +54,7 @@ async function fetchData() {
         userBio.value = postData.userBio;
         userAvatar.value = postData.userAvatar;
 
+
         // Fetch event details
         await fetchEventDetails(postData.postRelevantEventID);
     } catch (error) {
@@ -61,10 +65,10 @@ async function fetchData() {
 async function fetchEventDetails(eventID) {
     try {
         const response = await axiosInstance.get(`/event/detail?id=${eventID}`);
-        const eventData = response.data;
+        const eventData = response.data.data;
 
         eventTitle.value = eventData.title;
-        posterUrl.value = eventData.posterUrl;
+        posterUrl.value = eventData.postUrl;
     } catch (error) {
         console.error('Error fetching event details:', error);
     }
@@ -100,7 +104,7 @@ function goToPost() {
                             </el-row>
                             <el-row>
                                 <img
-                                    src="{{posterUrl}}"
+                                    :src="posterUrl"
                                     style="width: 6vw"/>
                             </el-row>
                         </el-col>

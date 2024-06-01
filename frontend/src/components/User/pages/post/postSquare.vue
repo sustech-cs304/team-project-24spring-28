@@ -63,7 +63,7 @@ const editDialogVisible = ref(false)
 const shareDialogVisible = ref(false)
 const imageDialogVisible = ref(false)
 
-
+const tempTest = '1'
 const load = () => {
     count.value += 10
 }
@@ -253,8 +253,8 @@ const handleUploadImage = async (event, insertImage, files) => {
                 <el-row>
                     <el-col :span="24">
                         <div>
-                            <postCard :post-i-d="5"></postCard>
-                            <postCard :post-i-d="6"></postCard>
+                            <postCard :post-i-d="tempTest"></postCard>
+                            <postCard :post-i-d="2"></postCard>
 <!--                            <postCard :post-i-d="1"></postCard>-->
 <!--                            <postCard :post-i-d="2"></postCard>-->
 <!--                            <postCard :post-i-d="3"></postCard>-->

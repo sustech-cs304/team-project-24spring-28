@@ -17,32 +17,93 @@ const route = useRoute(); // 初始化 route
 
 // API call to get post data
 const postID = route.query.id; // Example post ID
-const postData = ref({});
-const userData = ref({});
-const eventData = ref({});
+let postData = ref({});
+let userData = ref({});
+let eventData = ref({});
 
+let postTitle = ref('');
+let postContent = ref()
+let postRelevantEventID = ref()
+let username = ref()
+let userID = ref()
+let userBio = ref()
+let userAvatar = ref()
+let likeOrNot = ref()
+let collectOrNot = ref()
 onMounted(async () => {
-    axiosInstance.get('/post/getFullPost', {
-        params: {
-            postID: postID
-        }
-    }).then(response => {
-
-
-
-    }).catch(error => {
-        console.error(error);
-    });
+    try {
+        const response = await axiosInstance.get('/post/getFullPost', {
+            params: {
+                postID: postID
+            }
+        });
+        let temp = response.data.data;
+        postTitle.value = temp.postTitle;
+        postContent.value = temp.postContent;
+        postRelevantEventID.value = temp.postRelevantEvent;
+        username.value = temp.username;
+        userID.value = temp.userID;
+        userBio.value = temp.userBio;
+        userAvatar.value = temp.userAvatar;
+        isLiked.value = temp.likeOrNot;
+        isStarred.value = temp.collectOrNot;
+    } catch (error) {
+        console.error('Failed to fetch post data:', error);
+    }
 });
 
 // Right side buttons functionality
-const isStarred = ref(false);
-const isLiked = ref(false);
-const toggleStar = () => {
-    isStarred.value = !isStarred.value;
+let isStarred = ref(false);
+let isLiked = ref(false);
+const toggleStar = async () => {
+    if (isLiked.value === false) {
+        try {
+            await axiosInstance.post('/post/collectThePost', null, {
+                params: {
+                    postID: postID
+                }
+            });
+            isStarred.value = !isStarred.value;
+        } catch (error) {
+            console.error('Failed to collect the post:', error);
+        }
+    } else {
+        try {
+            await axiosInstance.post('/post/discollectThePost', null, {
+                params: {
+                    postID: postID
+                }
+            });
+            isStarred.value = !isStarred.value;
+        } catch (error) {
+            console.error('Failed to collect the post:', error);
+        }
+    }
 };
-const toggleLike = () => {
-    isLiked.value = !isLiked.value;
+const toggleLike = async () => {
+    if (isLiked.value === false) {
+        try {
+            await axiosInstance.post('/post/likeThePost', null, {
+                params: {
+                    postID: postID
+                }
+            });
+            isLiked.value = !isLiked.value;
+        } catch (error) {
+            console.error('Failed to like the post:', error);
+        }
+    }else {
+        try {
+            await axiosInstance.post('/post/dislikeThePost', null, {
+                params: {
+                    postID: postID
+                }
+            });
+            isLiked.value = !isLiked.value;
+        } catch (error) {
+            console.error('Failed to like the post:', error);
+        }
+    }
 };
 
 const commentSectionRef = ref(null);
@@ -80,20 +141,20 @@ const toggleCollapse = () => {
                             <el-card>
                                 <el-row>
                                     <el-col>
-                                        <span class="Title">{{ postData.postTitle }}</span>
+                                        <span class="Title">{{postTitle}}</span>
                                     </el-col>
                                     <el-divider />
                                     <el-col>
                                         <el-row>
                                             <!--profile-->
                                             <el-col :span="3">
-                                                <profile-card :name="name"></profile-card>
-                                                <AvatarWithName :user-id="userData.userID" :name="userData.username" :avatar="userData.userAvatar"></AvatarWithName>
+                                                <profile-card :name="username"></profile-card>
+<!--                                                <AvatarWithName :user-id="userID" :name="username" :avatar="userAvatar"></AvatarWithName>-->
                                             </el-col>
                                             <!--activity-->
                                             <el-col :span="4" />
                                             <el-col :span="8">
-                                                <event-card :name="eventData.eventID"></event-card>
+                                                <event-card :name="postRelevantEventID"></event-card>
                                             </el-col>
                                         </el-row>
                                     </el-col>
@@ -114,7 +175,7 @@ const toggleCollapse = () => {
                                 <el-card>
                                     <el-collapse v-model="activeNames">
                                         <el-collapse-item title="Content" name="contentFold">
-                                            <v-md-preview :text="postData.postContent"></v-md-preview>
+                                            <v-md-preview :text="postContent"></v-md-preview>
                                         </el-collapse-item>
                                     </el-collapse>
                                 </el-card>
