@@ -65,6 +65,11 @@ public class EventApp {
         return eventService.saveEvent(event);
     }
 
+    @GetMapping("/all")
+    public long[] getAllEvents() {
+        return eventService.findAllEvents().stream().mapToLong(Event::getId).toArray();
+    }
+
     @GetMapping("/detail")
     public EventDto getEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
         User user = (User) JwtUtil.verifyToken(token);
