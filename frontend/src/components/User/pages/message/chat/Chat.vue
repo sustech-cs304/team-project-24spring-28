@@ -93,7 +93,7 @@ let timer = null
 const polling = () => {
   timer = setInterval(() => {
     updateChatTexts()
-  }, 1000)
+  }, 1500)
 }
 
 onMounted(() => {
