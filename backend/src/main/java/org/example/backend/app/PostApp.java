@@ -154,4 +154,27 @@ public class PostApp {
     public boolean deletePost(@PathVariable("postID") String postId) {
         return postService.deletePostById(Long.parseLong(postId));
     }
+
+    @GetMapping("/getPostSquare/collect")
+    public List<PostDto> getPostSquareCollect(@RequestHeader("Authorization") String token) {
+        AbstractUser user = JwtUtil.verifyToken(token);
+        List<Post> posts = ((User) user).getFavouritePosts();
+        List<PostDto> postDtos = new ArrayList<>();
+        for (Post post : posts) {
+            postDtos.add(constructPostDto(post));
+        }
+        return postDtos;
+    }
+
+    @GetMapping("/getPostSquare/write")
+    public List<PostDto> getPostSquareWrite(@RequestHeader("Authorization") String token) {
+        AbstractUser user = JwtUtil.verifyToken(token);
+        List<Post> posts = postService.findPostsByUserId(user.getId());
+        List<PostDto> postDtos = new ArrayList<>();
+        for (Post post : posts) {
+            postDtos.add(constructPostDto(post));
+        }
+        return postDtos;
+    }
+
 }
