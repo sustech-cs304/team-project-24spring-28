@@ -1,30 +1,37 @@
-
 <template>
   <div class="container">
     <!-- Header -->
     <HeaderForAll>
     </HeaderForAll>
-
-    <!-- Search Bar -->
-    <div class="search-bar">
-      <el-input
-          v-model="searchInput"
-          placeholder="搜索你感兴趣的活动"
-          clearable
-          @clear="clearSearch"
-          @input="handleSearch"
-      >
-        <template #prepend>搜索</template>
-      </el-input>
-    </div>
-
+    <el-row>
+      <div class="container">
+        <h1>校园活动平台</h1>
+        <p>欢迎来到校园活动平台，发现最新最热门的校园活动！</p>
+        <el-row gutter="10" align="middle">
+          <el-col :span="12">
+            <el-input
+                v-model="searchInput"
+                placeholder="搜索你感兴趣的活动或帖子！"
+                clearable
+                @clear="clearSearch"
+            />
+          </el-col>
+          <el-col :span="6">
+            <el-button @click="searchEvent" type="primary" block>搜索活动</el-button>
+          </el-col>
+          <el-col :span="6">
+            <el-button @click="searchPost" type="primary" block>搜索帖子</el-button>
+          </el-col>
+        </el-row>
+      </div>
+    </el-row>
     <!-- Search Results -->
-    <div v-if="searchResults.length > 0">
-      <postCard
-          v-for="post in searchResults"
-          :key="post.id"
-          :postData="post"
-      />
+    <div v-if="postIds.length > 0">
+      <div v-for="item in postIds" :key="item.id">
+        <div class="event-card-wrapper">
+          <post-card :post-i-d="item" />
+        </div>
+      </div>
     </div>
     <div v-else>
       <p>没有找到相关内容</p>
@@ -34,48 +41,45 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
-import postCard from "@/components/User/pages/post/components/postsSquare/postCard.vue";
 import * as searchApi from '@/components/User/pages/main/searchApi.js';
+import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+import postCard from '@/components/User/pages/post/components/postsSquare/postCard.vue';
 
+const route = useRoute();
+const router = useRouter();
 
+const content = ref(route.query.content);
+const postIds = ref([]);
 const searchInput = ref('');
-const eventResults = ref([]);
-const postResults = ref([]);
+
+onMounted(async () => {
+  postIds.value = await searchApi.searchPost(content.value);
+});
 
 const clearSearch = () => {
   console.log('Search input cleared!');
   searchInput.value = '';
-  eventResults.value = [];
-  postResults.value = [];
 };
 
-const handleSearch = async () => {
-  if (searchInput.value.trim() === '') {
-    eventResults.value = [];
-    postResults.value = [];
-    return;
+const searchPost = () => {
+  if (searchInput.value.trim() !== '') {
+    let url = router.resolve({ path: '/post/search', query: { content: searchInput.value } }).href;
+    window.open(url, '_blank');
+  } else {
+    alert('请输入搜索内容');
   }
+};
 
-  // Call search API to get event IDs and post IDs
-  const eventIds = await searchApi.searchEvent(searchInput.value);
-  const postIds = await searchApi.searchPost(searchInput.value);
-
-  // Fetch detailed post information for each event ID and post ID
-  const posts = [];
-  for (let id of [...postIds]) {
-    const post = await searchApi.getPost(id);
-    posts.push(post);
+const searchEvent = () => {
+  if (searchInput.value.trim() !== '') {
+    let url = router.resolve({ path: '/event/search', query: { content: searchInput.value } }).href;
+    window.open(url, '_blank');
+  } else {
+    alert('请输入搜索内容');
   }
-  const events = [];
-  for (let id of [...eventIds]) {
-    const event = await searchApi.getBriefEvent(id);
-    events.push(event);
-  }
-
-  eventResults.value = events;
-  postResults.value = posts;
 };
 
 </script>

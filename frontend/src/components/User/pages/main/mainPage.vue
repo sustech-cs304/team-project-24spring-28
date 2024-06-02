@@ -1,81 +1,17 @@
-<!--<script setup>-->
-<!--import {ref} from 'vue'-->
-<!--import postCardForM from "@/components/User/pages/main/components/postCardForM.vue";-->
-<!--import * as API from "@/components/User/pages/main/mainApi"-->
-<!--import HeaderForAll from "@/components/Modules/HeaderForAll.vue";-->
-<!--import EventCardBig from "@/components/Modules/event/EventCardBig.vue";-->
-<!--import {useRouter} from "vue-router";-->
-<!--const router = useRouter()-->
-
-
-<!--// const count = ref(0)-->
-<!--// const load = () => {-->
-<!--//     count.value += 10-->
-<!--// }-->
-<!--export default {-->
-
-<!--  data() {-->
-<!--    return {-->
-<!--      input: '' ,// 绑定搜索框的输入值-->
-<!--      events: [],-->
-<!--      eventIds:[],-->
-<!--      postItems: [],-->
-<!--      event:{}-->
-<!--    };-->
-<!--  },-->
-
-<!--  async created() {-->
-<!--    await this.loadEventItems();-->
-<!--    // await this.loadEventItems()-->
-<!--  },-->
-
-<!--  methods: {-->
-<!--      async loadEventItems() {-->
-<!--      const ids = [1, 2];-->
-<!--      for (const id of ids) {-->
-<!--        // const res = await API.getBriefEvent(id);-->
-<!--        // this.events.push(res);-->
-<!--        this.eventIds.push(id);-->
-<!--      }-->
-<!--    },-->
-
-<!--    async loadPostlItems() {-->
-<!--      const ids = [1, 2, 3, 4];-->
-<!--      for (const id of ids) {-->
-<!--        const res = await API.getPost(id);-->
-<!--        this.postItems.push(res.data);-->
-<!--      }-->
-<!--    },-->
-
-<!--    onClear() {-->
-<!--      // 清除搜索框的输入值-->
-<!--      this.input = '';-->
-<!--    },-->
-<!--    search() {-->
-<!--      if (this.input.trim() !== '') {-->
-<!--        router.push({path: '/search', query: {content: this.input}})-->
-<!--      } else {-->
-<!--        alert('请输入搜索内容');-->
-<!--      }-->
-<!--    }-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
-import postCardForM from "@/components/User/pages/main/components/postCardForM.vue";
 import EventCardBig from "@/components/Modules/event/EventCardBig.vue";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import { useRouter } from "vue-router";
+import PostCard from "@/components/User/pages/post/components/postsSquare/postCard.vue";
 import * as API from "@/components/User/pages/main/mainApi";
 
 const router = useRouter();
 
 const input = ref('');
-const events = ref([]);
 const eventIds = ref([]);
-const postItems = ref([]);
-const event = reactive({});
+const postIds = ref([]);
+
 
 const loadEventItems = async () => {
   const ids = [1, 2];
@@ -89,8 +25,9 @@ const loadEventItems = async () => {
 const loadPostItems = async () => {
   const ids = [1, 2, 3, 4];
   for (const id of ids) {
-    const res = await API.getPost(id);
-    postItems.value.push(res.data);
+    // const res = await API.getPost(id);
+    // postItems.value.push(res.data);
+    postIds.value.push(id);
   }
 };
 
@@ -118,7 +55,7 @@ const searchEvent = () => {
 
 onMounted(async () => {
   await loadEventItems();
-  // await loadPostItems();
+  await loadPostItems();
 });
 </script>
 
@@ -173,9 +110,7 @@ onMounted(async () => {
       <el-row>
         <el-col :span="24">
           <div>
-            <postCardForM></postCardForM>
-            <postCardForM></postCardForM>
-
+            <post-card v-for="item in postIds" :key="item" :post-i-d="item" />
           </div>
         </el-col>
       </el-row>
