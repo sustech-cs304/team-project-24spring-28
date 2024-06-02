@@ -44,7 +44,6 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import * as adminApi from '@/components/Admin/admin.js';
-import {getAllUser} from "@/components/Admin/admin.js";
 
 const activeTable = ref(1);
 const eventIds = ref([]);
@@ -65,6 +64,9 @@ onMounted(() => {
 });
 
 async function fetchData() {
+  events.value = [];
+  posts.value = [];
+  eventIds.value = [];
   eventIds.value = await adminApi.getAllEvents();
   posts.value = await adminApi.getAllPosts();
   for (const id of eventIds.value) {
@@ -79,12 +81,12 @@ async function fetchData() {
 
 async function deleteEvent(eventId) {
   await adminApi.deleteEvent(eventId);
-  fetchData();
+  await fetchData();
 }
 
 async function deletePost(postId) {
   await adminApi.deletePost(postId);
-  fetchData();
+  await fetchData();
   // console.log(postId);
 }
 
