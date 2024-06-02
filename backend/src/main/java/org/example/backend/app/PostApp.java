@@ -69,34 +69,38 @@ public class PostApp {
     }
 
     @PostMapping("/likeThePost")
-    public boolean likeThePost(@RequestParam("postID") String postId) {
+    public boolean likeThePost(@RequestHeader("Authorization") String token, @RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
+        AbstractUser user = JwtUtil.verifyToken(token);
         List<AbstractUser> likeUsers = post.getLikeUsers();
-        if (likeUsers.contains(post.getUser())) {
+        if (likeUsers.contains(user)) {
             return true;
         }
-        likeUsers.add(post.getUser());
+        likeUsers.add(user);
         return postService.savePost(post);
     }
 
     @PostMapping("/dislikeThePost")
-    public boolean dislikeThePost(@RequestParam("postID") String postId) {
+    public boolean dislikeThePost(@RequestHeader("Authorization") String token, @RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
+        AbstractUser user = JwtUtil.verifyToken(token);
         List<AbstractUser> likeUsers = post.getLikeUsers();
-        if (!likeUsers.contains(post.getUser())) {
+        if (!likeUsers.contains(user)) {
             return false;
         }
-        likeUsers.remove(post.getUser());
+        likeUsers.remove(user);
         return postService.savePost(post);
     }
 
     @PostMapping("/collectThePost")
     public boolean collectThePost(@RequestHeader("Authorization") String token, @RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
-        long userId = JwtUtil.getIdByToken(token);
-        AbstractUser user = abstractUserService.findUserById(userId);
+        AbstractUser user = JwtUtil.verifyToken(token);
         if (!(user instanceof User)) {
             throw new MyException(0, "Only user can collect post");
+        }
+        if (((User) user).getFavouritePosts().contains(post)) {
+            return true;
         }
         ((User) user).getFavouritePosts().add(post);
         post.setPostCollectAmount(post.getPostCollectAmount() + 1);
@@ -106,10 +110,12 @@ public class PostApp {
     @PostMapping("/discollectThePost")
     public boolean discollectThePost(@RequestHeader("Authorization") String token, @RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
-        long userId = JwtUtil.getIdByToken(token);
-        AbstractUser user = abstractUserService.findUserById(userId);
+        AbstractUser user = JwtUtil.verifyToken(token);
         if (!(user instanceof User)) {
             throw new MyException(1, "Only user can discollect post");
+        }
+        if (!((User) user).getFavouritePosts().contains(post)) {
+            return false;
         }
         ((User) user).getFavouritePosts().remove(post);
         post.setPostCollectAmount(post.getPostCollectAmount() - 1);

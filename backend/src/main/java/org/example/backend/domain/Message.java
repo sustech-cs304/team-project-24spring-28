@@ -17,7 +17,16 @@ public class Message {
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private AbstractUser to;
+    private AbstractUser toUser;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Event toEvent;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Post toPost;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Comment toComment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private AbstractUser from;
@@ -30,13 +39,32 @@ public class Message {
     private String content;
     public Message() {
     }
-    public Message(String type, AbstractUser to, AbstractUser from, boolean read, LocalDateTime time, String content) {
+
+    public Message(String type, AbstractUser from, boolean read, LocalDateTime time, String content) {
         this.type = type;
-        this.to = to;
         this.from = from;
         this.read = read;
         this.time = time;
-        this.content = content;
+    }
+
+    public Message(String type, AbstractUser toUser, AbstractUser from, boolean read, LocalDateTime time, String content) {
+        this(type, from, read, time, content);
+        this.toUser = toUser;
+    }
+
+    public Message(String type, Event toEvent, AbstractUser from, boolean read, LocalDateTime time, String content) {
+        this(type, from, read, time, content);
+        this.toEvent = toEvent;
+    }
+
+    public Message(String type, Post toPost, AbstractUser from, boolean read, LocalDateTime time, String content) {
+        this(type, from, read, time, content);
+        this.toPost = toPost;
+    }
+
+    public Message(String type, Comment toComment, AbstractUser from, boolean read, LocalDateTime time, String content) {
+        this(type, from, read, time, content);
+        this.toComment = toComment;
     }
 
 }

@@ -25,6 +25,8 @@ public class UserApp {
     private EventService eventService;
     @Autowired
     private PostService postService;
+    @Autowired
+    private MessageService messageService;
 
     @PostMapping(value = "/commentEvent")
     boolean commentEvent(@RequestHeader("Authorization") String token, @RequestParam long eventId, @RequestParam String comment) {
@@ -79,5 +81,10 @@ public class UserApp {
             // message
             return commentService.updateComment(tempComment);
         }
+    }
+
+    private void addEventMessage(User user, EventComment eventComment) {
+
+//        messageService.saveMessage(message);
     }
 }
