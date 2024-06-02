@@ -89,6 +89,13 @@ onUpdated(() => {
   scrollToBottom()
 })
 
+let timer = null
+const polling = () => {
+  timer = setInterval(() => {
+    updateChatTexts()
+  }, 1000)
+}
+
 onMounted(() => {
   axiosInstance.get('/message/chat').then(response => {
     let temp = response.data.data;
@@ -144,8 +151,10 @@ onMounted(() => {
 
     if (noChat.value === false) {
       updateChatTexts()
-      connectWs();
+      // connectWs();
     }
+    // handle the polling
+    polling()
 
 
   }).catch(error => {
@@ -161,6 +170,7 @@ function connectWs() {
   ws.proxy.$connect()
   console.log('WS connected')
   ws.proxy.$socket.onmessage = function (event) {
+    console.log('WS received message: ' + event.data)
     let ws_id = JSON.parse(event.data).userId
     let ws_name = JSON.parse(event.data).userName
 
@@ -187,13 +197,14 @@ function connectWs() {
   }
 }
 
-// onBeforeUnmount(() => {
-//   try {
-//     ws.proxy.$disconnect()
-//   } catch (error) {
-//     console.error(error)
-//   }
-// })
+onBeforeUnmount(() => {
+  // try {
+  //   ws.proxy.$disconnect()
+  // } catch (error) {
+  //   console.error(error)
+  // }
+  clearInterval(timer)
+})
 
 
 // test data
