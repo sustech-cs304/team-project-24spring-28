@@ -250,7 +250,7 @@ const handleUploadImage = async (event, insertImage, files) => {
                                     <el-button-group class="ml-4">
                                         <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
                                         <el-button type="primary" :icon="Share" @click="handleSharePost"/>
-                                        <el-button type="primary" :icon="Delete" @click="postUpload" v-loading.fullscreen.lock="fullscreenLoading"/>
+                                        <el-button type="primary" :icon="Search" @click="goToSearch" v-loading.fullscreen.lock="fullscreenLoading"/>
                                     </el-button-group>
                                 </el-col>
                                 <el-col :span="20">
