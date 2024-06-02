@@ -174,7 +174,6 @@ onMounted(() => {
     grade.value = temp.score
     posterUrl.value = temp.postUrl
     liked.value = temp.liked
-    // commentBlockId.value = temp.commentBlockId
 
 
     stars.value = '⭐'
@@ -361,7 +360,7 @@ function showGrade(newGrade) {
         <v-md-preview :text="text"></v-md-preview>
       </div>
 
-      <comment :comment-block-id="commentBlockId"></comment>
+      <comment :event-id="Number(eventId)"></comment>
 
 
     </div>
