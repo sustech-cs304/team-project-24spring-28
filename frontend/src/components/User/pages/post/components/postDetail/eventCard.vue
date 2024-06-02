@@ -7,7 +7,7 @@
         offset="0"
     >
         <template #reference>
-            <div class="card-container">
+            <div class="card-container" @click="goToEvent">
                 <el-button-group >
                     <el-button class="profile-avatar" >
                         <div class="block">
@@ -105,7 +105,7 @@ onMounted( () => {
 })
 
 function goToEvent() {
-    router.push( {path: ''} )
+    router.push( {path: '/event', query: {id: props.id}} )
 }
 
 const urls = [

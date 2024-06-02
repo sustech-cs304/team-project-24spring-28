@@ -51,7 +51,7 @@ onMounted(async () => {
         isStarred.value = temp.collectOrNot;
         console.log(temp)
     } catch (error) {
-        await router.push({path: '/notFound', query: {id: 1}});
+        await router.push({path: '/notFound', query: {errorCode: 1}});
         console.error('Failed to fetch post data:', error);
     } finally {
     }
@@ -116,7 +116,7 @@ const handleDelete = async () => {
                     postId: postID
                 }
             });
-            await router.push({path: '/notFound', query: {id: 1}});
+            await router.push({path: '/notFound', query: {errorCode: 1}});
         } catch (error) {
             console.error('Failed to delete the post:', error);
         }
@@ -216,7 +216,7 @@ const toggleCollapse = () => {
                         <el-row>
                             <!--comment-->
                             <el-col>
-<!--                                <comment ref="commentSection" :postId="Number(postID)" />-->
+                                <comment ref="commentSection" :postId="Number(postID)" />
                                 <el-card style="height: 1000px"></el-card>
                                 <el-card></el-card>
                                 <el-card></el-card>

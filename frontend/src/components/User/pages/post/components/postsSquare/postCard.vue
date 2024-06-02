@@ -113,18 +113,20 @@ function goToPost() {
             </el-col>
             <el-col :span="4">
                 <el-row>
+                    <el-divider/>
                     <el-col :span="12">
-                        <info-box :given-number="Number(postLikeAmount)" :background="'@/assets/Like/like.png'"></info-box>
+                        <info-box :given-number="Number(postLikeAmount)" background="http://10.16.88.247:8082/image/like.png"></info-box>
                     </el-col>
                     <el-col :span="12">
-                        <info-box :given-number="Number(postCollectAmount)"></info-box>
+                        <info-box :given-number="Number(postCollectAmount)" background="http://10.16.88.247:8082/image/star.png"></info-box>
                     </el-col>
                     <el-col :span="12">
-                        <info-box :given-number="Number(postCommentAmount)"></info-box>
+                        <info-box :given-number="Number(postCommentAmount)" background="http://10.16.88.247:8082/image/comment.png"></info-box>
                     </el-col>
                     <el-col :span="12">
-                        <info-box></info-box>
+                        <info-box given-number="" background="http://10.16.88.247:8082/image/share.png"></info-box>
                     </el-col>
+                    <el-divider/>
                 </el-row>
             </el-col>
         </el-row>

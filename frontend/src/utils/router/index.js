@@ -18,6 +18,8 @@ import Profile from "@/components/User/pages/profile/profile.vue";
 import ProfileExample from "@/components/User/pages/profile/profileExample.vue";
 
 import notFound from "@/components/User/pages/post/notFound.vue";
+import PostCollect from "@/components/User/pages/post/components/postCollect.vue";
+import PostWrite from "@/components/User/pages/post/components/postWrite.vue";
 
 import Admin from "@/components/Admin/AdminPage.vue";
 import AllEvent from "@/components/User/pages/main/AllEvent.vue";
@@ -28,6 +30,9 @@ const routes = [
     {path: '/signup', component: signUp},
     {path: '/square', component: Square},
     {path: '/square/post', component: Post},
+    {path: '/square/post/collect', component: PostCollect},
+    {path: '/square/post/write', component: PostWrite},
+
 
     {path: '/profile', component: Profile},
     {path: '/profileTest', component: ProfileExample},
