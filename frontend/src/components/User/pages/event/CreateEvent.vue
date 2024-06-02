@@ -145,7 +145,7 @@ function formCancel() {
 let newFormEntryVisible = ref(false)
 let newFormEntryName = ref('')
 let newFormEntryType = ref('')
-let newFormEntryOptions = ref([])
+let newFormEntryOptions = ref('')
 let newFormEntryRequired = ref(false)
 
 function addNewFormEntryClick() {
@@ -169,6 +169,11 @@ function addNewFormEntryApply() {
       required: newFormEntryRequired.value
     })
   }
+  newFormEntryName.value = ''
+  newFormEntryType.value = ''
+  newFormEntryOptions.value = ''
+  newFormEntryRequired.value = false
+
   newFormEntryVisible.value = false
 }
 
@@ -311,27 +316,27 @@ function mdUploadImage(event, insertImage, files) {
 
 
 onMounted(() => {
-  definedForm.value = [
-    {
-      id: 0,
-      name: '姓名',
-      type: 'input',
-      required: true,
-    },
-    {
-      id: 1,
-      name: '学号',
-      type: 'input',
-      required: false,
-    },
-    {
-      id: 2,
-      name: '年级',
-      type: 'select',
-      options: ['大一', '大二', '大三', '大四'],
-      required: true,
-    }
-  ]
+  // definedForm.value = [
+  //   {
+  //     id: 0,
+  //     name: '姓名',
+  //     type: 'input',
+  //     required: true,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: '学号',
+  //     type: 'input',
+  //     required: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: '年级',
+  //     type: 'select',
+  //     options: ['大一', '大二', '大三', '大四'],
+  //     required: true,
+  //   }
+  // ]
 
 
 
