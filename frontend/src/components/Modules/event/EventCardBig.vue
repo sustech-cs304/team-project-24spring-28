@@ -35,6 +35,7 @@ function toEvent() {
   router.push({path: '/event', query: {id: props.id}})
 }
 
+let drawAvatar = ref(false)
 onMounted(() => {
   axiosInstance.get('/event/brief', {
     params: {
@@ -59,6 +60,7 @@ onMounted(() => {
       stars.value += '⭐'
     }
 
+    drawAvatar.value = true
 
   }).catch(error => {
     console.error(error);
@@ -103,7 +105,8 @@ onMounted(() => {
         <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
           <p style="font-size: 20px; font-weight: bold"
           >{{title}}</p>
-          <avatar-with-name :user-id="authorId.toString()" :name="author" margin-left="5px"/>
+          <avatar-with-name v-if="drawAvatar"
+              :user-id="authorId.toString()" :name="author" margin-left="5px"/>
         </div>
 
         <div style="display: flex; flex-direction: row; align-items: center;">

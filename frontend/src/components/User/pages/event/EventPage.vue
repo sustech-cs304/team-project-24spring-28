@@ -18,7 +18,7 @@ console.log(eventId)
 
 let title = ref('')
 let eventName = ref('')
-let authorId = ref('')
+let authorId = ref(0)
 let authorName = ref('')
 let applyStartTime = ref('')
 let applyEndTime = ref('')
@@ -27,7 +27,6 @@ let endTime = ref('')
 let grade = ref(0)
 let posterUrl = ref('')
 let text = ref('')
-let commentBlockId = ref('')
 
 let postList = ref([])
 
@@ -156,6 +155,7 @@ function formApply() {
   formVisible.value = false
 }
 
+let drawAuthor = ref(false)
 onMounted(() => {
   axiosInstance.get('/event/detail', {
     params: {
@@ -209,103 +209,11 @@ onMounted(() => {
     // TODO: need to be checked the correctness
     postList.value = temp.postList
 
+    drawAuthor.value = true
+
   }).catch(error => {
     console.error(error);
   });
-  // get event info
-  // title.value = '某某活动马上就要开始了！'
-  // eventName.value = '活动某某'
-  // authorId.value = '123456'
-  // authorName.value = 'Lamptales'
-  // applyStartTime.value = '2024-4-4 00:00:00'
-  // applyEndTime.value = '2024-4-14 00:00:00'
-  // startTime.value = '2024-4-16 00:00:00'
-  // endTime.value = '2024-4-26 00:00:00'
-  // liked.value = true
-  // let score = 4
-  // posterUrl.value = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
-  //
-  // eventType = 'form'
-
-
-  // currentCount.value = 5
-  // let limit = -1
-  // if (limit === -1) {
-  //   limitCount.value = '无限制'
-  // } else {
-  //   limitCount.value = limit.toString()
-  // }
-
-  // definedForm.value = [
-  //   {
-  //     id: 0,
-  //     name: '姓名',
-  //     type: 'input',
-  //     required: true
-  //   },
-  //   {
-  //     id: 1,
-  //     name: '学号',
-  //     type: 'input',
-  //     required: true
-  //   },
-  //   {
-  //     id: 2,
-  //     name: '性别',
-  //     type: 'select',
-  //     options: ['男', '女'],
-  //     required: true
-  //   }
-  // ]
-  //
-  // for (let i = 0; i < definedForm.value.length; i++) {
-  //   appliedForm.value.push({
-  //     id: definedForm.value[i].id,
-  //     name: definedForm.value[i].name,
-  //     value: ''
-  //   })
-  // }
-
-
-  // stars.value = '⭐'
-  // for (let i = 1; i < score; i++) {
-  //   stars.value += '⭐'
-  // }
-  //
-  //
-  // text.value = '<p align="left">\n' +
-  //     '    English ｜ <a href="README.md">中文</a>\n' +
-  //     '</p>\n' +
-  //     '<br>\n' +
-  //     '\n' +
-  //     '<h1 align="center">\n' +
-  //     '  Llama-Chinese\n' +
-  //     '</h1>\n' +
-  //     '<p align="center" width="100%">\n' +
-  //     '  <img src="https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg" alt="Llama" style="width: 20%; display: block; margin: auto;"></a>\n' +
-  //     '</p>\n' +
-  //     '<p align="center">\n' +
-  //     '  <font face="黑体" color=orange size="6"> The Best Chinese Llama Large Language Model </font>\n' +
-  //     '</p>\n' +
-  //     '<p align="center">\n' +
-  //     '  <a href="https://llama.family">Online: llama.family</a>\n' +
-  //     '</p>\n' +
-  //     '<p align="center">\n' +
-  //     '  <a href="https://huggingface.co/FlagAlpha/Atom-7B-Chat">Open-source Chinese Pre-trained LLM Atom based on Llama2</a>\n' +
-  //     '</p>\n' +
-  //     '\n'
-
-  // postList.value = [
-  //   {
-  //     id: '1'
-  //   },
-  //   {
-  //     id: '2'
-  //   },
-  //   {
-  //     id: '3'
-  //   }
-  // ]
 
 })
 
@@ -366,12 +274,14 @@ function showGrade(newGrade) {
     </div>
 
     <div class="right-panel">
-      <div class="author-wrap">
+      <div v-if="drawAuthor"
+          class="author-wrap">
         <avatar-with-name
             :user-id="authorId.toString()"
             :need-small="true"
             size-small="60px"
-            name="LampTales"></avatar-with-name>
+            :name="authorName"
+        ></avatar-with-name>
       </div>
       <div>
         <p class="event-title">Related Posts</p>
