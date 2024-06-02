@@ -1,6 +1,8 @@
 <script>
 import {ref} from 'vue'
-import postCard from '@/components/User/pages/post/components/postsSquare/postCard.vue'
+import postCardForM from "@/components/User/pages/main/components/postCardForM.vue";
+import EventCard from "@/components/User/pages/main/components/EventCard.vue";
+import * as API from "@/components/User/pages/main/mainApi"
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import {
     ArrowLeft,
@@ -10,10 +12,11 @@ import {
     Share,
 } from "@element-plus/icons";
 
-const count = ref(0)
-const load = () => {
-    count.value += 10
-}
+
+// const count = ref(0)
+// const load = () => {
+//     count.value += 10
+// }
 export default {
     computed: {
         Search() {
@@ -33,16 +36,43 @@ export default {
         }
     },
     components: {
+      // eslint-disable-next-line vue/no-unused-components
+      EventCard,
       HeaderForAll,
-        postCard
+      postCardForM
     },
 
   data() {
     return {
-      input: '' // 绑定搜索框的输入值
+      input: '' ,// 绑定搜索框的输入值
+      eventItems: [],
+      postItems: [],
+      event:{}
     };
   },
+
+  async created() {
+    await this.loadEventlItems();
+    await this.loadEventlItems()
+  },
+
   methods: {
+      async loadEventlItems() {
+      const ids = [1, 2, 3, 4];
+      for (const id of ids) {
+        const res = await API.getBriefEvent(id);
+        this.eventItems.push(res.data);
+      }
+    },
+
+    async loadPostlItems() {
+      const ids = [1, 2, 3, 4];
+      for (const id of ids) {
+        const res = await API.getPost(id);
+        this.postItems.push(res.data);
+      }
+    },
+
     onClear() {
       // 清除搜索框的输入值
       this.input = '';
@@ -85,8 +115,8 @@ export default {
                         <el-col>
                             <el-card style="border-radius: 0.5vw">
                                 <el-carousel height="30vh" motion-blur interval="6000">
-                                    <el-carousel-item v-for="item in 4" :key="item">
-                                        <h3 class="small justify-center" text="2xl">{{ item }}</h3>
+                                    <el-carousel-item v-for="item in eventItems" :key="item.id">
+                                        <h3 class="small justify-center" text="2xl">{{ item.name }}</h3>
                                     </el-carousel-item>
                                 </el-carousel>
                             </el-card>
@@ -97,18 +127,12 @@ export default {
       <el-row>
         <el-col :span="24">
           <div>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
-            <postCard></postCard>
+            <postCardForM></postCardForM>
+            <postCardForM></postCardForM>
+            <postCardForM></postCardForM>
+            <postCardForM></postCardForM>
+            <postCardForM></postCardForM>
+            <postCardForM></postCardForM>
           </div>
         </el-col>
       </el-row>

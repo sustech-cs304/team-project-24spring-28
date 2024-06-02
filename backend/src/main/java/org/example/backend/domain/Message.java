@@ -1,9 +1,13 @@
 package org.example.backend.domain;
 
 import jakarta.persistence.*;
+import lombok.Setter;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
 public class Message {
     @Id
@@ -13,10 +17,10 @@ public class Message {
     private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User to;
+    private AbstractUser to;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private User from;
+    private AbstractUser from;
 
     private boolean read;
 
@@ -26,7 +30,7 @@ public class Message {
     private String content;
     public Message() {
     }
-    public Message( String type, User to, User from, boolean read, LocalDateTime time, String content) {
+    public Message(String type, AbstractUser to, AbstractUser from, boolean read, LocalDateTime time, String content) {
         this.type = type;
         this.to = to;
         this.from = from;
@@ -35,59 +39,4 @@ public class Message {
         this.content = content;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public User getTo() {
-        return to;
-    }
-
-    public void setTo(User to) {
-        this.to = to;
-    }
-
-    public User getFrom() {
-        return from;
-    }
-
-    public void setFrom(User from) {
-        this.from = from;
-    }
-
-    public boolean getRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    public LocalDateTime getTime() {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
 }

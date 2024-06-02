@@ -1,17 +1,16 @@
 <script setup>
-import {getCurrentInstance, reactive, ref} from "vue";
-import {useRouter} from "vue-router";
+import  {reactive, ref} from "vue";
 import axiosInstance from "@/utils/axios";
-import VueNativeSock from "vue-native-websocket-vue3";
-import store from "@/utils/store";
-import app, {globalStore} from "@/main";
+import {useRouter} from "vue-router";
 
 const router = useRouter()
 
-const loginForm = reactive({
+const registerForm = reactive({
   username: '',
   password: ''
 })
+
+
 
 const rules = reactive({
   username: [{
@@ -26,59 +25,14 @@ const rules = reactive({
   }]
 })
 
-const loginFormInTemp = ref(null)
+const registerFormInTemp = ref(null)
 
-
-const instance = getCurrentInstance();
-
-function initWebsocket() {
-  let baseUrl = 'ws://' + window.location.host.split(':')[0] + ':8082' + '/websocket/' + localStorage.getItem("token")
-  console.log(localStorage.getItem("token"))
-  app.use(VueNativeSock,
-      baseUrl, {
-        headers: {
-          Authorization: localStorage.getItem('token')
-        },
-        store: store,
-        format: 'json',
-        reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 3000,
-        connectManually: true,
-      })
-  // modify the websocket's authorization header
-
-
-}
-
-function checkLoginType() {
-  if (localStorage.getItem('token') != null) {
-    console.log('reinit')
-    axiosInstance.get('/user', {
-      headers: {
-        Authorization: localStorage.getItem('token')
-      }
-    }).then((res) => {
-      console.log(res.data)
-      if (res.data.data.type === 1) {
-        router.push({path: '/admin'})
-      } else if (res.data.data.type === 0) {
-        initWebsocket()
-        localStorage.setItem('userId', res.data.data.id)
-        router.push({path: '/student'})
-      }
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
-}
-
-const login = () => {
-  loginFormInTemp.value.validate((valid) => {
+const register = () => {
+  registerFormInTemp.value.validate((valid) => {
     if (valid) {
-      axiosInstance.post('/login', {
-            username: loginForm.username,
-            password: loginForm.password
+      axiosInstance.post('/signUp', {
+            username: registerForm.username,
+            password: registerForm.password
           },
           {
             headers: {
@@ -87,63 +41,21 @@ const login = () => {
           }
       ).then((res) => {
         console.log(res)
-        if (res.data.data && res.data.data.length > 0) { // 添加对res.data.data的检查
-          console.log('login success')
-          localStorage.setItem('token', res.data.data)
-          localStorage.setItem('username', loginForm.username)
-          checkLoginType()
-          console.log(localStorage.getItem('token'))
+        if (res.data.data) {
+          console.log('registration success')
+          alert('registration success')
+          router.push({path: '/'})
         } else {
-          console.log('login failed')
-          alert('Username or password is incorrect')
+          console.log('registration failed')
+          alert('registration failed, username already exist')
         }
       }).catch((err) => {
         console.log(err)
         alert('Username or password is incorrect')
       })
-    } else {
-
     }
-
   })
 }
-
-// TODO: add the sign up function
-function toLogin() {
-  router.push({path: '/signup'})
-}
-
-// -------------------test button function-------------------
-// add your test button function here
-
-function toMain() {
-  router.push({path: '/main'})
-}
-
-function toStudent() {
-  router.push({path: '/student'})
-}
-
-function toAdmin() {
-  router.push({path: '/admin'})
-}
-
-function toSquare() {
-    router.push({path: '/square'})
-  // let url = router.resolve({path: '/square'}).href
-  // window.open(url, '_blank')
-}
-
-function toPost() {
-    // router.push({path: '/post'})
-  let url = router.resolve({path: '/square/post'}).href
-  window.open(url, '_blank')
-}
-
-function toEvent() {
-  router.push({path: '/event'})
-}
-
 
 </script>
 
@@ -162,16 +74,16 @@ function toEvent() {
     <h1 style="font-size: 30px; text-align: center">
       南科大活动中心
     </h1>
-    <el-form :model="loginForm" :rules="rules" ref="loginFormInTemp">
+    <el-form :model="registerForm" :rules="rules" ref="registerFormInTemp">
       <el-form-item label="username" prop="username" style="margin-left: 100px; margin-top: 30px; margin-bottom: 30px">
-        <el-input v-model="loginForm.username" style="max-width: 300px; height: 30px"></el-input>
+        <el-input v-model="registerForm.username" style="max-width: 300px; height: 30px"></el-input>
       </el-form-item>
       <el-form-item label="password" prop="password" style="margin-left: 100px">
-        <el-input v-model="loginForm.password" show-password style="max-width: 300px"></el-input>
+        <el-input v-model="registerForm.password" show-password style="max-width: 300px"></el-input>
       </el-form-item>
     </el-form>
 
-    <button type="submit" class="submit" @click="login">
+    <button type="submit" class="submit" @click="register">
       Sign up
     </button>
 

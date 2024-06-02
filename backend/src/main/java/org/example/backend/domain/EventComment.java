@@ -14,6 +14,18 @@ public class EventComment extends Comment {
     @JoinColumn(name = "event_id")
     private Event event;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
     public Event getEvent() {
         return event;
     }

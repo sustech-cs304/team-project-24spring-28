@@ -8,10 +8,13 @@ import java.util.List;
 public interface AbstractUserService {
     AbstractUser checkUser(String username, String password);
 
+    boolean saveUser(AbstractUser abstractUser);
 
     boolean deleteUserById(long id);
 
     List<AbstractUser> findAllUser();
 
     AbstractUser findUserById(long id);
+
+    AbstractUser findUserByUsername(String username);
 }

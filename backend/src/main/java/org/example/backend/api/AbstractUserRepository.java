@@ -7,4 +7,6 @@ public interface AbstractUserRepository extends JpaRepository<AbstractUser, Long
     AbstractUser findByUsernameAndPassword(String username, String password);
 
     AbstractUser findById(long id);
+
+    AbstractUser findByUsername(String username);
 }

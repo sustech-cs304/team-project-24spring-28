@@ -11,9 +11,29 @@ public class AbstractEnrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private long capacity;
+
+    @OneToOne
+    private Event event;
+    @ManyToMany
+    private List<User> participants;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public List<User> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
+    }
 
     public long getId() {
         return id;
@@ -21,14 +41,6 @@ public class AbstractEnrollment {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(long capacity) {
-        this.capacity = capacity;
     }
 
     public LocalDateTime getStartTime() {
