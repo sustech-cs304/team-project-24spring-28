@@ -119,7 +119,7 @@ function countApply() {
 }
 
 function formApply() {
-  // console.log(appliedForm.value)
+  console.log(appliedForm.value)
   for (let i = 0; i < appliedForm.value.length; i++) {
     console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
   }
@@ -135,16 +135,9 @@ function formApply() {
   temp.append('id', eventId)
 
   // TODO: check the correctness
-  let formValues = []
   for (let i = 0; i < appliedForm.value.length; i++) {
-    // formValues.push({
-    //   id: appliedForm.value[i].id,
-    //   value: appliedForm.value[i].value
-    // })
-    // example: ["王煜然", "12110330", "", "男"]
-    formValues.push(appliedForm.value[i].value)
+    temp.append('formValues[]', appliedForm.value[i].value)
   }
-  temp.append('formValues', JSON.stringify(formValues))
 
   axiosInstance.post('/event/apply', temp).then(response => {
     console.log(response)
