@@ -59,3 +59,19 @@ export async function getPost(id) {
     });
     return post.value
 }
+
+export async function search(keyword) {
+    const event = ref([])
+    await axiosInstance.get('/event/search'
+        , {
+            params: {
+                keyword: keyword
+            }
+        }).then(response => {
+        event.value = response.data.data;
+        }
+    ).catch(error => {
+        console.error(error);
+    });
+    return event.value
+}

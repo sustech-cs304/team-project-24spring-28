@@ -82,14 +82,11 @@ export default {
       this.input = '';
     },
     search() {
-      // 执行搜索跳转逻辑，这里只是一个示例
-      // 替换为你实际的跳转逻辑
-      // if (this.input.trim() !== '') {
-      //   window.location.href = `/search?query=${encodeURIComponent(this.input)}`;
-      // } else {
-      //   alert('请输入搜索内容');
-      // }
-      window.location.href = '/search'
+      if (this.input.trim() !== '') {
+
+      } else {
+        alert('请输入搜索内容');
+      }
     }
   }
 }
