@@ -4,6 +4,8 @@ import postCardForM from "@/components/User/pages/main/components/postCardForM.v
 import EventCard from "@/components/User/pages/main/components/EventCard.vue";
 import * as API from "@/components/User/pages/main/mainApi"
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
+import EventCardBig from "@/components/Modules/event/EventCardBig.vue";
+
 import {
     ArrowLeft,
     Delete,
@@ -30,6 +32,7 @@ export default {
         }
     },
     components: {
+      EventCardBig,
       // eslint-disable-next-line vue/no-unused-components
       EventCard,
       HeaderForAll,
@@ -40,23 +43,18 @@ export default {
     return {
       input: '' ,// 绑定搜索框的输入值
       eventItems: [],
-      postItems: [],
       event:{},
       eventIds: []
     };
   },
 
   async created() {
-    await this.loadEventlItems();
+    await this.loadEventItems();
   },
 
   methods: {
-      async loadEventlItems() {
-      const ids = [1, 2, 3, 4];
-      for (const id of ids) {
-        const res = await API.getBriefEvent(id);
-        this.eventItems.push(res.data);
-      }
+      async loadEventItems() {
+        this.eventIds = await API.getAllEvent();
     },
   }
 }
@@ -74,13 +72,8 @@ export default {
       </el-row>
       <el-row>
         <el-col :span="24">
-          <div>
-            <postCardForM></postCardForM>
-            <postCardForM></postCardForM>
-            <postCardForM></postCardForM>
-            <postCardForM></postCardForM>
-            <postCardForM></postCardForM>
-            <postCardForM></postCardForM>
+          <div v-for="item in eventIds" :key="item.id">
+            <event-card-big :id="item" />
           </div>
         </el-col>
       </el-row>

@@ -55,12 +55,12 @@ export default {
   },
 
   async created() {
-    await this.loadEventlItems();
-    // await this.loadEventlItems()
+    await this.loadEventItems();
+    // await this.loadEventItems()
   },
 
   methods: {
-      async loadEventlItems() {
+      async loadEventItems() {
       const ids = [1, 2];
       for (const id of ids) {
         // const res = await API.getBriefEvent(id);

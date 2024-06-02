@@ -17,6 +17,17 @@ export async function getBriefEvent(id) {
     return event.value
 }
 
+export async function getAllEvent() {
+    const event = ref([])
+    await axiosInstance.get('/event/all').then(response => {
+            event.value = response.data.data;
+        }
+    ).catch(error => {
+        console.error(error);
+    });
+    return event.value
+}
+
 export async function getEvent(id) {
     const event = ref([])
     await axiosInstance.get('/event/brief'

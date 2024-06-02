@@ -16,6 +16,7 @@ import signUp from "@/components/User/pages/main/signUp.vue";
 import Profile from "@/components/User/pages/profile/profile.vue";
 import ProfileExample from "@/components/User/pages/profile/profileExample.vue";
 import Admin from "@/components/Admin/AdminPage.vue";
+import AllEvent from "@/components/User/pages/main/AllEvent.vue";
 
 const routes = [
     {path: '/', component: Login},
@@ -36,6 +37,7 @@ const routes = [
     {path: '/search', component: searchPage},
     {path: '/message', component: Message},
     {path: '/admin', component: Admin},
+    {path: '/allEvent', component: AllEvent}
 
 ]
 

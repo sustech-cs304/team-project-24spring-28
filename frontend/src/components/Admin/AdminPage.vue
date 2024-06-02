@@ -7,22 +7,32 @@
     </div>
 
     <div v-show="activeTable === 1">
-      <el-table :data="activityData" style="width: 100%">
-        <el-table-column prop="id" label="id" width="180"></el-table-column>
-        <el-table-column prop="title" label="标题/活动" width="180"></el-table-column>
-        <el-table-column prop="author" label="作者/用户" width="180"></el-table-column>
+      <el-table :data="events" style="width: 100%">
+        <el-table-column prop="eventId" label="id" width="180"></el-table-column>
+        <el-table-column prop="eventName" label="标题/活动" width="280"></el-table-column>
+        <el-table-column prop="authorName" label="作者/用户" width="180"></el-table-column>
+        <el-table-column label="操作" width="180">
+          <template #default="scope">
+            <el-button @click="deleteEvent(scope.row.eventId)" type="danger" size="small">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div v-show="activeTable === 2">
-      <el-table :data="postData" style="width: 100%">
-        <el-table-column prop="id" label="id" width="180"></el-table-column>
-        <el-table-column prop="title" label="标题/帖子" width="180"></el-table-column>
-        <el-table-column prop="author" label="作者/用户" width="180"></el-table-column>
+      <el-table :data="posts" style="width: 100%">
+        <el-table-column prop="postID" label="id" width="180"></el-table-column>
+        <el-table-column prop="postTitle" label="标题/帖子" width="380"></el-table-column>
+        <el-table-column prop="username" label="作者/用户" width="180"></el-table-column>
+        <el-table-column label="操作" width="180">
+          <template #default="scope">
+            <el-button @click="deletePost(scope.row.postID)" type="danger" size="small">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <div v-show="activeTable === 3">
       <el-table :data="userData" style="width: 100%">
-        <el-table-column prop="id" label="id" width="180"></el-table-column>
+        <el-table-column prop="postID" label="id" width="180"></el-table-column>
         <el-table-column prop="name" label="名字/用户" width="180"></el-table-column>
         <el-table-column prop="permission" label="权限" width="180"></el-table-column>
         <el-table-column prop="password" label="密码" width="180"></el-table-column>
@@ -34,26 +44,15 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import * as adminApi from '@/components/Admin/admin.js';
+import {getAllUser} from "@/components/Admin/admin.js";
 
 const activeTable = ref(1);
 const eventIds = ref([]);
-const eventList = ref([]);
-const postIds = ref([]);
-const postList = ref([]);
-const userList = ref([]);
+const events = ref([]);
+const posts = ref([]);
+const users = ref([]);
 
 
-const activityData = [
-  { date: '2021-10-01', title: '活动1', author: '用户1' },
-  { date: '2021-10-02', title: '活动2', author: '用户2' },
-  { date: '2021-10-03', title: '活动3', author: '用户3' },
-];
-
-const postData = [
-  { date: '2021-11-01', title: '帖子1', author: '用户4' },
-  { date: '2021-11-02', title: '帖子2', author: '用户5' },
-  { date: '2021-11-03', title: '帖子3', author: '用户6' },
-];
 
 const userData = [
   { date: '2021-12-01', name: '用户1', permission: '权限1', password: '密码1' },
@@ -67,8 +66,26 @@ onMounted(() => {
 
 async function fetchData() {
   eventIds.value = await adminApi.getAllEvents();
-  postIds.value = await adminApi.getAllPosts();
-  userList.value = await adminApi.getUserList();
+  posts.value = await adminApi.getAllPosts();
+  for (const id of eventIds.value) {
+    events.value.push(await adminApi.getBriefEvent(id));
+  }
+  users.value = await adminApi.getAllUser();
+  // console.log(events);
+  // console.log(posts);
+  // console.log(eventIds);
+  console.log(users)
+}
+
+async function deleteEvent(eventId) {
+  await adminApi.deleteEvent(eventId);
+  fetchData();
+}
+
+async function deletePost(postId) {
+  await adminApi.deletePost(postId);
+  fetchData();
+  // console.log(postId);
 }
 
 function showTable(index) {
