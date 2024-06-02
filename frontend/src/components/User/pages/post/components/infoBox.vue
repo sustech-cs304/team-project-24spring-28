@@ -1,6 +1,5 @@
 <script setup>
-import {ref, onMounted, onBeforeUnmount, defineProps} from 'vue';
-
+import { ref, onMounted, onBeforeUnmount, defineProps } from 'vue';
 
 const props = defineProps({
     background: {
@@ -11,8 +10,8 @@ const props = defineProps({
         type: Number,
         default: '1234'
     }
-
 });
+
 const num = ref(null);
 const adjustFontSize = () => {
     const NUM = parseInt(num.value.innerText);
@@ -41,7 +40,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div  class="box" :style="{ backgroundImage: `url(${background})` }">
+    <div class="box" :style="{ backgroundImage: `url(${background})` }">
         <span ref="num" class="number">{{props.givenNumber}}</span>
     </div>
 </template>
@@ -49,14 +48,15 @@ onBeforeUnmount(() => {
 <style scoped>
 .box {
     height: 8vh;
-    //background-color: #ccc;
     margin: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     border-radius: 10px;
-    background-size: auto;
+    background-size: cover; /* 使用 cover 或 contain */
+    background-position: center; /* 确保背景图片居中显示 */
+    background-repeat: no-repeat; /* 防止背景图片重复 */
 }
 .number {
     position: absolute;

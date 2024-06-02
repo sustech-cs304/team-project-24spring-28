@@ -31,9 +31,10 @@ import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 import 'codemirror/lib/codemirror.css';
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
-import { useRoute } from "vue-router";
+import { useRoute,useRouter} from "vue-router";
 
 const route = useRoute();
+const router = useRouter();
 VMdEditor.Codemirror = Codemirror;
 VMdEditor.use(githubTheme, {
     Hljs: hljs,
@@ -63,6 +64,9 @@ const paginatedPostIDs = computed(() => {
     return postIDs.value.slice(start, end);
 });
 
+const goToSearch = () => {
+    router.push({ path: '/post/search' })
+}
 const handlePageChange = (newPage) => {
     currentPage.value = newPage;
 };
@@ -250,7 +254,7 @@ const handleUploadImage = async (event, insertImage, files) => {
                                     </el-button-group>
                                 </el-col>
                                 <el-col :span="20">
-                                    <el-button :icon="Search" round style="width: 100%">Search</el-button>
+                                    <el-button :icon="Search" round style="width: 100%" @click="goToSearch">Search</el-button>
                                 </el-col>
                             </el-row>
                         </el-card>

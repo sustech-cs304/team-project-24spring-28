@@ -7,7 +7,27 @@
         </el-row>
         <el-row :class="main-main" gutter="10">
             <section>
+
                 <div class="sec_new">
+<!--                    &lt;!&ndash; 编辑弹窗 &ndash;&gt;-->
+<!--                    <el-dialog title="Edit Profile" v-if="editDialogVisible" style="z-index: 999;">-->
+<!--                        <el-form :model="editForm">-->
+<!--                            <el-form-item label="Name">-->
+<!--                                <el-input v-model="editForm.name"></el-input>-->
+<!--                            </el-form-item>-->
+<!--                            <el-form-item label="Bio">-->
+<!--                                <el-input v-model="editForm.bio"></el-input>-->
+<!--                            </el-form-item>-->
+<!--                            &lt;!&ndash; 可以添加更多表单项 &ndash;&gt;-->
+<!--                        </el-form>-->
+<!--                        <template #footer>-->
+<!--                            <el-button @click="editDialogVisible = false">Cancel</el-button>-->
+<!--                            <el-button type="primary" @click="submitEdit">Save</el-button>-->
+<!--                        </template>-->
+<!--                    </el-dialog>-->
+
+<!--                    &lt;!&ndash; 头像上传弹窗 &ndash;&gt;-->
+<!--                    <input type="file" ref="fileInput" @change="handleFileChange" style="display: none;">-->
                     <el-row>
                         <el-col span="8">
                             <div class="profile">
@@ -16,6 +36,7 @@
                                     :src="avatar"
                                     shape="square"
                                     style="margin-bottom: 8px; opacity: 1"
+                                    fit="fill"
                                 /></el-row>
                                 <el-button-group>
                                     <el-button v-if="!isSelf" @click="chat" :icon="ChatDotSquare">
@@ -24,7 +45,7 @@
                                     <el-button v-if="isSelf" @click="edit" :icon="EditPen">
                                         Edit
                                     </el-button>
-                                    <el-button v-if="isSelf" @click="changeAvatar" :icon="User">
+                                    <el-button v-if="isSelf" @click="avatarDialogVisible=true" :icon="User">
                                         Avatar
                                     </el-button>
                                     <el-button v-if="isSelf" @click="logout" :icon="House">
@@ -36,9 +57,41 @@
                                 <p>{{ bio }}</p>
                             </div>
                         </el-col>
-                        <el-col span="16">
+                        <el-col span="8">
                             <!-- 这里可以放其他内容 -->
+<!--                            TODO: 编辑username 和 bio并上传&ndash;&gt;-->
+                            <div v-if="editDialogVisible" style="position: relative">
+                                <h4>Edit Profile</h4>
+                                <el-form :model="editForm">
+                                    <el-form-item label="Name">
+                                        <el-input v-model="editForm.name"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="Bio">
+                                        <el-input v-model="editForm.bio" :autosize="{ minRows: 2, maxRows: 4 }"
+                                                  type="textarea"></el-input>
+                                    </el-form-item>
+                                    <!-- 可以添加更多表单项 -->
+                                </el-form>
+                                <el-button @click="editDialogVisible=false">cancel</el-button>
+                                <el-button @click="submitEdit">submit</el-button>
+<!--                                <template #footer>-->
+<!--                                    <el-button @click="editDialogVisible = false">Cancel</el-button>-->
+<!--                                    <el-button type="primary" @click="submitEdit">Save</el-button>-->
+<!--                                </template>-->
+                            </div>
+                            <div v-if="avatarDialogVisible">
+<!--                                todo 上传头像-->
+                                <div class="avatar-upload">
+                                    <input type="file" @change="onFileChange" accept="image/*" />
+                                    <img v-if="previewImage" :src="previewImage" alt="Selected Image" class="avatar-preview" />
+                                    <el-button v-if="selectedFile" @click="uploadAvatar" type="primary">上传头像</el-button>
+                                </div>
+
+                            </div>
+
+
                         </el-col>
+
                     </el-row>
                     <el-row>
                         <el-col span="12">
@@ -76,25 +129,7 @@
                 <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
                 <div id="text">Moon Light</div>
                 <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
-                <!-- 编辑弹窗 -->
-                <el-dialog title="Edit Profile" :visible.sync="editDialogVisible">
-                    <el-form :model="editForm">
-                        <el-form-item label="Name">
-                            <el-input v-model="editForm.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Bio">
-                            <el-input v-model="editForm.bio"></el-input>
-                        </el-form-item>
-                        <!-- 可以添加更多表单项 -->
-                    </el-form>
-                    <template #footer>
-                        <el-button @click="editDialogVisible = false">Cancel</el-button>
-                        <el-button type="primary" @click="submitEdit">Save</el-button>
-                    </template>
-                </el-dialog>
 
-                <!-- 头像上传弹窗 -->
-                <input type="file" ref="fileInput" @change="handleFileChange" style="display: none;">
             </section>
         </el-row>
 
@@ -165,11 +200,14 @@ export default {
         const bio = ref('');
         const posts = ref([]);
         const isSelf = ref(false);
+        const previewImage = ref();
+        const selectedFile = ref();
 
         const editDialogVisible = ref(false);
+        const avatarDialogVisible = ref(false);
         const editForm = ref({
-            name: "",
-            bio: "",
+            name: userName,
+            bio: bio,
         });
 
         onBeforeMount(async () => {
@@ -216,6 +254,7 @@ export default {
 
         const edit = () => {
             editDialogVisible.value = true;
+            console.log("edit")
         };
 
         const submitEdit = async () => {
@@ -233,55 +272,45 @@ export default {
                 }
             } catch (error) {
                 console.error("Error updating profile:", error);
+            } finally {
+                editDialogVisible.value=false;
             }
         };
 
-        const changeAvatar = () => {
-            const fileInput = this.$refs.fileInput;
-            fileInput.click();
-        };
-
-        const handleFileChange = async (event) => {
+        const onFileChange = (event) => {
             const file = event.target.files[0];
             if (file) {
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-                const img = new Image();
-                img.onload = async () => {
-                    canvas.width = canvas.height = Math.min(img.width, img.height);
-                    ctx.drawImage(
-                        img,
-                        (img.width - canvas.width) / 2,
-                        (img.height - canvas.height) / 2,
-                        canvas.width,
-                        canvas.height,
-                        0,
-                        0,
-                        canvas.width,
-                        canvas.height
-                    );
-                    canvas.toBlob(async (blob) => {
-                        const formData = new FormData();
-                        formData.append("image", blob);
-                        try {
-                            const response = await axiosInstance.post("/image/upload", formData, {
-                                headers: {
-                                    "Content-Type": "multipart/form-data",
-                                },
-                            });
-                            if (response.data.success) {
-                                const newAvatarUrl = response.data.url;
-                                await axiosInstance.post("/profile/avatar/edit", { url: newAvatarUrl });
-                                avatar.value = newAvatarUrl;
-                            } else {
-                                console.error("Error uploading avatar:", response.data.message);
-                            }
-                        } catch (error) {
-                            console.error("Error uploading avatar:", error);
-                        }
-                    }, "image/jpeg");
-                };
-                img.src = URL.createObjectURL(file);
+                selectedFile.value = file;
+                previewImage.value = URL.createObjectURL(file);
+            }
+        };
+
+        const uploadAvatar = async () => {
+            if (!selectedFile.value) {
+                console.error("No file selected for upload.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', selectedFile.value);
+
+            try {
+                const response = await axiosInstance.post('/image/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                const imageUrl = response.data.data;
+                console.log('url:',imageUrl)
+                await axiosInstance.post('/profile/avatar/edit', { avatar: imageUrl });
+
+                // 更新头像成功后，清除选择的文件和预览
+                selectedFile.value = null;
+                previewImage.value = null;
+                avatarDialogVisible.value = false;
+            } catch (error) {
+                console.error('Error uploading image:', error);
             }
         };
 
@@ -308,13 +337,16 @@ export default {
             posts,
             isSelf,
             editDialogVisible,
+            avatarDialogVisible,
             editForm,
             edit,
             submitEdit,
-            changeAvatar,
-            handleFileChange,
+            onFileChange,
+            uploadAvatar,
             logout,
             chat,
+            previewImage,
+            selectedFile
         };
     },
 
@@ -483,5 +515,20 @@ section #btn{
     border-radius: 4px;
     background: var(--el-color-danger-light-9);
     color: var(--el-color-danger);
+}
+
+.avatar-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 10px;
 }
 </style>
