@@ -18,7 +18,7 @@ console.log(eventId)
 
 let title = ref('')
 let eventName = ref('')
-let authorId = ref('')
+let authorId = ref(0)
 let authorName = ref('')
 let applyStartTime = ref('')
 let applyEndTime = ref('')
@@ -27,7 +27,6 @@ let endTime = ref('')
 let grade = ref(0)
 let posterUrl = ref('')
 let text = ref('')
-let commentBlockId = ref('')
 
 let postList = ref([])
 
@@ -156,6 +155,7 @@ function formApply() {
   formVisible.value = false
 }
 
+let drawAuthor = ref(false)
 onMounted(() => {
   axiosInstance.get('/event/detail', {
     params: {
@@ -208,6 +208,8 @@ onMounted(() => {
 
     // TODO: need to be checked the correctness
     postList.value = temp.postList
+
+    drawAuthor.value = true
 
   }).catch(error => {
     console.error(error);
@@ -366,12 +368,14 @@ function showGrade(newGrade) {
     </div>
 
     <div class="right-panel">
-      <div class="author-wrap">
+      <div v-if="drawAuthor"
+          class="author-wrap">
         <avatar-with-name
             :user-id="authorId.toString()"
             :need-small="true"
             size-small="60px"
-            name="LampTales"></avatar-with-name>
+            :name="authorName"
+        ></avatar-with-name>
       </div>
       <div>
         <p class="event-title">Related Posts</p>
