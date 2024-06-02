@@ -335,11 +335,11 @@ const handleUploadImage = async (event, insertImage, files) => {
                 </el-affix>
             </el-col>
         </el-row>
-        <el-row :class="main-footer">
-            <el-col>
-                <header-for-all/>
-            </el-col>
-        </el-row>
+<!--        <el-row :class="main-footer">-->
+<!--            <el-col>-->
+<!--                <header-for-all/>-->
+<!--            </el-col>-->
+<!--        </el-row>-->
     </div>
 </template>
 

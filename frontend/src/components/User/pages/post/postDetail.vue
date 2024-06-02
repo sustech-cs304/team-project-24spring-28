@@ -237,9 +237,6 @@ const toggleCollapse = () => {
                             <!--comment-->
                             <el-col>
                                 <comment ref="commentSection" :postId="Number(postID)" />
-                                <el-card style="height: 1000px"></el-card>
-                                <el-card></el-card>
-                                <el-card></el-card>
                             </el-col>
                         </el-row>
                     </el-col>
@@ -302,9 +299,9 @@ const toggleCollapse = () => {
                 </el-affix>
             </el-col>
         </el-row>
-        <el-row :class="main-footer">
-            footer
-        </el-row>
+<!--        <el-row :class="main-footer">-->
+<!--            footer-->
+<!--        </el-row>-->
     </div>
 
     <el-dialog :visible="dialogVisible" title="Post Deleted">
