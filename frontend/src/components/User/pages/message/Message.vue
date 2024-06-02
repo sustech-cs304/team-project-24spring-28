@@ -93,9 +93,9 @@ onMounted(() => {
             let exData = JSON.parse(tempList[i].content)
             commentData.value.push({
               id: tempList[i].id,
-              time: formatTime(tempList[i].time),
-              commenterId: tempList[i].from.id,
-              commenterName: tempList[i].from.name,
+              time: formatTime(tempList[i].time).split('.')[0],
+              commenterId: tempList[i].from,
+              commenterName: tempList[i].fromName,
               // TODO: communicate with the backend to get the ids
               eventId: exData.eventId === undefined ? -1 : exData.eventId,
               postId: exData.postId === undefined ? -1 : exData.postId,
@@ -120,9 +120,9 @@ onMounted(() => {
             let exData = JSON.parse(tempList[i].content)
             commentData.value.push({
               id: tempList[i].id,
-              time: formatTime(tempList[i].time),
-              commenterId: tempList[i].from.id,
-              commenterName: tempList[i].from.name,
+              time: formatTime(tempList[i].time).split('.')[0],
+              commenterId: tempList[i].from,
+              commenterName: tempList[i].fromName,
               eventId: exData.eventId === undefined ? -1 : exData.eventId,
               postId: exData.postId === undefined ? -1 : exData.postId,
               commentContent: exData.commentContent,
