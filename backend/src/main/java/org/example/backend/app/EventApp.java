@@ -24,6 +24,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 该类用于处理活动相关的请求
+ * @author wangyr
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/event")
 public class EventApp {

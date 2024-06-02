@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 该类用于处理用户个人信息相关的请求
+ * @author Shinomiya
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/profile")
 public class ProfileApp {
