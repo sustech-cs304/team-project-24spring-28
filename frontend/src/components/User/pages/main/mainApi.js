@@ -6,7 +6,7 @@ export async function getBriefEvent(id) {
     await axiosInstance.get('/event/brief'
         , {
             params: {
-                eventId: id
+                id: id
             }
         }).then(response => {
         event.value = response.data.data;
