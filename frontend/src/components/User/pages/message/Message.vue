@@ -96,8 +96,9 @@ onMounted(() => {
               time: formatTime(tempList[i].time),
               commenterId: tempList[i].from.id,
               commenterName: tempList[i].from.name,
-              roomId: exData.roomId,
-              roomName: exData.roomName,
+              // TODO: communicate with the backend to get the ids
+              eventId: exData.eventId,
+              postId: exData.postId,
               commentContent: exData.commentContent,
               oriCommentContent: exData.oriCommentContent
             })
@@ -121,8 +122,8 @@ onMounted(() => {
               time: formatTime(tempList[i].time),
               commenterId: tempList[i].from.id,
               commenterName: tempList[i].from.name,
-              roomId: exData.roomId,
-              roomName: exData.roomName,
+              eventId: exData.eventId,
+              postId: exData.postId,
               commentContent: exData.commentContent,
               oriCommentContent: exData.oriCommentContent
             })
@@ -215,7 +216,7 @@ onMounted(() => {
       <div v-else>
         <div v-for="item in commentData" :key="item.id">
           <CommentEntity :id="item.id.toString()" :time="item.time" :commenterId="item.commenterId.toString()"
-                         :commenterName="item.commenterName" :roomId="item.roomId" :roomName="item.roomName"
+                         :commenterName="item.commenterName" :event-id="item.eventId" :post-id="item.postId"
                          :commentContent="item.commentContent" :oriCommentContent="item.oriCommentContent"/>
         </div>
       </div>
@@ -240,7 +241,7 @@ onMounted(() => {
   justify-content: space-evenly;
   align-items: center;
   background: #ffffed;
-  height: 269px;
+  height: 105px;
   width: 15%;
   margin: 10px 10px;
   border-radius: 10px;
