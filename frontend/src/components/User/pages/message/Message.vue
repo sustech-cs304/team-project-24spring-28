@@ -3,12 +3,9 @@ import {useRoute, useRouter} from "vue-router";
 import {reactive, ref, onMounted, getCurrentInstance} from "vue";
 import axiosInstance from "@/utils/axios";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
-import NoticeEntity from "@/components/User/pages/message/NoticeEntity.vue"
 import Chat from "@/components/User/pages/message/chat/Chat.vue";
 import CommentEntity from "@/components/User/pages/message/CommentEntity.vue";
 import { formatTime } from "@/components/User/pages/message/utils";
-import Invitation from "@/components/User/pages/message/Invitation/Invitation.vue";
-import Exchange from "@/components/User/pages/message/exchange/Exchange.vue";
 
 
 const router = useRouter()
@@ -18,10 +15,8 @@ const route = useRoute()
 const mt = ref(route.query.messageType)
 
 const messageSelectList = reactive({
-  noticeSelect: (typeof (route.query.messageType) === 'undefined' ? true : route.query.messageType === 'notices'),
-  invAndAppSelect: (route.query.messageType === 'invs&apps'),
-  exchangeSelect: (route.query.messageType === 'exchanges'),
-  commentSelect: (route.query.messageType === 'comments'),
+  // noticeSelect: (typeof (route.query.messageType) === 'undefined' ? true : route.query.messageType === 'notices'),
+  commentSelect: (typeof (route.query.messageType) === 'undefined' ? true : route.query.messageType === 'comments'),
   chatSelect: (route.query.messageType === 'chats')
 })
 
@@ -41,108 +36,102 @@ function press_button(messageType) {
 
 const instance = getCurrentInstance();
 
-const noticeData = ref([])
+// const noticeData = ref([])
 const commentData = ref([])
 
 
-// onMounted(() => {
-//   // get all the unread stages
-//   axiosInstance.get('/message/hasUnread')
-//       .then(response => {
-//         // hasUnread.value.notice = response.data.data.notice
-//         // hasUnread.value.invAndApp = response.data.data.invAndApp
-//         // hasUnread.value.exchange = response.data.data.exchange
-//         // hasUnread.value.comment = response.data.data.comment
-//         // hasUnread.value.chat = response.data.data.chat
-//         let temp = JSON.parse(response.data.data)
-//         hasUnread.value.notice = temp.notice
-//         hasUnread.value.invAndApp = temp.invAndApp
-//         hasUnread.value.exchange = temp.exchange
-//         hasUnread.value.comment = temp.comment
-//         hasUnread.value.chat = temp.chat
-//       })
-//       .catch(error => {
-//         console.error(error);
-//       });
-//
-//   // update the stages immediately
-//   let temp = new FormData()
-//   if (messageSelectList.invAndAppSelect) {
-//     hasUnread.value.invAndApp = false
-//     temp.append('messageType', 'invitation')
-//     axiosInstance.post('/message/read', temp).then(() => {
-//     }).catch(() => {
-//       console.log('Invitations read failed')
-//     })
-//   } else if (messageSelectList.exchangeSelect) {
-//     hasUnread.value.exchange = false
-//     temp.append('messageType', 'exchange')
-//     axiosInstance.post('/message/read', temp).then(() => {
-//     }).catch(() => {
-//       console.log('Exchanges read failed')
-//     })
-//   } else if (messageSelectList.commentSelect) {
-//     hasUnread.value.comment = false
-//     temp.append('messageType', 'comment')
-//     axiosInstance.post('/message/read', temp).then(() => {
-//     }).catch(() => {
-//       console.log('Comments read failed')
-//     })
-//   } else if (messageSelectList.chatSelect) {
-//     hasUnread.value.chat = false
-//     temp.append('messageType', 'chat')
-//     axiosInstance.post('/message/read', temp).then(() => {
-//     }).catch(() => {
-//       console.log('Chats read failed')
-//     })
-//   } else {
-//     hasUnread.value.notice = false
-//     temp.append('messageType', 'notice')
-//     axiosInstance.post('/message/read', temp).then(() => {
-//     }).catch(() => {
-//       console.log('Notices read failed')
-//     })
-//   }
-//
-//   // get the corresponding data
-//   if (messageSelectList.invAndAppSelect) {
-//
-//   } else if (messageSelectList.exchangeSelect) {
-//
-//   } else if (messageSelectList.commentSelect) {
-//     axiosInstance.get('/message/comment')
-//         .then(response => {
-//           // commentData.value = response.data.data;
-//           let tempList = response.data.data
-//           commentData.value = []
-//           for (let i = 0; i < tempList.length; i++) {
-//             let exData = JSON.parse(tempList[i].content)
-//             commentData.value.push({
-//               id: tempList[i].id,
-//               time: formatTime(tempList[i].time),
-//               commenterId: tempList[i].from.id,
-//               commenterName: tempList[i].from.name,
-//               roomId: exData.roomId,
-//               roomName: exData.roomName,
-//               commentContent: exData.commentContent,
-//               oriCommentContent: exData.oriCommentContent
-//             })
-//           }
-//         })
-//         .catch(error => {
-//           console.error(error);
-//         });
-//   } else if (messageSelectList.chatSelect) {
-//
-//   } else {
-//     axiosInstance.get('/message/notice')
-//         .then(response => {
-//           noticeData.value = response.data.data;
-//         })
-//         .catch(error => {
-//           console.error(error);
-//         });
-//   }
+onMounted(() => {
+  // get all the unread stages
+  axiosInstance.get('/message/hasUnread')
+      .then(response => {
+        // hasUnread.value.notice = response.data.data.notice
+        // hasUnread.value.invAndApp = response.data.data.invAndApp
+        // hasUnread.value.exchange = response.data.data.exchange
+        // hasUnread.value.comment = response.data.data.comment
+        // hasUnread.value.chat = response.data.data.chat
+        let temp = JSON.parse(response.data.data)
+        hasUnread.value.comment = temp.comment
+        hasUnread.value.chat = temp.chat
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+  // update the stages immediately
+  let temp = new FormData()
+  if (messageSelectList.commentSelect) {
+    hasUnread.value.comment = false
+    temp.append('messageType', 'comment')
+    axiosInstance.post('/message/read', temp).then(() => {
+    }).catch(() => {
+      console.log('Comments read failed')
+    })
+  } else if (messageSelectList.chatSelect) {
+    hasUnread.value.chat = false
+    temp.append('messageType', 'chat')
+    axiosInstance.post('/message/read', temp).then(() => {
+    }).catch(() => {
+      console.log('Chats read failed')
+    })
+  } else {
+    hasUnread.value.comment = false
+    temp.append('messageType', 'comment')
+    axiosInstance.post('/message/read', temp).then(() => {
+    }).catch(() => {
+      console.log('Comments read failed')
+    })
+  }
+
+  // get the corresponding data
+  if (messageSelectList.commentSelect) {
+    axiosInstance.get('/message/comment')
+        .then(response => {
+          // commentData.value = response.data.data;
+          let tempList = response.data.data
+          commentData.value = []
+          for (let i = 0; i < tempList.length; i++) {
+            let exData = JSON.parse(tempList[i].content)
+            commentData.value.push({
+              id: tempList[i].id,
+              time: formatTime(tempList[i].time),
+              commenterId: tempList[i].from.id,
+              commenterName: tempList[i].from.name,
+              roomId: exData.roomId,
+              roomName: exData.roomName,
+              commentContent: exData.commentContent,
+              oriCommentContent: exData.oriCommentContent
+            })
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+  } else if (messageSelectList.chatSelect) {
+
+  } else {
+    axiosInstance.get('/message/comment')
+        .then(response => {
+          // commentData.value = response.data.data;
+          let tempList = response.data.data
+          commentData.value = []
+          for (let i = 0; i < tempList.length; i++) {
+            let exData = JSON.parse(tempList[i].content)
+            commentData.value.push({
+              id: tempList[i].id,
+              time: formatTime(tempList[i].time),
+              commenterId: tempList[i].from.id,
+              commenterName: tempList[i].from.name,
+              roomId: exData.roomId,
+              roomName: exData.roomName,
+              commentContent: exData.commentContent,
+              oriCommentContent: exData.oriCommentContent
+            })
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+  }
 //
 //
 //   // test data
@@ -182,7 +171,7 @@ const commentData = ref([])
 //
 //
 //
-// })
+})
 
 </script>
 
@@ -190,32 +179,6 @@ const commentData = ref([])
   <header-for-all/>
   <div class="wrap">
     <div class="button_list">
-
-      <div :class="messageSelectList.noticeSelect?'pressed_button':'unpressed_button'"
-              @click="press_button('notices')"
-           style="border-top-left-radius: 10px; border-top-right-radius: 10px">
-        <div class="dot_wrap">
-          <p>notices</p>
-          <p :style="hasUnread.notice ? 'display: block':'display: none'">&nbsp;</p>
-          <i :class="hasUnread.notice ? 'dot_show':'dot_unshow'"></i>
-        </div>
-      </div>
-      <div :class="messageSelectList.invAndAppSelect?'pressed_button':'unpressed_button'"
-              @click="press_button('invs&apps')">
-        <div class="dot_wrap">
-          <p>invitations</p>
-          <p :style="hasUnread.invAndApp ? 'display: block':'display: none'">&nbsp;</p>
-          <i :class="hasUnread.invAndApp ? 'dot_show':'dot_unshow'"></i>
-        </div>
-      </div>
-      <div :class="messageSelectList.exchangeSelect?'pressed_button':'unpressed_button'"
-              @click="press_button('exchanges')">
-        <div class="dot_wrap">
-          <p>exchanges</p>
-          <p :style="hasUnread.exchange ? 'display: block':'display: none'">&nbsp;</p>
-          <i :class="hasUnread.exchange ? 'dot_show':'dot_unshow'"></i>
-        </div>
-      </div>
       <div :class="messageSelectList.commentSelect?'pressed_button':'unpressed_button'"
               @click="press_button('comments')">
         <div class="dot_wrap">
@@ -237,32 +200,23 @@ const commentData = ref([])
 
     <div class="main_list" :style="messageSelectList.chatSelect ? 'overflow-y: hidden' : 'overflow-y: scroll'">
 
-      <div v-if="messageSelectList.invAndAppSelect">
-        <Invitation/>
-      </div>
+<!--      <div v-if="messageSelectList.commentSelect">-->
+<!--        <div v-for="item in commentData" :key="item.id">-->
+<!--          <CommentEntity :id="item.id.toString()" :time="item.time" :commenterId="item.commenterId.toString()"-->
+<!--                         :commenterName="item.commenterName" :roomId="item.roomId" :roomName="item.roomName"-->
+<!--                         :commentContent="item.commentContent" :oriCommentContent="item.oriCommentContent"/>-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <div v-else-if="messageSelectList.exchangeSelect">
-        <exchange/>
-      </div>
-
-      <div v-else-if="messageSelectList.commentSelect">
-        <div v-for="item in commentData" :key="item.id">
-          <CommentEntity :id="item.id.toString()" :time="item.time" :commenterId="item.commenterId.toString()"
-                         :commenterName="item.commenterName" :roomId="item.roomId" :roomName="item.roomName"
-                         :commentContent="item.commentContent" :oriCommentContent="item.oriCommentContent"/>
-        </div>
-      </div>
-
-      <div v-else-if="messageSelectList.chatSelect">
+      <div v-if="messageSelectList.chatSelect">
         <chat/>
       </div>
 
       <div v-else>
-        <div v-for="item in noticeData" :key="item.id">
-          <NoticeEntity :sender="item.from.name"
-                        :time="formatTime(item.time)"
-                        :title="JSON.parse(item.content).title"
-                        :content="JSON.parse(item.content).content"/>
+        <div v-for="item in commentData" :key="item.id">
+          <CommentEntity :id="item.id.toString()" :time="item.time" :commenterId="item.commenterId.toString()"
+                         :commenterName="item.commenterName" :roomId="item.roomId" :roomName="item.roomName"
+                         :commentContent="item.commentContent" :oriCommentContent="item.oriCommentContent"/>
         </div>
       </div>
 

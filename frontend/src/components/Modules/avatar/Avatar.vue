@@ -50,25 +50,7 @@ const isSelf = computed(() => {
 })
 
 function toProfile() {
-  if (isSelf.value) {
-    router.push({path: '/self'})
-  } else {
-    let studentId = 0
-    axiosInstance.get('/user/students', {
-      params: {
-        id: props.userId
-      }
-    }).then(response => {
-      studentId = response.data.data.username
-      router.push({
-        path: '/bulletin', query: {
-          tag: studentId
-        }
-      })
-    }).catch(error => {
-      console.error(error);
-    });
-  }
+  router.push({path: '/profile', query: {userID: props.userId}})
 }
 
 function mouseEnter() {
@@ -106,10 +88,33 @@ function invite() {
   })
 }
 
-let avatar_url = computed(() => {
-  // return 'http://10.16.88.247:8084/' + props.userId + '.png'
-  return 'https://avatars.githubusercontent.com/u/115088102?v=4'
+let avatar_url = ref('')
+
+onMounted(() => {
+  axiosInstance.get('profile/info/get', {
+    params: {
+      userID: Number(props.userId)
+    }
+  }).then(response => {
+    let temp = response.data.data
+    avatar_url.value = temp.avatar
+  }).catch(error => {
+    console.error(error);
+  });
 })
+
+// let avatar_url = computed(() => {
+//   axiosInstance.get('profile/info/get', {
+//     params: {
+//       userID: Number(props.userId)
+//     }
+//   }).then(response => {
+//     let temp = response.data.data
+//     return temp.avatar
+//   }).catch(error => {
+//     console.error(error);
+//   });
+// })
 
 </script>
 
@@ -129,10 +134,6 @@ let avatar_url = computed(() => {
               <div @click="logout">
                 <div class="levi_butt">Log out</div>
               </div>
-              <el-divider class="el-divider-modified1"/>
-              <div @click="toSelf">
-                <div class="levi_butt">Self</div>
-              </div>
             </div>
           </div>
 
@@ -140,10 +141,6 @@ let avatar_url = computed(() => {
             <div>
               <div @click="toChat">
                 <div class="levi_butt">Chat</div>
-              </div>
-              <el-divider class="el-divider-modified1"/>
-              <div @click="invite">
-                <div class="levi_butt">Invite</div>
               </div>
             </div>
           </div>
@@ -177,7 +174,7 @@ let avatar_url = computed(() => {
 
 .levitate {
   left: -20px;
-  height: 100px;
+  height: 40px;
   width: 100px;
   display: flex;
   flex-direction: column;
@@ -188,7 +185,7 @@ let avatar_url = computed(() => {
   border: 1px solid #cccccc;
   border-radius: 10px;
   background-color: #ffffff;
-  z-index: 3;
+  z-index: 9999;
 }
 
 .levi_butt {

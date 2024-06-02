@@ -19,9 +19,15 @@ const props = defineProps({
     type: String,
     required: true
   },
-  roomId: {
-    type: String,
-    required: true
+  eventId: {
+    type: Number,
+    required: false,
+    default: -1
+  },
+  postId: {
+    type: Number,
+    required: false,
+    default: -1
   },
   roomName: {
     type: String,
@@ -37,8 +43,17 @@ const props = defineProps({
   },
 })
 
-function toRoom() {
-  router.push({path: '/detailInfo', query: {roomId: props.roomId}})
+// function toRoom() {
+//   router.push({path: '/detailInfo', query: {roomId: props.roomId}})
+// }
+
+// TODO: figure out how to pass post
+function toOrigin() {
+  if (props.eventId !== -1) {
+    router.push({path: '/event', query: {id: props.eventId}})
+  } else if (props.postId !== -1) {
+    router.push({path: '/post', query: {id: props.postId}})
+  }
 }
 
 </script>

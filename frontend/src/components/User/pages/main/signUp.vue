@@ -4,12 +4,14 @@ import axiosInstance from "@/utils/axios";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
-
 const registerForm = reactive({
   username: '',
   password: ''
 })
 
+function toLogin() {
+  router.push({path: '/'})
+}
 
 
 const rules = reactive({
@@ -82,6 +84,12 @@ const register = () => {
         <el-input v-model="registerForm.password" show-password style="max-width: 300px"></el-input>
       </el-form-item>
     </el-form>
+
+    <div @click="toLogin">
+      <p class="signUpText" style="margin-left: 110px; margin-top: 10px; color: #6bccff; cursor: pointer">
+        Go back to login
+      </p>
+    </div>
 
     <button type="submit" class="submit" @click="register">
       Sign up

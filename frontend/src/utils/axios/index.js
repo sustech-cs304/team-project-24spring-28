@@ -9,7 +9,13 @@ axiosInstance.interceptors.request.use(
     (request) => {
         request.headers['Authorization'] = localStorage.getItem('token')
         if (request.method === 'post') {
-            if (request.url === '/teacher/room' || request.url === '/teacher/schedule' || request.url === '/teacher/zoning' || request.url === '/teacher/building' || request.url === '/teacher/student') {
+            if (request.url === '/teacher/room' ||
+                request.url === '/teacher/schedule' ||
+                request.url === '/teacher/zoning' ||
+                request.url === '/teacher/building' ||
+                request.url === '/teacher/student' ||
+                request.url === '/event/create'
+            ) {
                 request.headers['Content-Type'] = 'application/json'
             } else {
                 request.headers['Content-Type'] = 'multipart/form-data'

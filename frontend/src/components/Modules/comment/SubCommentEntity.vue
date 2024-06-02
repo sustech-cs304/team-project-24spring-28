@@ -47,15 +47,10 @@ function changeReplyingState() {
 }
 
 function Reply(commentId) {
-  axiosInstance.get('/student/comment', {
-    headers: {
-      'Authorization': localStorage.getItem('token')
-    },
-    params: {
-      'commentId': commentId,
-      'comment': replyContent.value
-    }
-  }).then((res) => {
+  let temp = new FormData()
+  temp.append('commentId', commentId)
+  temp.append('comment', replyContent.value)
+  axiosInstance.post('/user/reply', temp).then((res) => {
     console.log(res.data)
     isReplying.value = false
     replyContent.value = ''

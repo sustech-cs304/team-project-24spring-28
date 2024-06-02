@@ -19,6 +19,12 @@ module.exports = defineConfig({
                 }
             }
         },
+        // client: {
+        //     overlay: {
+        //         warnings: false,
+        //         errors: true,
+        //     },
+        // },
         // add to avoid refresh 404
         historyApiFallback: true,
     },

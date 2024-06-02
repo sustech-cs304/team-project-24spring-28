@@ -3,21 +3,33 @@ import { ref, reactive, onMounted } from 'vue'
 import {useRouter} from "vue-router";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import EventCardBig from "@/components/Modules/event/EventCardBig.vue";
+import axiosInstance from "@/utils/axios";
 
 let favorList = ref([])
 let applyList = ref([])
 
 onMounted(() => {
-  for (let i = 0; i < 10; i++) {
-    favorList.value.push({
-      id: '123'
-    })
-  }
-  for (let i = 0; i < 10; i++) {
-    applyList.value.push({
-      id: '123'
-    })
-  }
+  // TODO: test the following code
+  axiosInstance.get('/event/favored').then((res) => {
+    favorList.value = res.data.data
+  }).catch((err) => {
+    console.log(err)
+  })
+  axiosInstance.get('/event/applied').then((res) => {
+    applyList.value = res.data.data
+  }).catch((err) => {
+    console.log(err)
+  })
+  // for (let i = 0; i < 10; i++) {
+  //   favorList.value.push({
+  //     id: '123'
+  //   })
+  // }
+  // for (let i = 0; i < 10; i++) {
+  //   applyList.value.push({
+  //     id: '123'
+  //   })
+  // }
 })
 
 </script>
@@ -35,7 +47,7 @@ onMounted(() => {
 
       <div v-for="item in favorList" :key="item.id" style="margin-top: 20px"
       >
-        <EventCardBig :id="item.id"></EventCardBig>
+        <EventCardBig :id="item.toString()"></EventCardBig>
       </div>
     </div>
 
@@ -46,7 +58,7 @@ onMounted(() => {
 
       <div v-for="item in applyList" :key="item.id" style="margin-top: 20px"
       >
-        <EventCardBig :id="item.id"></EventCardBig>
+        <EventCardBig :id="item.toString()"></EventCardBig>
       </div>
     </div>
 

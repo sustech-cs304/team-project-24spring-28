@@ -11,11 +11,11 @@
                 <el-button-group >
                     <el-button class="profile-avatar" v-if="props.posterVisible">
                         <div class="block">
-                            <el-avatar shape="square" :size="40" :src="props.avatar" />
+                            <el-avatar shape="square" :size="40" :src="posterUrl" />
                         </div>
                     </el-button>
                     <el-button class="profile-name" v-if="props.nameVisible">
-                        <p>{{ props.name }}</p>
+                        <p>{{ name }}</p>
                     </el-button>
                 </el-button-group>
             </div>
@@ -41,18 +41,18 @@
                         class="demo-rich-content__name"
                         style="margin: 0; font-weight: 500"
                     >
-                        {{props.name}}
+                        {{name}}
                     </p>
                     <p
                         class="demo-rich-content__mention"
                         style="margin: 0; font-size: 14px; color: var(--el-color-info)"
                     >
-                        @{{props.id}}
+                        @{{id}}
                     </p>
                 </div>
 
                 <p class="demo-rich-content__desc" style="margin: 0">
-                    {{props.bio}}
+                    {{introduction}}
                 </p>
             </div>
         </template>
@@ -61,40 +61,52 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import {defineProps, onMounted, ref} from 'vue';
+import axiosInstance from "@/utils/axios";
+import {useRouter} from "vue-router";
+
+const router = useRouter()
 
 const props = defineProps({
-    poster: {
-        type: String,
-        default: 'posterUrl' // 设置海报的默认值
-    },
-    posterVisible: {
-        type: Boolean,
-        default: true
-    },
-    name: {
-        type: String,
-        default: 'Default Event Name' // 设置活动名的默认值
-    },
     nameVisible: {
         type: Boolean,
         default: true
     },
     id: {
         type: String,
-        default: '666666' // 设置活动id
+        default: '1' // 设置活动id
     },
-    bio: {
-        type: String,
-        default: 'Have no bio yet.' // 设置活动的简介
-    },
-    link: {
-        type: String,
-        default: 'Default Event Page Link'  //对应活动页面
-    }
-
-
 });
+const title = ref('')
+const eventName = ref('')
+const author = ref('')
+const authorId = ref('')
+const introduction = ref('')
+const posterUrl = ref('')
+
+async function fetchData() {
+    try {
+        const response = await axiosInstance.get(`/event/brief?id=${props.id}`)
+        const temp = response.data.data
+
+        title.value = temp.title
+        eventName.value = temp.eventName
+        author.value = temp.authorName
+        authorId.value = temp.authorId
+        introduction.value = temp.introduction
+        posterUrl.value = temp.postUrl
+    } catch (error) {
+        console.error('Failed to fetch post data:', error);
+    }
+}
+onMounted( () => {
+    fetchData();
+})
+
+function goToEvent() {
+    router.push( {path: ''} )
+}
+
 const urls = [
     'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg',
     'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2781c4fba33d850549jpeg.jpeg',

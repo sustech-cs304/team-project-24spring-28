@@ -36,7 +36,7 @@ export async function getPost(id) {
 
 export async function searchEvent(content) {
     const eventIds = ref([])
-    await axiosInstance.get('/event/brief'
+    await axiosInstance.get('/search/event'
         , {
             params: {
                 content: content
@@ -53,7 +53,7 @@ export async function searchEvent(content) {
 
 export async function searchPost(content) {
     const postIds = ref([])
-    await axiosInstance.get('/event/brief'
+    await axiosInstance.get('/search/post'
         , {
             params: {
                 content: content
