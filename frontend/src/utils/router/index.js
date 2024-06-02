@@ -24,6 +24,8 @@ import PostWrite from "@/components/User/pages/post/components/postWrite.vue";
 import Admin from "@/components/Admin/AdminPage.vue";
 import AllEvent from "@/components/User/pages/main/AllEvent.vue";
 
+import Doc from "@/components/User/pages/doc/Doc.vue";
+
 
 const routes = [
     {path: '/', component: Login},
@@ -54,7 +56,9 @@ const routes = [
     {path: '/event/search', component: searchEventPage},
       
     {path: '/admin', component: Admin},
-    {path: '/allEvent', component: AllEvent}
+    {path: '/allEvent', component: AllEvent},
+
+    {path: '/doc', component: Doc}
 
 
 ]
