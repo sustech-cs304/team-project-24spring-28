@@ -5,6 +5,7 @@ import Comment from '@/components/Modules/comment/Comment.vue'
 import Avatar from '@/components/Modules/avatar/Avatar.vue'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import SimplePost from "@/components/Modules/SimplePost.vue";
+import { formatTime } from "@/components/User/pages/message/utils";
 
 import {useRoute, useRouter} from "vue-router";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
@@ -73,6 +74,7 @@ function clickLike() {
 
 function clickWrite() {
   console.log('write')
+  router.push({path: '/square', query: {eventID: eventId}})
 }
 
 function clickApply() {
@@ -104,16 +106,20 @@ function countApply() {
   temp.append('id', eventId)
   axiosInstance.post('/event/apply', temp).then(response => {
     console.log(response)
+    if (response.data.code === 0) {
+      alert('报名成功！')
+      currentCount.value += 1
+    } else {
+      alert('报名失败！')
+    }
   }).catch(error => {
     console.error(error)
   })
-  currentCount.value += 1
-  alert('报名成功！')
   countVisible.value = false
 }
 
 function formApply() {
-  // console.log(appliedForm.value)
+  console.log(appliedForm.value)
   for (let i = 0; i < appliedForm.value.length; i++) {
     console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
   }
@@ -129,19 +135,17 @@ function formApply() {
   temp.append('id', eventId)
 
   // TODO: check the correctness
-  let formValues = []
   for (let i = 0; i < appliedForm.value.length; i++) {
-    // formValues.push({
-    //   id: appliedForm.value[i].id,
-    //   value: appliedForm.value[i].value
-    // })
-    // example: ["王煜然", "12110330", "", "男"]
-    formValues.push(appliedForm.value[i])
+    temp.append('formValues[]', appliedForm.value[i].value)
   }
-  temp.append('formValues', JSON.stringify(formValues))
 
   axiosInstance.post('/event/apply', temp).then(response => {
     console.log(response)
+    if (response.data.code === 0) {
+      alert('报名成功！')
+    } else {
+      alert('报名失败！')
+    }
   }).catch(error => {
     console.error(error)
   })
@@ -149,7 +153,6 @@ function formApply() {
   for (let i = 0; i < appliedForm.value.length; i++) {
     appliedForm.value[i].value = ''
   }
-  alert('报名成功！')
   formVisible.value = false
 }
 
@@ -164,13 +167,13 @@ onMounted(() => {
     eventName.value = temp.eventName
     authorId.value = temp.authorId
     authorName.value = temp.authorName
-    applyStartTime.value = temp.applyStartTime
-    applyEndTime.value = temp.applyEndTime
-    startTime.value = temp.startTime
-    endTime.value = temp.endTime
+    applyStartTime.value = formatTime(temp.applyStartTime)
+    applyEndTime.value = formatTime(temp.applyEndTime)
+    startTime.value = formatTime(temp.startTime)
+    endTime.value = formatTime(temp.endTime)
     grade.value = temp.score
-    posterUrl.value = temp.posterUrl
-    commentBlockId.value = temp.commentBlockId
+    posterUrl.value = temp.postUrl
+    liked.value = temp.liked
 
 
     stars.value = '⭐'
@@ -178,12 +181,12 @@ onMounted(() => {
       stars.value += '⭐'
     }
 
-    text.value = temp.introduction
+    text.value = temp.text
 
     eventType = temp.enrollmentType
     if (eventType === 'count') {
       currentCount.value = temp.currentCount
-      let limit = temp.limitCount
+      let limit = temp.limit
       if (limit === -1) {
         limitCount.value = '无限制'
       } else {
@@ -313,7 +316,7 @@ function showGrade(newGrade) {
   let temp = new FormData()
   temp.append('id', eventId)
   temp.append('grade', newGrade)
-  axiosInstance.post('/event/score', temp).then(response => {
+  axiosInstance.post('/event/grade', temp).then(response => {
     console.log(response)
   }).catch(error => {
     console.error(error)
@@ -350,14 +353,14 @@ function showGrade(newGrade) {
       </div>
 
       <div>
-        <img :src="posterUrl"/>
+        <img :src="posterUrl" style="width: 400px"/>
       </div>
 
       <div>
         <v-md-preview :text="text"></v-md-preview>
       </div>
 
-      <comment :comment-block-id="commentBlockId"></comment>
+      <comment :event-id="Number(eventId)"></comment>
 
 
     </div>
@@ -365,7 +368,7 @@ function showGrade(newGrade) {
     <div class="right-panel">
       <div class="author-wrap">
         <avatar-with-name
-            :user-id="authorId"
+            :user-id="authorId.toString()"
             :need-small="true"
             size-small="60px"
             name="LampTales"></avatar-with-name>

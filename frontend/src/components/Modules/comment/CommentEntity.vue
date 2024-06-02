@@ -20,7 +20,15 @@ const props = defineProps({
     required: true
   },
   // TODO: remove roomId
-  roomId: {
+  // roomId: {
+  //   type: Number,
+  //   required: true
+  // },
+  // commentId: {
+  //   type: Number,
+  //   required: true
+  // },
+  postId: {
     type: Number,
     required: true
   },
@@ -45,16 +53,10 @@ function changeReplyingState() {
 }
 
 function Reply(commentId) {
-  axiosInstance.get('/student/comment', {
-    headers: {
-      'Authorization': localStorage.getItem('token')
-    },
-    data:null,
-    params: {
-      'commentId': commentId,
-      'comment': replyContent.value
-    }
-  }).then((res) => {
+  let temp = new FormData()
+  temp.append('commentId', commentId)
+  temp.append('comment', replyContent.value)
+  axiosInstance.post('/user/reply', temp).then((res) => {
     console.log(res.data)
     isReplying.value = false
     replyContent.value = ''
@@ -120,11 +122,11 @@ function Reply(commentId) {
           v-for="subComment in subComments"
           :key="subComment.id"
           :id="subComment.id"
-          :student-id="subComment.studentId"
-          :student-name="subComment.studentName"
+          :student-id="subComment.userId"
+          :student-name="subComment.userName"
           :underCommentID="subComment.underCommentId"
           :to-comment-id="subComment.toCommentId"
-          :to-student-name="subComment.toStudentName"
+          :to-student-name="subComment.toUserName"
           :commentContent="subComment.comment"
       />
     </div>

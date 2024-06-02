@@ -10,13 +10,13 @@ let applyList = ref([])
 
 onMounted(() => {
   // TODO: test the following code
-  axiosInstance.get('/user/favor').then((res) => {
-    favorList.value = res.data.data.eventList
+  axiosInstance.get('/event/favored').then((res) => {
+    favorList.value = res.data.data
   }).catch((err) => {
     console.log(err)
   })
-  axiosInstance.get('/user/apply').then((res) => {
-    applyList.value = res.data.data.eventList
+  axiosInstance.get('/event/applied').then((res) => {
+    applyList.value = res.data.data
   }).catch((err) => {
     console.log(err)
   })
@@ -47,7 +47,7 @@ onMounted(() => {
 
       <div v-for="item in favorList" :key="item.id" style="margin-top: 20px"
       >
-        <EventCardBig :id="item.id"></EventCardBig>
+        <EventCardBig :id="item.toString()"></EventCardBig>
       </div>
     </div>
 
@@ -58,7 +58,7 @@ onMounted(() => {
 
       <div v-for="item in applyList" :key="item.id" style="margin-top: 20px"
       >
-        <EventCardBig :id="item.id"></EventCardBig>
+        <EventCardBig :id="item.toString()"></EventCardBig>
       </div>
     </div>
 

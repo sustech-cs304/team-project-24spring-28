@@ -145,7 +145,7 @@ function formCancel() {
 let newFormEntryVisible = ref(false)
 let newFormEntryName = ref('')
 let newFormEntryType = ref('')
-let newFormEntryOptions = ref([])
+let newFormEntryOptions = ref('')
 let newFormEntryRequired = ref(false)
 
 function addNewFormEntryClick() {
@@ -169,6 +169,11 @@ function addNewFormEntryApply() {
       required: newFormEntryRequired.value
     })
   }
+  newFormEntryName.value = ''
+  newFormEntryType.value = ''
+  newFormEntryOptions.value = ''
+  newFormEntryRequired.value = false
+
   newFormEntryVisible.value = false
 }
 
@@ -214,48 +219,83 @@ function editSelectCancel() {
 
 // turn Sat Jul 06 2024 00:00:00 GMT+0800 (中国标准时间) to 2024-07-06 00:00:00
 function formatTime(str) {
-  let temp = new Date(str)
-  let year = temp.getFullYear()
-  let month = temp.getMonth() + 1
-  let day = temp.getDate()
-  let hour = temp.getHours()
-  let minute = temp.getMinutes()
-  let second = temp.getSeconds()
-  return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+  let date = str.toString().split(' ')
+  let month = ''
+  switch (date[1]) {
+    case 'Jan':
+      month = '01'
+      break
+    case 'Feb':
+      month = '02'
+      break
+    case 'Mar':
+      month = '03'
+      break
+    case 'Apr':
+      month = '04'
+      break
+    case 'May':
+      month = '05'
+      break
+    case 'Jun':
+      month = '06'
+      break
+    case 'Jul':
+      month = '07'
+      break
+    case 'Aug':
+      month = '08'
+      break
+    case 'Sep':
+      month = '09'
+      break
+    case 'Oct':
+      month = '10'
+      break
+    case 'Nov':
+      month = '11'
+      break
+    case 'Dec':
+      month = '12'
+      break
+  }
+  let day = date[2]
+  let year = date[3]
+  let time = date[4]
+  return year + '-' + month + '-' + day + ' ' + time
 }
 
 function createEventClick() {
-  // console.log(form)
-  // console.log(mdText)
-  let temp = new FormData()
-  temp.append('title', form.title)
-  temp.append('name', form.name)
-  temp.append('applyStartTime', formatTime(form.applyStartTime))
-  temp.append('applyEndTime', formatTime(form.applyEndTime))
-  temp.append('startTime', formatTime(form.startTime))
-  temp.append('endTime', formatTime(form.endTime))
-  temp.append('introduction', form.introduction)
-  temp.append('imageUrl', imageUrl.value)
-  temp.append('mdText', mdText.value)
-  if (form.type === '1') {
-    temp.append('enrollmentType', 'count')
-    if (form.limitCount === '') {
-      temp.append('limitCount', 0)
-    } else {
-      temp.append('limitCount', Number(form.limitCount))
-    }
-    // add empty definedForm
-    temp.append('definedForm', JSON.stringify([]))
-  } else if (form.type === '2') {
-    temp.append('enrollmentType', 'select')
-    temp.append('seatSet', form.seatSet)
-  } else {
-    temp.append('definedForm', JSON.stringify(definedForm.value))
+  let temp = {
+    title: form.title,
+    name: form.name,
+    applyStartTime: formatTime(form.applyStartTime),
+    applyEndTime: formatTime(form.applyEndTime),
+    startTime: formatTime(form.startTime),
+    endTime: formatTime(form.endTime),
+    introduction: form.introduction,
+    imageUrl: imageUrl.value,
+    mdText: mdText.value,
+    enrollmentType: '',
   }
-  // console.log(form.startTime)
-  // console.log(temp.get('startTime'))
-  axiosInstance.post('/event/create', temp).then((res) => {
-    console.log(res.data)
+  if (form.type === '1') {
+    temp.enrollmentType = 'count'
+    if (form.limitCount === '') {
+      temp.limitCount = 0
+    } else {
+      temp.limitCount = Number(form.limitCount)
+    }
+  } else if (form.type === '2') {
+    temp.enrollmentType = 'select'
+  } else {
+    temp.enrollmentType = 'form'
+    temp.limitCount = 0
+    temp.definedForm = definedForm.value
+  }
+  let jsonContent = JSON.stringify(temp)
+  // jsonContent = "{\"title\": \"asdf\"}"
+  axiosInstance.post('/event/create', jsonContent).then((res) => {
+    console.log(res)
   }).catch((err) => {
     console.log(err)
   })
@@ -276,27 +316,27 @@ function mdUploadImage(event, insertImage, files) {
 
 
 onMounted(() => {
-  definedForm.value = [
-    {
-      id: 0,
-      name: '姓名',
-      type: 'input',
-      required: true,
-    },
-    {
-      id: 1,
-      name: '学号',
-      type: 'input',
-      required: false,
-    },
-    {
-      id: 2,
-      name: '年级',
-      type: 'select',
-      options: ['大一', '大二', '大三', '大四'],
-      required: true,
-    }
-  ]
+  // definedForm.value = [
+  //   {
+  //     id: 0,
+  //     name: '姓名',
+  //     type: 'input',
+  //     required: true,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: '学号',
+  //     type: 'input',
+  //     required: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: '年级',
+  //     type: 'select',
+  //     options: ['大一', '大二', '大三', '大四'],
+  //     required: true,
+  //   }
+  // ]
 
 
 

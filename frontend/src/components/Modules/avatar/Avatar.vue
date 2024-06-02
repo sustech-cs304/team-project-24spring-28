@@ -108,8 +108,22 @@ function invite() {
 
 let avatar_url = computed(() => {
   // return 'http://10.16.88.247:8084/' + props.userId + '.png'
-  return 'https://avatars.githubusercontent.com/u/115088102?v=4'
+  // return 'https://avatars.githubusercontent.com/u/115088102?v=4'
+  // TODO: check whether computed attribute can use async function
+  return getAvatar()
 })
+function getAvatar() {
+  axiosInstance.get('profile/info/get', {
+    params: {
+      userID: props.userId
+    }
+  }).then(response => {
+    let temp = response.data.data
+    return temp.userAvatar
+  }).catch(error => {
+    console.error(error);
+  });
+}
 
 </script>
 

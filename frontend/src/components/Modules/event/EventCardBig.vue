@@ -4,6 +4,7 @@ import {ref, onMounted} from "vue";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
 import axiosInstance from "@/utils/axios";
 import {useRoute, useRouter} from "vue-router";
+import { formatTime } from "@/components/User/pages/message/utils";
 
 const router = useRouter()
 const route = useRoute()
@@ -41,21 +42,21 @@ onMounted(() => {
     }
   }).then(response => {
     let temp = response.data.data
-    title = temp.title
-    eventName = temp.eventName
-    author = temp.authorName
-    authorId = temp.authorId
-    applyStartTime = temp.applyStartTime
-    applyEndTime = temp.applyEndTime
-    startTime = temp.startTime
-    endTime = temp.endTime
-    score = temp.score
-    introduction = temp.introduction
-    posterUrl = temp.posterUrl
+    title.value = temp.title
+    eventName.value = temp.eventName
+    author.value = temp.authorName
+    authorId.value = temp.authorId
+    applyStartTime.value = formatTime(temp.applyStartTime)
+    applyEndTime.value = formatTime(temp.applyEndTime)
+    startTime.value = formatTime(temp.startTime)
+    endTime.value = formatTime(temp.endTime)
+    score.value = temp.score
+    introduction.value = temp.introduction
+    posterUrl.value = temp.postUrl
 
-    stars = '⭐'
+    stars.value = '⭐'
     for (let i = 1; i < score; i++) {
-      stars = stars + '⭐'
+      stars.value += '⭐'
     }
 
 
@@ -65,7 +66,7 @@ onMounted(() => {
 })
 
 // just for test
-score = '4'
+// score = '4'
 
 
 
@@ -95,14 +96,14 @@ score = '4'
   <el-card style="border-radius: 0.5vw" shadow="hover">
     <div class="warp" @click="toEvent">
       <div class="poster-warp">
-        <img :src="posterUrl" alt="poster" style="width: 100%; height: auto;">
+        <img :src="posterUrl" alt="poster" style="width: 200px; height: auto;">
       </div>
       <div class="content-warp">
 
         <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
           <p style="font-size: 20px; font-weight: bold"
           >{{title}}</p>
-          <avatar-with-name :user-id="authorId" :name="author" margin-left="5px"/>
+          <avatar-with-name :user-id="authorId.toString()" :name="author" margin-left="5px"/>
         </div>
 
         <div style="display: flex; flex-direction: row; align-items: center;">
