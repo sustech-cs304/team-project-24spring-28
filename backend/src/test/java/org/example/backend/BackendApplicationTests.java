@@ -55,6 +55,12 @@ class BackendApplicationTests {
     @Test
     void generateData() {
         // generate users
+        Admin admin = new Admin();
+        admin.setUsername("admin");
+        admin.setPassword("admin");
+        admin.setName("admin");
+        admin.setBio("admin");
+        abstractUserService.saveUser(admin);
         User user = new User();
         for (int i = 0; i < 8; i++) {
             user = new User();
