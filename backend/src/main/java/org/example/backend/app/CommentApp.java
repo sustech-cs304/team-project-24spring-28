@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 该类用于处理评论相关的请求
+ * @author wangyr
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/comment")
 public class CommentApp {
