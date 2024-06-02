@@ -79,12 +79,12 @@ public class UserApp {
 //                jsonObject.put("type", "post");
                 jsonObject.put("postId", eventComment.getPost().getId());
                 jsonObject.put("postTitle", eventComment.getPost().getPostTitle());
-                jsonObject.put("commentContent", eventComment.getPost().getPostContent());
+                jsonObject.put("commentContent", comment);
             } else {
 //                jsonObject.put("type", "event");
                 jsonObject.put("eventId", eventComment.getEvent().getId());
                 jsonObject.put("eventTitle", eventComment.getEvent().getTitle());
-                jsonObject.put("commentContent", eventComment.getEvent().getText());
+                jsonObject.put("commentContent", comment);
             }
             jsonObject.put("oriComment", toComment.getComment());
             messageService.saveMessage(new Message("Comment", toComment.getUser(), user, false, LocalDateTime.now(), jsonObject.toString()));
@@ -100,12 +100,12 @@ public class UserApp {
 //                jsonObject.put("type", "post");
                 jsonObject.put("postId", tempComment.getPost().getId());
                 jsonObject.put("postTitle", tempComment.getPost().getPostTitle());
-                jsonObject.put("commentContent", tempComment.getPost().getPostContent());
+                jsonObject.put("commentContent", comment);
             } else {
 //                jsonObject.put("type", "event");
                 jsonObject.put("eventId", tempComment.getEvent().getId());
                 jsonObject.put("eventTitle", tempComment.getEvent().getTitle());
-                jsonObject.put("commentContent", tempComment.getEvent().getText());
+                jsonObject.put("commentContent", comment);
             }
             jsonObject.put("oriComment", tempComment.getComment());
             messageService.saveMessage(new Message("Comment", tempComment.getUser(), user, false, LocalDateTime.now(), jsonObject.toString()));

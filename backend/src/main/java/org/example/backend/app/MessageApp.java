@@ -308,10 +308,8 @@ public class MessageApp {
     @GetMapping("/comment")
     public List<MessageDto> getComment(@RequestHeader("Authorization") String token) {
         long userId = JwtUtil.getIdByToken(token);
-        List<Message> fromMessages = messageService.findMessageByFromIdAndType(userId, "Comment");
         List<Message> toMessages = messageService.findMessageByToUserIdAndType(userId, "Comment");
-        fromMessages.addAll(toMessages);
-        return fromMessages.stream().map(this::constructMessageDto).toList();
+        return toMessages.stream().map(this::constructMessageDto).toList();
     }
 
 //    @GetMapping("/exchange")
