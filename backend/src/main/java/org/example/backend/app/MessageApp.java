@@ -195,17 +195,17 @@ public class MessageApp {
         fromMessages.sort(Comparator.comparing(Message::getTime));
         return fromMessages.stream().map(this::constructMessageDto).toList();
     }
-    public List<Message> getChatText(@RequestParam("id") long userId, @RequestParam("userId") long friendId) {
-        List<Message> fromMessages = messageService.findMessageByFromIdAndToUserIdAndType(userId, friendId, "Chat");
-        List<Message> toMessages = messageService.findMessageByFromIdAndToUserIdAndType(friendId, userId, "Chat");
-        for (Message message : toMessages) {
-            message.setRead(true);
-            messageService.updateMessage(message);
-        }
-        fromMessages.addAll(toMessages);
-        fromMessages.sort(Comparator.comparing(Message::getTime));
-        return fromMessages;
-    }
+//    public List<Message> getChatText(@RequestParam("id") long userId, @RequestParam("userId") long friendId) {
+//        List<Message> fromMessages = messageService.findMessageByFromIdAndToUserIdAndType(userId, friendId, "Chat");
+//        List<Message> toMessages = messageService.findMessageByFromIdAndToUserIdAndType(friendId, userId, "Chat");
+//        for (Message message : toMessages) {
+//            message.setRead(true);
+//            messageService.updateMessage(message);
+//        }
+//        fromMessages.addAll(toMessages);
+//        fromMessages.sort(Comparator.comparing(Message::getTime));
+//        return fromMessages;
+//    }
 
     private MessageDto constructMessageDto(Message message) {
         MessageDto messageDto = new MessageDto();
@@ -304,12 +304,12 @@ public class MessageApp {
 //    }
 
     @GetMapping("/comment")
-    public List<Message> getComment(@RequestHeader("Authorization") String token) {
+    public List<MessageDto> getComment(@RequestHeader("Authorization") String token) {
         long userId = JwtUtil.getIdByToken(token);
         List<Message> fromMessages = messageService.findMessageByFromIdAndType(userId, "Comment");
         List<Message> toMessages = messageService.findMessageByToUserIdAndType(userId, "Comment");
         fromMessages.addAll(toMessages);
-        return fromMessages;
+        return fromMessages.stream().map(this::constructMessageDto).toList();
     }
 
 //    @GetMapping("/exchange")
