@@ -61,6 +61,7 @@ public class PostApp {
         postDto.setPostCollectAmount(post.getPostCollectAmount());
         postDto.setPostCommentAmount(eventCommentService.findEventCommentByPostId(post.getId()).size());
         postDto.setUsername(user.getUsername());
+        postDto.setUserID(user.getId());
         postDto.setUserBio(user.getBio());
         postDto.setUserAvatar(user.getAvatar());
         postDto.setLikeOrNot(post.getLikeUsers().contains(user));

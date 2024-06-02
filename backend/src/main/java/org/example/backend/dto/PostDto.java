@@ -19,6 +19,7 @@ public class PostDto {
     private int postCollectAmount;
     private int postCommentAmount;
     private String username;
+    private Long userID;
     private String userBio;
     private String userAvatar;
     private String eventLink;
@@ -41,6 +42,7 @@ public class PostDto {
         this.postRelevantEventID = event.getId();
         this.postLikeAmount = post.getLikeUsers().size();
         this.username = user.getUsername();
+        this.userID = user.getId();
         this.userBio = user.getBio();
         this.userAvatar = user.getAvatar();
         this.eventLink = String.valueOf(event.getId());
