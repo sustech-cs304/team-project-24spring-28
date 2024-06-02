@@ -31,13 +31,41 @@
       </el-table>
     </div>
     <div v-show="activeTable === 3">
-      <el-table :data="userData" style="width: 100%">
-        <el-table-column prop="postID" label="id" width="180"></el-table-column>
-        <el-table-column prop="name" label="名字/用户" width="180"></el-table-column>
-        <el-table-column prop="permission" label="权限" width="180"></el-table-column>
+      <el-table :data="users" style="width: 100%">
+        <el-table-column prop="id" label="id" width="180"></el-table-column>
+        <el-table-column prop="name" label="昵称" width="180"></el-table-column>
+        <el-table-column prop="username" label="账号" width="180"></el-table-column>
         <el-table-column prop="password" label="密码" width="180"></el-table-column>
+        <el-table-column prop="canCreate" label="能够创建" width="180"></el-table-column>
+        <el-table-column prop="canEnroll" label="能够报名" width="180"></el-table-column>
+        <el-table-column prop="canComment" label="能够评论" width="180"></el-table-column>
+        <el-table-column label="操作" width="180">
+          <template #default="scope">
+            <el-button @click="showPermissionDialog(scope.row)" type="primary" size="small">设置权限</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
+
+    <el-dialog v-model="permissionDialogVisible" title="设置用户权限">
+      <el-form :model="permissionForm">
+        <el-form-item label="能够创建">
+          <el-switch v-model="permissionForm.canCreate"></el-switch>
+        </el-form-item>
+        <el-form-item label="能够报名">
+          <el-switch v-model="permissionForm.canEnroll"></el-switch>
+        </el-form-item>
+        <el-form-item label="能够评论">
+          <el-switch v-model="permissionForm.canComment"></el-switch>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="permissionDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="updatePermission">确定</el-button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -51,13 +79,30 @@ const events = ref([]);
 const posts = ref([]);
 const users = ref([]);
 
+const permissionDialogVisible = ref(false);
+const permissionForm = ref({
+  userId: null,
+  canCreate: false,
+  canEnroll: false,
+  canComment: false
+});
 
+function showPermissionDialog(user) {
+  permissionForm.value = {
+    userId: user.id,
+    canCreate: user.canCreate,
+    canEnroll: user.canEnroll,
+    canComment: user.canComment
+  };
+  permissionDialogVisible.value = true;
+}
 
-const userData = [
-  { date: '2021-12-01', name: '用户1', permission: '权限1', password: '密码1' },
-  { date: '2021-12-02', name: '用户2', permission: '权限2', password: '密码2' },
-  { date: '2021-12-03', name: '用户3', permission: '权限3', password: '密码3' },
-];
+async function updatePermission() {
+  await adminApi.changePermission(permissionForm.value);
+  permissionDialogVisible.value = false;
+  await fetchData();
+}
+
 
 onMounted(() => {
   fetchData();
@@ -73,10 +118,6 @@ async function fetchData() {
     events.value.push(await adminApi.getBriefEvent(id));
   }
   users.value = await adminApi.getAllUser();
-  // console.log(events);
-  // console.log(posts);
-  // console.log(eventIds);
-  console.log(users)
 }
 
 async function deleteEvent(eventId) {

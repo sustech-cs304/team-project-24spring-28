@@ -92,3 +92,14 @@ export async function deletePost(id) {
         console.error(error);
     });
 }
+
+export async function changePermission(permissionForm) {
+    console.log(permissionForm);
+    await axiosInstance.post('/admin/permission', permissionForm
+    ).then(response => {
+        console.log(response.data);
+        alert("修改成功")
+    }).catch(error => {
+        console.error(error);
+    });
+}
