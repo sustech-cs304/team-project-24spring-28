@@ -72,6 +72,21 @@ public class UserApp {
             replyCommentService.saveReplyComment(replyComment);
             toComment.getReplyComments().add(replyComment);
             // message
+            JSONObject jsonObject = new JSONObject();
+            EventComment eventComment = toComment.getUnderComment();
+            if (eventComment.getEvent() == null) {
+//                jsonObject.put("type", "post");
+                jsonObject.put("postId", eventComment.getPost().getId());
+                jsonObject.put("postTitle", eventComment.getPost().getPostTitle());
+                jsonObject.put("commentContent", eventComment.getPost().getPostContent());
+            } else {
+//                jsonObject.put("type", "event");
+                jsonObject.put("eventId", eventComment.getEvent().getId());
+                jsonObject.put("eventTitle", eventComment.getEvent().getTitle());
+                jsonObject.put("commentContent", eventComment.getEvent().getText());
+            }
+            jsonObject.put("oriComment", toComment.getComment());
+            messageService.saveMessage(new Message("Comment", toComment.getUser(), user, false, LocalDateTime.now(), jsonObject.toString()));
             return commentService.updateComment(toComment);
         } else {
             replyComment.setUnderComment(tempComment);
@@ -79,12 +94,21 @@ public class UserApp {
             replyCommentService.saveReplyComment(replyComment);
             tempComment.getReplyComments().add(replyComment);
             // message
+            JSONObject jsonObject = new JSONObject();
+            if (tempComment.getEvent() == null) {
+//                jsonObject.put("type", "post");
+                jsonObject.put("postId", tempComment.getPost().getId());
+                jsonObject.put("postTitle", tempComment.getPost().getPostTitle());
+                jsonObject.put("commentContent", tempComment.getPost().getPostContent());
+            } else {
+//                jsonObject.put("type", "event");
+                jsonObject.put("eventId", tempComment.getEvent().getId());
+                jsonObject.put("eventTitle", tempComment.getEvent().getTitle());
+                jsonObject.put("commentContent", tempComment.getEvent().getText());
+            }
+            jsonObject.put("oriComment", tempComment.getComment());
+            messageService.saveMessage(new Message("Comment", tempComment.getUser(), user, false, LocalDateTime.now(), jsonObject.toString()));
             return commentService.updateComment(tempComment);
         }
-    }
-
-    private void addEventMessage(User user, EventComment eventComment) {
-
-//        messageService.saveMessage(message);
     }
 }
