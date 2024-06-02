@@ -285,15 +285,15 @@ const toggleCollapse = () => {
                     </el-row>
                     <el-row>
                         <el-col>
-                            <el-card style="border-radius: 0.5vw">
-                                <el-carousel height="40vh" motion-blur interval="6000">
-                                    <el-carousel-item v-for="item in postIds" :key="item.id">
-                                        <div class="event-card-wrapper">
-                                            <post-card :id="item" />
-                                        </div>
-                                    </el-carousel-item>
-                                </el-carousel>
-                            </el-card>
+<!--                            <el-card style="border-radius: 0.5vw">-->
+<!--                                <el-carousel height="40vh" motion-blur interval="6000">-->
+<!--                                    <el-carousel-item v-for="item in postIds" :key="item.id">-->
+<!--                                        <div class="event-card-wrapper">-->
+<!--                                            <post-card :id="item" />-->
+<!--                                        </div>-->
+<!--                                    </el-carousel-item>-->
+<!--                                </el-carousel>-->
+<!--                            </el-card>-->
                         </el-col>
                     </el-row>
                 </el-affix>
