@@ -40,7 +40,7 @@ const routes = [
 
     {path: '/main', component: mainPage},
 
-    {path: '/search', component: searchPage},
+    // {path: '/search', component: searchPage},
     {path: '/message', component: Message},
 
     {path: '/notFound', component: notFound},

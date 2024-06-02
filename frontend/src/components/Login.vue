@@ -213,47 +213,47 @@ function toMyEvent() {
 
 
     <!-- ------------- add your test button here --------------- -->
-    <button type="submit" @click="toMain">
-      toMain
-    </button>
+<!--    <button type="submit" @click="toMain">-->
+<!--      toMain-->
+<!--    </button>-->
 
-    <button type="submit" @click="toSquare">
-      toSquare
-    </button>
+<!--    <button type="submit" @click="toSquare">-->
+<!--      toSquare-->
+<!--    </button>-->
 
-    <button type="submit" @click="toPost">
-      toPost
-    </button>
+<!--    <button type="submit" @click="toPost">-->
+<!--      toPost-->
+<!--    </button>-->
 
-    <button type="submit" @click="toEvent">
-      toEvent
-    </button>
+<!--    <button type="submit" @click="toEvent">-->
+<!--      toEvent-->
+<!--    </button>-->
 
-      <button type="submit" @click="toProfile">
-          toProfile
-      </button>
-      <button type="submit" @click="toProfileTest">
-          toProfileTest
-      </button>
-    <button type="submit" @click="toWriteEvent">
-      toWriteEvent
-    </button>
+<!--      <button type="submit" @click="toProfile">-->
+<!--          toProfile-->
+<!--      </button>-->
+<!--      <button type="submit" @click="toProfileTest">-->
+<!--          toProfileTest-->
+<!--      </button>-->
+<!--    <button type="submit" @click="toWriteEvent">-->
+<!--      toWriteEvent-->
+<!--    </button>-->
 
-    <button type="submit" @click="toManageEvent">
-      toManageEvent
-    </button>
+<!--    <button type="submit" @click="toManageEvent">-->
+<!--      toManageEvent-->
+<!--    </button>-->
 
-    <button type="submit" @click="toMessage">
-      toMessage
-    </button>
+<!--    <button type="submit" @click="toMessage">-->
+<!--      toMessage-->
+<!--    </button>-->
 
-    <button type="submit" @click="toEventCardTest">
-      toCardTest
-    </button>
+<!--    <button type="submit" @click="toEventCardTest">-->
+<!--      toCardTest-->
+<!--    </button>-->
 
-    <button type="submit" @click="toMyEvent">
-      toMyEvent
-    </button>
+<!--    <button type="submit" @click="toMyEvent">-->
+<!--      toMyEvent-->
+<!--    </button>-->
 
     <!-- ------------- end of the test list --------------- -->
   </div>
