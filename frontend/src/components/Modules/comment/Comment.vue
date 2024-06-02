@@ -9,9 +9,15 @@ const router = useRouter()
 const route = useRoute()
 
 const props = defineProps({
-  commentBlockId: {
+  postId: {
     type: Number,
-    required: true
+    required: false,
+    default: -1
+  },
+  eventId: {
+    type: Number,
+    required: false,
+    default: -1
   }
 })
 
@@ -27,7 +33,31 @@ const commentData = ref([])
 
 // TODO: edit in the future
 onMounted(() => {
-  // axiosInstance.get(`/comment/room`, {params: {roomId: roomId}}).then((res) => {
+  let param_id = {}
+  if (props.postId !== -1) {
+    param_id = {postId: props.postId}
+  } else if (props.eventId !== -1) {
+    param_id = {eventId: props.eventId}
+  }
+  axiosInstance.get(`/comment/event`, {params: param_id}).then((res) => {
+    commentData.value = res.data.data
+    for (let i = 0; i < commentData.value.length; i++) {
+      axiosInstance.get(`/comment/under`, {
+            params: {
+              commentId: commentData.value[i].id
+            }
+          }
+      ).then((res) => {
+        commentData.value[i].subComments = res.data.data
+        console.log('commentData:', commentData)
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+  // axiosInstance.get(`/comment/event`, {params: {roomId: roomId}}).then((res) => {
   //   commentData.value = res.data.data
   //   for (let i = 0; i < commentData.value.length; i++) {
   //     axiosInstance.get(`/comment/under`, {
@@ -45,7 +75,6 @@ onMounted(() => {
   // }).catch((err) => {
   //   console.log(err)
   // })
-
 })
 
 // TODO: edit in the future
@@ -53,20 +82,41 @@ function submitComment() {
   if (textarea.value === '') {
     return
   }
-  axiosInstance.get('/student/comment', {
-    headers: {
-      'Authorization': localStorage.getItem('token')
-    },
-    data: null,
-    params: {
-      'roomId': roomId,
-      'comment': textarea.value
-    }
-  }).then((res) => {
-    console.log(res.data)
-  }).catch((err) => {
-    console.log(err)
-  })
+  console.log(props.postId)
+  if (props.eventId !== -1) {
+    let temp = new FormData()
+    temp.append('eventId', props.eventId)
+    temp.append('comment', textarea.value)
+    axiosInstance.post('/user/commentEvent', temp).then((res) => {
+      console.log(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+  } else if (props.postId !== -1) {
+    let temp = new FormData()
+    temp.append('postId', props.postId)
+    temp.append('comment', textarea.value)
+    axiosInstance.post('/user/commentPost', temp).then((res) => {
+      console.log(res.data)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+  textarea.value = ''
+  // axiosInstance.get('/student/comment', {
+  //   headers: {
+  //     'Authorization': localStorage.getItem('token')
+  //   },
+  //   data: null,
+  //   params: {
+  //     'roomId': roomId,
+  //     'comment': textarea.value
+  //   }
+  // }).then((res) => {
+  //   console.log(res.data)
+  // }).catch((err) => {
+  //   console.log(err)
+  // })
 }
 
 
@@ -109,13 +159,15 @@ function submitComment() {
       </el-row>
     </div>
     <div class="CommentContainer">
+      <!-- TODO: ask what this should be -->
       <CommentEntity
           v-for="Comment in commentData"
           :key="Comment.id"
           :id="Comment.id"
-          :commenterId="Comment.studentId"
-          :commenterName="Comment.studentName"
-          :roomId="Comment.roomId"
+          :commenterId="Comment.userId"
+          :commenterName="Comment.userName"
+          :eventId="props.eventId"
+          :postId="props.postId"
           :commentContent="Comment.comment"
           :subComments="Comment.subComments"
       />

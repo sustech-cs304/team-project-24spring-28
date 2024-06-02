@@ -5,9 +5,11 @@ import Comment from '@/components/Modules/comment/Comment.vue'
 import Avatar from '@/components/Modules/avatar/Avatar.vue'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import SimplePost from "@/components/Modules/SimplePost.vue";
+import { formatTime } from "@/components/User/pages/message/utils";
 
 import {useRoute, useRouter} from "vue-router";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
+import axiosInstance from "@/utils/axios";
 const router = useRouter()
 const route = useRoute()
 
@@ -16,7 +18,7 @@ console.log(eventId)
 
 let title = ref('')
 let eventName = ref('')
-let authorId = ref('')
+let authorId = ref(0)
 let authorName = ref('')
 let applyStartTime = ref('')
 let applyEndTime = ref('')
@@ -42,6 +44,7 @@ let limitCount = ref('')
 
 // select attributes
 //TODO: select attributes
+let selectConstraint = ref('')
 
 // form attributes
 let definedForm = ref([])
@@ -51,10 +54,26 @@ const appliedForm = ref([])
 function clickLike() {
   liked.value = !liked.value
   console.log(liked.value)
+  let temp = new FormData()
+  temp.append('id', eventId)
+  if (liked.value) {
+    axiosInstance.post('/event/favor', temp).then(response => {
+      console.log(response)
+    }).catch(error => {
+      console.error(error)
+    })
+  } else {
+    axiosInstance.post('/event/unfavor', temp).then(response => {
+      console.log(response)
+    }).catch(error => {
+      console.error(error)
+    })
+  }
 }
 
 function clickWrite() {
   console.log('write')
+  router.push({path: '/square', query: {eventID: eventId}})
 }
 
 function clickApply() {
@@ -75,137 +94,143 @@ function clickCancel() {
 }
 
 function countApply() {
-  currentCount.value += 1
-  alert('报名成功！')
+  // currentCount.value += 1
+  // alert('报名成功！')
+  // countVisible.value = false
+  if (currentCount.value >= limitCount.value) {
+    alert('报名人数已满！')
+    return
+  }
+  let temp = new FormData()
+  temp.append('id', eventId)
+  axiosInstance.post('/event/apply', temp).then(response => {
+    console.log(response)
+    if (response.data.code === 0) {
+      alert('报名成功！')
+      currentCount.value += 1
+    } else {
+      alert('报名失败！')
+    }
+  }).catch(error => {
+    console.error(error)
+  })
   countVisible.value = false
 }
 
 function formApply() {
-  // console.log(appliedForm.value)
+  console.log(appliedForm.value)
   for (let i = 0; i < appliedForm.value.length; i++) {
     console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
   }
 
   for (let i = 0; i < appliedForm.value.length; i++) {
-    if (appliedForm.value[i].value === '') {
+    if (appliedForm.value[i].value === '' && definedForm.value[i].required) {
       alert('请填写：' + appliedForm.value[i].name)
       return
     }
   }
 
+  let temp = new FormData()
+  temp.append('id', eventId)
+
+  // TODO: check the correctness
+  for (let i = 0; i < appliedForm.value.length; i++) {
+    temp.append('formValues[]', appliedForm.value[i].value)
+  }
+
+  axiosInstance.post('/event/apply', temp).then(response => {
+    console.log(response)
+    if (response.data.code === 0) {
+      alert('报名成功！')
+    } else {
+      alert('报名失败！')
+    }
+  }).catch(error => {
+    console.error(error)
+  })
+
   for (let i = 0; i < appliedForm.value.length; i++) {
     appliedForm.value[i].value = ''
   }
-  alert('报名成功！')
   formVisible.value = false
 }
 
+let drawAuthor = ref(false)
 onMounted(() => {
-  // get event info
-  title.value = '某某活动马上就要开始了！'
-  eventName.value = '活动某某'
-  authorId.value = '123456'
-  authorName.value = 'Lamptales'
-  applyStartTime.value = '2024-4-4 00:00:00'
-  applyEndTime.value = '2024-4-14 00:00:00'
-  startTime.value = '2024-4-16 00:00:00'
-  endTime.value = '2024-4-26 00:00:00'
-  liked.value = true
-  let score = 4
-  posterUrl.value = 'https://static.fotor.com.cn/assets/projects/pages/c3000361e65b4048ab8dd18e8c076c0e/fotor-86b1e566f1d74bf1870ac2c2a624390f.jpg'
-
-  eventType = 'form'
-
-  currentCount.value = 5
-  let limit = -1
-  if (limit === -1) {
-    limitCount.value = '无限制'
-  } else {
-    limitCount.value = limit.toString()
-  }
-
-  definedForm.value = [
-    {
-      id: 0,
-      name: '姓名',
-      type: 'input',
-      required: true
-    },
-    {
-      id: 1,
-      name: '学号',
-      type: 'input',
-      required: true
-    },
-    {
-      id: 2,
-      name: '性别',
-      type: 'select',
-      options: ['男', '女'],
-      required: true
+  axiosInstance.get('/event/detail', {
+    params: {
+      id: eventId
     }
-  ]
-
-  for (let i = 0; i < definedForm.value.length; i++) {
-    appliedForm.value.push({
-      id: definedForm.value[i].id,
-      name: definedForm.value[i].name,
-      value: ''
-    })
-  }
-
-
-  stars.value = '⭐'
-  for (let i = 1; i < score; i++) {
-    stars.value += '⭐'
-  }
+  }).then(response => {
+    let temp = response.data.data
+    title.value = temp.title
+    eventName.value = temp.eventName
+    authorId.value = temp.authorId
+    authorName.value = temp.authorName
+    applyStartTime.value = formatTime(temp.applyStartTime)
+    applyEndTime.value = formatTime(temp.applyEndTime)
+    startTime.value = formatTime(temp.startTime)
+    endTime.value = formatTime(temp.endTime)
+    grade.value = temp.score
+    posterUrl.value = temp.postUrl
+    liked.value = temp.liked
 
 
-  text.value = '<p align="left">\n' +
-      '    English ｜ <a href="README.md">中文</a>\n' +
-      '</p>\n' +
-      '<br>\n' +
-      '\n' +
-      '<h1 align="center">\n' +
-      '  Llama-Chinese\n' +
-      '</h1>\n' +
-      '<p align="center" width="100%">\n' +
-      '  <img src="https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg" alt="Llama" style="width: 20%; display: block; margin: auto;"></a>\n' +
-      '</p>\n' +
-      '<p align="center">\n' +
-      '  <font face="黑体" color=orange size="6"> The Best Chinese Llama Large Language Model </font>\n' +
-      '</p>\n' +
-      '<p align="center">\n' +
-      '  <a href="https://llama.family">Online: llama.family</a>\n' +
-      '</p>\n' +
-      '<p align="center">\n' +
-      '  <a href="https://huggingface.co/FlagAlpha/Atom-7B-Chat">Open-source Chinese Pre-trained LLM Atom based on Llama2</a>\n' +
-      '</p>\n' +
-      '\n'
-
-  postList.value = [
-    {
-      title: 'Title1',
-      author: 'Author1',
-      time: '2024-4-4',
-    },
-    {
-      title: 'Title2',
-      author: 'Author2',
-      time: '2024-4-4',
-    },
-    {
-      title: 'Title3',
-      author: 'Author3',
-      time: '2024-4-4',
+    stars.value = '⭐'
+    for (let i = 1; i < grade.value; i++) {
+      stars.value += '⭐'
     }
-  ]
+
+    text.value = temp.text
+
+    eventType = temp.enrollmentType
+    if (eventType === 'count') {
+      currentCount.value = temp.currentCount
+      let limit = temp.limit
+      if (limit === -1) {
+        limitCount.value = '无限制'
+      } else {
+        limitCount.value = limit.toString()
+      }
+    } else if (eventType === 'select') {
+      selectConstraint.value = temp.selectConstraint
+    } else if (eventType === 'form') {
+      // TODO: need to be checked the correctness
+      definedForm.value = temp.definedForm
+      for (let i = 0; i < definedForm.value.length; i++) {
+        appliedForm.value.push({
+          id: definedForm.value[i].id,
+          name: definedForm.value[i].name,
+          value: ''
+        })
+      }
+    }
+
+    // TODO: need to be checked the correctness
+    postList.value = temp.postList
+
+    drawAuthor.value = true
+
+  }).catch(error => {
+    console.error(error);
+  });
+
 })
 
 
 function showGrade(newGrade) {
   console.log(newGrade)
+
+  let temp = new FormData()
+  temp.append('id', eventId)
+  temp.append('grade', newGrade)
+  axiosInstance.post('/event/grade', temp).then(response => {
+    console.log(response)
+  }).catch(error => {
+    console.error(error)
+  })
 }
+
 </script>
 
 <template>
@@ -236,32 +261,34 @@ function showGrade(newGrade) {
       </div>
 
       <div>
-        <img :src="posterUrl"/>
+        <img :src="posterUrl" style="width: 400px"/>
       </div>
 
       <div>
         <v-md-preview :text="text"></v-md-preview>
       </div>
 
-      <comment comment-block-id="1"></comment>
+      <comment :event-id="Number(eventId)"></comment>
 
 
     </div>
 
     <div class="right-panel">
-      <div class="author-wrap">
+      <div v-if="drawAuthor"
+          class="author-wrap">
         <avatar-with-name
-            :user-id="authorId"
+            :user-id="authorId.toString()"
             :need-small="true"
             size-small="60px"
-            name="LampTales"></avatar-with-name>
+            :name="authorName"
+        ></avatar-with-name>
       </div>
       <div>
         <p class="event-title">Related Posts</p>
       </div>
 
       <div v-for="post in postList">
-        <simple-post></simple-post>
+        <simple-post :postID="post"></simple-post>
       </div>
     </div>
 

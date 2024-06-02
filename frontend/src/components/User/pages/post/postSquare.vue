@@ -1,6 +1,6 @@
 <script setup>
-import {ref} from 'vue'
-import { ElLoading } from 'element-plus'
+import { ref, computed, onMounted } from 'vue'
+import { ElLoading, ElMessage } from 'element-plus'
 import postCard from '@/components/User/pages/post/components/postsSquare/postCard.vue'
 import {
     ArrowLeft,
@@ -10,54 +10,62 @@ import {
     Search,
     Share,
 } from "@element-plus/icons";
-// import MarkdownEdit from "@/components/User/pages/post/components/postsSquare/markdownEdit.vue";
 import SimplePost from "@/components/Modules/SimplePost.vue";
 import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor';
 import '@kangc/v-md-editor/lib/style/codemirror-editor.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
-// highlightjs
 import hljs from 'highlight.js';
-
-// codemirror 编辑器的相关资源
 import Codemirror from 'codemirror';
-// mode
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/css/css';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/vue/vue';
-// edit
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/matchbrackets';
-// placeholder
 import 'codemirror/addon/display/placeholder';
-// active-line
 import 'codemirror/addon/selection/active-line';
-// scrollbar
 import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
-// style
 import 'codemirror/lib/codemirror.css';
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 VMdEditor.Codemirror = Codemirror;
 VMdEditor.use(githubTheme, {
     Hljs: hljs,
 });
 
+const eventID = ref(route.query.eventID);
 
-const count = ref(0)
+const bindingEventID = ref(route.query.eventID);
+const postTitle = ref()
+const markdownText = ref('')
+const errorMessage = ref('')
+
 const fullscreenLoading = ref(false)
 
-const editDialogVisible = ref(false)
+const editDialogVisible = ref(!!route.query.eventID);
 const shareDialogVisible = ref(false)
 const imageDialogVisible = ref(false)
 
+const postIDs = ref([])
 
-const load = () => {
-    count.value += 10
-}
+const currentPage = ref(1);
+const pageSize = ref(8);
+
+const paginatedPostIDs = computed(() => {
+    const start = (currentPage.value - 1) * pageSize.value;
+    const end = start + pageSize.value;
+    return postIDs.value.slice(start, end);
+});
+
+const handlePageChange = (newPage) => {
+    currentPage.value = newPage;
+};
 
 const handleEditPost = () => {
     editDialogVisible.value = true;
@@ -72,21 +80,94 @@ const handleImageUpload = () => {
     editDialogVisible.value = false;
 }
 
-const postUpload = () => {
-    fullscreenLoading.value = true
-    setTimeout(() => {
-        fullscreenLoading.value = false
-    }, 2000)
-    imageDialogVisible.value = false;
-    editDialogVisible.value = false;
+async function getAllPostOnSquare() {
+    try {
+        const response = await axiosInstance.get(`/post/getPostSquare`)
+        const postData = response.data.data;
+        postIDs.value = postData.map(post => post.postID);
+    } catch (error) {
+        console.error('Error fetching post data:', error);
+    }
 }
 
-const fullScreenLoading = () => {
+onMounted(() => {
+    getAllPostOnSquare();
+});
 
+const postUpload = async () => {
+    if (!postTitle.value) {
+        errorMessage.value = 'Title is required.'
+        ElMessage.error(errorMessage.value)
+        return
+    }
+    if (postTitle.value.length > 30) {
+        errorMessage.value = 'Title must be within 30 characters.'
+        ElMessage.error(errorMessage.value)
+        return
+    }
+    if (!/^\d+$/.test(bindingEventID.value)) {
+        errorMessage.value = 'Relevant Event ID must be all numbers.'
+        ElMessage.error(errorMessage.value)
+        return
+    }
+
+    fullscreenLoading.value = true;
+    try {
+        const response = await axiosInstance.post('/post/releasePost', {
+            postTitle: postTitle.value,
+            postContent: markdownText.value,
+            postRelevantEvent: bindingEventID.value,
+        });
+        if (response.data.code === 0) {
+            ElMessage.success('Post uploaded successfully!');
+            editDialogVisible.value = false;
+            window.location.reload(); // 刷新页面
+        } else {
+            ElMessage.error(`Upload failed: ${response.data.msg}`);
+        }
+    } catch (error) {
+        ElMessage.error('Failed to upload post.');
+        console.error('Failed to upload post:', error);
+    } finally {
+        fullscreenLoading.value = false;
+        imageDialogVisible.value = false;
+        bindingEventID.value = "";
+        postTitle.value = "";
+        markdownText.value = "";
+    }
 }
 
-const markdownText = ref('')
+import axiosInstance from "@/utils/axios"
 
+const handleUploadImage = async (event, insertImage, files) => {
+    console.log(files);
+
+    if (files && files.length > 0) {
+        const formData = new FormData();
+        formData.append('file', files[0]);
+
+        try {
+            const response = await axiosInstance.post('/image/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.data.code === 0) {
+                const imageUrl = `${response.data.data}`;
+                insertImage({
+                    url: imageUrl,
+                    desc: 'sample',
+                });
+                console.log(imageUrl)
+            } else {
+                console.error('Upload failed:', response.data.msg);
+            }
+        } catch (error) {
+            console.error('Failed to upload image:', error);
+        }
+    }
+};
 </script>
 
 <template>
@@ -110,38 +191,45 @@ const markdownText = ref('')
         width="1300"
         :before-close="handleClose"
     >
-        <div></div>
-        <v-md-editor v-model="markdownText" height="400px"></v-md-editor>
+        <el-divider/>
+        <h4>Title</h4>
+        <el-input v-model="postTitle" placeholder="Enter Title"></el-input>
+        <el-divider/>
+        <h4>Relevant Event</h4>
+        <el-input v-model="bindingEventID" placeholder="Enter Event ID"></el-input>
+        <el-divider/>
+        <h4>Content</h4>
+        <v-md-editor v-model="markdownText" height="400px"
+                     :disabled-menus="[]"
+                     @upload-image="handleUploadImage"></v-md-editor>
         <el-dialog
             v-model="imageDialogVisible"
             width="500"
             title="Start mine!"
             append-to-body
         >
-            <span>This is the inner Dialog</span>
             <template #footer>
                 <div class="dialog-footer">
                     <el-button @click="handleEditPost">Back</el-button>
-                    <el-button type="primary" @click="postUpload"  v-loading.fullscreen.lock="fullscreenLoading">
-                        Upload
-                    </el-button>
                 </div>
             </template>
         </el-dialog>
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="editDialogVisible = false">Back</el-button>
-                <el-button type="primary" @click="handleImageUpload">
-                    Next
+                <el-button @click="editDialogVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="postUpload"  v-loading.fullscreen.lock="fullscreenLoading">
+                    Upload
                 </el-button>
             </div>
         </template>
     </el-dialog>
 
-
     <div class="common-layout-all">
-        <el-row :class="main-header">
-            header
+        <el-row >
+            <el-col :span="24">
+                <header-for-all/>
+            </el-col>
+
             <el-backtop :right="10" :bottom="10"/>
         </el-row>
         <el-row :class="main-main" gutter="10">
@@ -158,7 +246,6 @@ const markdownText = ref('')
                                     <el-button-group class="ml-4">
                                         <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
                                         <el-button type="primary" :icon="Share" @click="handleSharePost"/>
-
                                         <el-button type="primary" :icon="Delete" @click="postUpload" v-loading.fullscreen.lock="fullscreenLoading"/>
                                     </el-button-group>
                                 </el-col>
@@ -173,28 +260,24 @@ const markdownText = ref('')
                 <el-row>
                     <el-col :span="24">
                         <div>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
-                            <postCard></postCard>
+                            <postCard v-for="postID in paginatedPostIDs" :key="postID" :post-i-d="postID"></postCard>
                         </div>
                     </el-col>
                 </el-row>
-                <!--翻页-->
+                <!--pagination-->
                 <el-row>
                     <el-col>
                         <el-affix offset="5" position="bottom">
                             <el-card style="border: none; display: flex; justify-content: center; align-items: center;"
                                      shadow="never">
-                                <el-pagination background layout="prev, pager, next" :total="1000"/>
+                                <el-pagination
+                                    background
+                                    layout="prev, pager, next"
+                                    :total="postIDs.length"
+                                    :page-size="pageSize"
+                                    @current-change="handlePageChange"
+                                    :current-page="currentPage"
+                                />
                             </el-card>
                         </el-affix>
                     </el-col>
@@ -210,7 +293,6 @@ const markdownText = ref('')
                                     <el-container>
                                         <el-header :height="10">Announcement</el-header>
                                         <el-main>
-
                                         </el-main>
                                     </el-container>
                                 </div>
@@ -230,18 +312,88 @@ const markdownText = ref('')
                     </el-row>
                     <el-row>
                         <el-col>
-                            <simple-post></simple-post>
                         </el-col>
                     </el-row>
                 </el-affix>
             </el-col>
         </el-row>
         <el-row :class="main-footer">
-            footer
-
+            <el-col>
+                <header-for-all/>
+            </el-col>
         </el-row>
     </div>
 </template>
+
+
+
+<style scoped>
+/* 整个页面的设置 */
+.common-layout-all {
+    height: 100vh;
+}
+
+.common-layout {
+    height: 80vh;
+}
+
+.el-row {
+    border-radius: 0.5vw;
+    margin-bottom: 20px;
+}
+
+.el-row:last-child {
+    margin-bottom: 0;
+}
+
+.el-col {
+    border-radius: 0.5vw;
+}
+
+/* 整个页面的设置 */
+/* 走马灯 */
+.el-carousel__item h3 {
+    color: #475669;
+    opacity: 0.75;
+    line-height: 200px;
+    margin: 0;
+    text-align: center;
+}
+
+.el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+    background-color: #d3dce6;
+}
+
+/* 走马灯 */
+/* 无限滚动列表 */
+.infinite-list {
+    height: 300px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.infinite-list .infinite-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    background: var(--el-color-primary-light-9);
+    margin: 10px;
+    color: var(--el-color-primary);
+}
+
+.infinite-list .infinite-list-item + .list-item {
+    margin-top: 10px;
+}
+
+</style>
+
+
 
 <style scoped>
 /* 整个页面的设置 */

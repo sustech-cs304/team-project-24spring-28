@@ -3,6 +3,9 @@ import { ref, reactive, onMounted } from 'vue'
 import VMdEditor from '@kangc/v-md-editor'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
+import axiosInstance from "@/utils/axios";
+import router from "@/utils/router";
+
 
 let imageUrl = ref('')
 
@@ -51,8 +54,18 @@ const rules = reactive({
 
 function beforeUpload(file) {
   console.log(file.name)
-  imageUrl.value = URL.createObjectURL(file.raw)
-  console.log(imageUrl)
+  let temp = new FormData()
+  temp.append('file', file.raw)
+  axiosInstance.post('/image/upload', temp).then((res) => {
+    console.log(res.data)
+    imageUrl.value = res.data.data
+    // cat the host and the path
+    // imageUrl.value = axiosInstance.defaults.url + imageUrl.value
+  }).catch((err) => {
+    console.log(err)
+  })
+  // imageUrl.value = URL.createObjectURL(file.raw)
+  console.log(imageUrl.value)
   return false
 }
 
@@ -110,7 +123,7 @@ function deleteForm(id) {
     if (definedForm.value[i].id === id) {
       definedForm.value.splice(i, 1)
       found = true
-      if (definedForm.value.length !== 0) {
+      if (definedForm.value.length !== 0 && id < definedForm.value.length) {
         definedForm.value[i].id -= 1
       }
     }
@@ -133,7 +146,7 @@ function formCancel() {
 let newFormEntryVisible = ref(false)
 let newFormEntryName = ref('')
 let newFormEntryType = ref('')
-let newFormEntryOptions = ref([])
+let newFormEntryOptions = ref('')
 let newFormEntryRequired = ref(false)
 
 function addNewFormEntryClick() {
@@ -157,6 +170,11 @@ function addNewFormEntryApply() {
       required: newFormEntryRequired.value
     })
   }
+  newFormEntryName.value = ''
+  newFormEntryType.value = ''
+  newFormEntryOptions.value = ''
+  newFormEntryRequired.value = false
+
   newFormEntryVisible.value = false
 }
 
@@ -200,29 +218,132 @@ function editSelectCancel() {
   editSelectVisible.value = false
 }
 
+// turn Sat Jul 06 2024 00:00:00 GMT+0800 (中国标准时间) to 2024-07-06 00:00:00
+function formatTime(str) {
+  let date = str.toString().split(' ')
+  let month = ''
+  switch (date[1]) {
+    case 'Jan':
+      month = '01'
+      break
+    case 'Feb':
+      month = '02'
+      break
+    case 'Mar':
+      month = '03'
+      break
+    case 'Apr':
+      month = '04'
+      break
+    case 'May':
+      month = '05'
+      break
+    case 'Jun':
+      month = '06'
+      break
+    case 'Jul':
+      month = '07'
+      break
+    case 'Aug':
+      month = '08'
+      break
+    case 'Sep':
+      month = '09'
+      break
+    case 'Oct':
+      month = '10'
+      break
+    case 'Nov':
+      month = '11'
+      break
+    case 'Dec':
+      month = '12'
+      break
+  }
+  let day = date[2]
+  let year = date[3]
+  let time = date[4]
+  return year + '-' + month + '-' + day + ' ' + time
+}
+
+function createEventClick() {
+  let temp = {
+    title: form.title,
+    name: form.name,
+    applyStartTime: formatTime(form.applyStartTime),
+    applyEndTime: formatTime(form.applyEndTime),
+    startTime: formatTime(form.startTime),
+    endTime: formatTime(form.endTime),
+    introduction: form.introduction,
+    imageUrl: imageUrl.value,
+    mdText: mdText.value,
+    enrollmentType: '',
+  }
+  if (form.type === '1') {
+    temp.enrollmentType = 'count'
+    if (form.limitCount === '') {
+      temp.limitCount = 0
+    } else {
+      temp.limitCount = Number(form.limitCount)
+    }
+  } else if (form.type === '2') {
+    temp.enrollmentType = 'select'
+  } else {
+    temp.enrollmentType = 'form'
+    temp.limitCount = 0
+    temp.definedForm = definedForm.value
+  }
+  let jsonContent = JSON.stringify(temp)
+  // jsonContent = "{\"title\": \"asdf\"}"
+  axiosInstance.post('/event/create', jsonContent).then((res) => {
+    console.log(res)
+    if (res.data.code === 0) {
+      alert('创建成功')
+      router.push({path: '/event/manage'})
+    } else {
+      alert('创建失败')
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
+function mdUploadImage(event, insertImage, files) {
+  let temp = new FormData()
+  temp.append('file', files[0])
+  axiosInstance.post('/image/upload', temp).then((res) => {
+    insertImage({
+      url: res.data.data,
+      desc: 'Description'
+    })
+  }).catch((err) => {
+    console.log(err)
+  })
+}
+
 
 onMounted(() => {
-  definedForm.value = [
-    {
-      id: 0,
-      name: '姓名',
-      type: 'input',
-      required: true,
-    },
-    {
-      id: 1,
-      name: '学号',
-      type: 'input',
-      required: false,
-    },
-    {
-      id: 2,
-      name: '年级',
-      type: 'select',
-      options: ['大一', '大二', '大三', '大四'],
-      required: true,
-    }
-  ]
+  // definedForm.value = [
+  //   {
+  //     id: 0,
+  //     name: '姓名',
+  //     type: 'input',
+  //     required: true,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: '学号',
+  //     type: 'input',
+  //     required: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: '年级',
+  //     type: 'select',
+  //     options: ['大一', '大二', '大三', '大四'],
+  //     required: true,
+  //   }
+  // ]
 
 
 
@@ -331,11 +452,16 @@ onMounted(() => {
       >活动正文</p>
     </div>
     <div style="width: 90%; display: flex; flex-direction: row; justify-content: center; margin-left: 50px">
-      <v-md-editor v-model="mdText"></v-md-editor>
+      <v-md-editor
+          v-model="mdText"
+          @upload-image="mdUploadImage"
+          :disabled-menus="[]"
+      ></v-md-editor>
     </div>
 
     <div style="margin-top: 30px; display: flex; flex-direction: row; justify-content: center;">
-      <el-button type="primary">发起活动</el-button>
+      <el-button type="primary" @click="createEventClick"
+      >发起活动</el-button>
     </div>
   </div>
 
