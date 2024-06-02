@@ -43,7 +43,7 @@ const routes = [
     {path: '/search', component: searchPage},
     {path: '/message', component: Message},
 
-    {path: '/notFound', component: notFound}
+    {path: '/notFound', component: notFound},
 
     {path: '/post/search', component: searchPostPage},
     {path: '/event/search', component: searchEventPage},
