@@ -288,7 +288,7 @@ function showGrade(newGrade) {
       </div>
 
       <div v-for="post in postList">
-        <simple-post :id="post.id"></simple-post>
+        <simple-post :postID="post"></simple-post>
       </div>
     </div>
 
