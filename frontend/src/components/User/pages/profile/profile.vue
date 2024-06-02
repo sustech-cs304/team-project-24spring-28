@@ -76,7 +76,25 @@
                 <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
                 <div id="text">Moon Light</div>
                 <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
+                <!-- 编辑弹窗 -->
+                <el-dialog title="Edit Profile" :visible.sync="editDialogVisible">
+                    <el-form :model="editForm">
+                        <el-form-item label="Name">
+                            <el-input v-model="editForm.name"></el-input>
+                        </el-form-item>
+                        <el-form-item label="Bio">
+                            <el-input v-model="editForm.bio"></el-input>
+                        </el-form-item>
+                        <!-- 可以添加更多表单项 -->
+                    </el-form>
+                    <template #footer>
+                        <el-button @click="editDialogVisible = false">Cancel</el-button>
+                        <el-button type="primary" @click="submitEdit">Save</el-button>
+                    </template>
+                </el-dialog>
 
+                <!-- 头像上传弹窗 -->
+                <input type="file" ref="fileInput" @change="handleFileChange" style="display: none;">
             </section>
         </el-row>
 
@@ -116,6 +134,27 @@ export default {
             return ChatDotSquare
         }
     },
+    mounted() {
+        //获取到一些关键元素
+        let stars = this.$el.querySelector('#stars');
+        let moon = this.$el.querySelector('#moon');
+        let mountain_behind = this.$el.querySelector('#mountain_behind');
+        let text = this.$el.querySelector('#text');
+        // let btn = this.$el.querySelector('#btn');
+        let mountain_front = this.$el.querySelector('#mountain_front');
+
+        //给窗口添加鼠标滚动事件
+        window.addEventListener('scroll', () => {
+            let value = window.scrollY;
+            stars.style.left = value * 0.25 + 'px';
+            moon.style.top = value * 1.2 + 'px';
+            mountain_behind.style.top = value * 0.5 + 'px';
+            text.style.marginRight = value * 4 + 'px';
+            text.style.marginTop = value * 0.5 + 'px';
+            // btn.style.marginRight = value * 1.5 + 'px';
+            // btn.style.marginTop = value * 0.5 + 'px';
+        });
+    },
     components: {ProfileIntersection, Avatar, HeaderForAll, SimplePost },
     setup() {
         const route = useRoute();
@@ -126,6 +165,12 @@ export default {
         const bio = ref('');
         const posts = ref([]);
         const isSelf = ref(false);
+
+        const editDialogVisible = ref(false);
+        const editForm = ref({
+            name: "",
+            bio: "",
+        });
 
         onBeforeMount(async () => {
             const userIdFromRoute = route.query.userID;
@@ -168,29 +213,111 @@ export default {
             }
         };
 
+
+        const edit = () => {
+            editDialogVisible.value = true;
+        };
+
+        const submitEdit = async () => {
+            try {
+                const response = await axiosInstance.post("/profile/info/edit", {
+                    name: editForm.value.name,
+                    bio: editForm.value.bio,
+                });
+                if (response.data.success) {
+                    userName.value = editForm.value.name;
+                    bio.value = editForm.value.bio;
+                    editDialogVisible.value = false;
+                } else {
+                    console.error("Error updating profile:", response.data.message);
+                }
+            } catch (error) {
+                console.error("Error updating profile:", error);
+            }
+        };
+
+        const changeAvatar = () => {
+            const fileInput = this.$refs.fileInput;
+            fileInput.click();
+        };
+
+        const handleFileChange = async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d");
+                const img = new Image();
+                img.onload = async () => {
+                    canvas.width = canvas.height = Math.min(img.width, img.height);
+                    ctx.drawImage(
+                        img,
+                        (img.width - canvas.width) / 2,
+                        (img.height - canvas.height) / 2,
+                        canvas.width,
+                        canvas.height,
+                        0,
+                        0,
+                        canvas.width,
+                        canvas.height
+                    );
+                    canvas.toBlob(async (blob) => {
+                        const formData = new FormData();
+                        formData.append("image", blob);
+                        try {
+                            const response = await axiosInstance.post("/image/upload", formData, {
+                                headers: {
+                                    "Content-Type": "multipart/form-data",
+                                },
+                            });
+                            if (response.data.success) {
+                                const newAvatarUrl = response.data.url;
+                                await axiosInstance.post("/profile/avatar/edit", { url: newAvatarUrl });
+                                avatar.value = newAvatarUrl;
+                            } else {
+                                console.error("Error uploading avatar:", response.data.message);
+                            }
+                        } catch (error) {
+                            console.error("Error uploading avatar:", error);
+                        }
+                    }, "image/jpeg");
+                };
+                img.src = URL.createObjectURL(file);
+            }
+        };
+
+        const logout = () => {
+            router.push({path: '/'})
+            localStorage.setItem('token', '')
+            localStorage.setItem('userId', '')
+        };
+
+        const chat = () => {
+            router.push({
+                path: '/message', query: {
+                    messageType: 'chats',
+                    userId: userID
+                }
+            })
+        };
+
         return {
             avatar,
             userName,
             userID,
             bio,
             posts,
-            isSelf
+            isSelf,
+            editDialogVisible,
+            editForm,
+            edit,
+            submitEdit,
+            changeAvatar,
+            handleFileChange,
+            logout,
+            chat,
         };
     },
-    function: {
-        edit() {
 
-        },
-        changeAvatar() {
-
-        },
-        logout() {
-
-        },
-        chat() {
-
-        }
-    }
 };
 
 </script>
