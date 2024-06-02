@@ -12,10 +12,13 @@ import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
 import axios from 'axios';
 import {useRoute, useRouter} from "vue-router";
 import axiosInstance from "@/utils/axios";
+import EventCardBig from "@/components/Modules/event/EventCardBig.vue";
+import PostCard from "@/components/User/pages/post/components/postsSquare/postCard.vue";
 
 const route = useRoute(); // Initialize route
 const router = useRouter();
 
+const postIds = ref([1,2]);
 // API call to get post data
 const postID = route.query.id; // Example post ID
 let postData = ref({});
@@ -271,10 +274,13 @@ const toggleCollapse = () => {
                     </el-row>
                     <el-row>
                         <el-col>
+
                             <el-card style="border-radius: 0.5vw">
-                                <el-carousel height="30vh" motion-blur interval="6000">
-                                    <el-carousel-item v-for="item in 4" :key="item">
-                                        <h3 class="small justify-center" text="2xl">{{ item }}</h3>
+                                <el-carousel height="40vh" motion-blur interval="6000">
+                                    <el-carousel-item v-for="item in postIds" :key="item.id">
+                                        <div class="event-card-wrapper">
+                                            <post-card :id="item" />
+                                        </div>
                                     </el-carousel-item>
                                 </el-carousel>
                             </el-card>

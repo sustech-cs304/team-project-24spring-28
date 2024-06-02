@@ -53,8 +53,8 @@ const editDialogVisible = ref(!!route.query.eventID);
 const shareDialogVisible = ref(false)
 const imageDialogVisible = ref(false)
 
-const postIDs = ref([])
-
+const postIDs = ref([]);
+const postIds = ref([1,2,3]);
 const currentPage = ref(1);
 const pageSize = ref(8);
 
@@ -152,6 +152,7 @@ const postUpload = async () => {
 }
 
 import axiosInstance from "@/utils/axios"
+import PostCard from "@/components/User/pages/post/components/postsSquare/postCard.vue";
 
 const handleUploadImage = async (event, insertImage, files) => {
     console.log(files);
@@ -318,8 +319,10 @@ const handleUploadImage = async (event, insertImage, files) => {
                         <el-col>
                             <el-card style="border-radius: 0.5vw">
                                 <el-carousel height="30vh" motion-blur interval="6000">
-                                    <el-carousel-item v-for="item in 4" :key="item">
-                                        <h3 class="small justify-center" text="2xl">{{ item }}</h3>
+                                    <el-carousel-item v-for="item in postIds" :key="item.id">
+                                        <div class="event-card-wrapper">
+                                            <simple-post :post-i-d="item" />
+                                        </div>
                                     </el-carousel-item>
                                 </el-carousel>
                             </el-card>
