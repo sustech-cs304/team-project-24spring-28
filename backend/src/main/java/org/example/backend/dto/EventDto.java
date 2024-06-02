@@ -43,6 +43,7 @@ public class EventDto {
         this.title = event.getTitle();
         this.eventName = event.getName();
         this.authorId = event.getAuthor().getId();
+        this.authorName = event.getAuthor().getName();
         this.applyStartTime = event.getAbstractEnrollment().getStartTime();
         this.applyEndTime = event.getAbstractEnrollment().getEndTime();
         this.startTime = event.getStartTime();
