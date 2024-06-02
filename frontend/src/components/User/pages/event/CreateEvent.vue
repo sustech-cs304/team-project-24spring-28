@@ -347,10 +347,10 @@ onMounted(() => {
 
 
 
-  mdText.value = 'sdf\n' +
-      '### Title\n' +
-      '\n' +
-      '![Description](https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg){{{width="200" height="auto"}}}'
+  // mdText.value = 'sdf\n' +
+  //     '### Title\n' +
+  //     '\n' +
+  //     '![Description](https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg){{{width="200" height="auto"}}}'
 
 })
 
