@@ -52,11 +52,12 @@ import EventCardBig from "@/components/Modules/event/EventCardBig.vue";
 const route = useRoute();
 const router = useRouter();
 
-const content = ref(route.query.content);
+const content = ref(' ');
 const eventIds = ref([]);
 const searchInput = ref('');
 
 onMounted(async () => {
+  content.value = route.query.content;
   eventIds.value = await searchApi.searchEvent(content.value);
 });
 
