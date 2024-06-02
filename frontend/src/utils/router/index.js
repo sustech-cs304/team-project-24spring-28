@@ -11,11 +11,17 @@ import MyEvent from "@/components/User/pages/event/MyEvent.vue";
 import ExamplePage from "@/components/Modules/event/ExamplePage.vue";
 
 import mainPage from "@/components/User/pages/main/mainPage.vue"
-import searchPage from "@/components/User/pages/main/searchPage.vue";
+import searchPostPage from "@/components/User/pages/main/searchPostPage.vue";
+import searchEventPage from "@/components/User/pages/main/searchEventPage.vue";
 import signUp from "@/components/User/pages/main/signUp.vue";
 import Profile from "@/components/User/pages/profile/profile.vue";
 import ProfileExample from "@/components/User/pages/profile/profileExample.vue";
+
 import notFound from "@/components/User/pages/post/notFound.vue";
+
+import Admin from "@/components/Admin/AdminPage.vue";
+import AllEvent from "@/components/User/pages/main/AllEvent.vue";
+
 
 const routes = [
     {path: '/', component: Login},
@@ -33,10 +39,19 @@ const routes = [
     {path: '/event/my', component: MyEvent},
 
     {path: '/main', component: mainPage},
+
     {path: '/search', component: searchPage},
     {path: '/message', component: Message},
 
     {path: '/notFound', component: notFound}
+
+    {path: '/post/search', component: searchPostPage},
+    {path: '/event/search', component: searchEventPage},
+      
+    {path: '/admin', component: Admin},
+    {path: '/allEvent', component: AllEvent}
+
+
 ]
 
 const router = createRouter({

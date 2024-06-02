@@ -51,18 +51,18 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public List<Message> findMessageByToId(long id) {
-        return messageRepository.findMessageByToId(id);
+    public List<Message> findMessageByToUserId(long id) {
+        return messageRepository.findMessageByToUserId(id);
     }
 
     @Override
-    public List<Message> findMessageByFromIdAndToId(long fromId, long toId) {
-        return messageRepository.findMessageByFromIdAndToId(fromId, toId);
+    public List<Message> findMessageByFromIdAndToUserId(long fromId, long toId) {
+        return messageRepository.findMessageByFromIdAndToUserId(fromId, toId);
     }
 
     @Override
-    public List<Message> findMessageByFromIdAndToIdAndType(long fromId, long toId, String type) {
-        return messageRepository.findMessageByFromIdAndToIdAndType(fromId, toId, type);
+    public List<Message> findMessageByFromIdAndToUserIdAndType(long fromId, long toId, String type) {
+        return messageRepository.findMessageByFromIdAndToUserIdAndType(fromId, toId, type);
     }
 
     @Override
@@ -71,17 +71,17 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public List<Message> findMessageByToIdAndType(long toId, String type) {
-        return messageRepository.findMessageByToIdAndType(toId, type);
+    public List<Message> findMessageByToUserIdAndType(long toId, String type) {
+        return messageRepository.findMessageByToUserIdAndType(toId, type);
     }
 
     @Override
-    public List<Message> findMessageByToIdAndRead(long toId, boolean read) {
-        return messageRepository.findMessageByToIdAndRead(toId, read);
+    public List<Message> findMessageByToUserIdAndRead(long toId, boolean read) {
+        return messageRepository.findMessageByToUserIdAndRead(toId, read);
     }
 
     @Override
-    public List<Message> findMessageByToIdAndTypeAndRead(long toId, String type, boolean read) {
-        return messageRepository.findMessageByToIdAndTypeAndRead(toId, type, read);
+    public List<Message> findMessageByToUserIdAndTypeAndRead(long toId, String type, boolean read) {
+        return messageRepository.findMessageByToUserIdAndTypeAndRead(toId, type, read);
     }
 }

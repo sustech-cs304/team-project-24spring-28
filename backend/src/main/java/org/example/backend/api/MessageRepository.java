@@ -10,17 +10,17 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     List<Message> findMessageByFromId(long id);
 
-    List<Message> findMessageByToId(long id);
+    List<Message> findMessageByToUserId(long id);
 
-    List<Message> findMessageByFromIdAndToId(long fromId, long toId);
+    List<Message> findMessageByFromIdAndToUserId(long fromId, long toId);
 
     List<Message> findMessageByFromIdAndType(long fromId, String type);
 
-    List<Message> findMessageByToIdAndType(long toId, String type);
+    List<Message> findMessageByToUserIdAndType(long toId, String type);
 
-    List<Message> findMessageByFromIdAndToIdAndType(long fromId, long toId, String type);
+    List<Message> findMessageByFromIdAndToUserIdAndType(long fromId, long toId, String type);
 
-    List<Message> findMessageByToIdAndRead(long toId, boolean read);
+    List<Message> findMessageByToUserIdAndRead(long toId, boolean read);
 
-    List<Message> findMessageByToIdAndTypeAndRead(long toId, String type, boolean read);
+    List<Message> findMessageByToUserIdAndTypeAndRead(long toId, String type, boolean read);
 }
