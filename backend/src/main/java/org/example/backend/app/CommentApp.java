@@ -29,6 +29,10 @@ public class CommentApp {
         this.replyCommentService = replyCommentService;
     }
 
+    /**
+     * @param postId 帖子ID
+     * @return 评论列表
+     */
     @GetMapping(value = "/event", params = {"postId"})
     public List<EventCommentDto> getEventCommentByPostId(long postId) {
         List<EventCommentDto> eventCommentDtos = new ArrayList<>();
@@ -37,6 +41,11 @@ public class CommentApp {
         }
         return eventCommentDtos;
     }
+
+    /**
+     * @param eventId 活动ID
+     * @return 评论列表
+     */
     @GetMapping(value = "/event", params = {"eventId"})
     public List<EventCommentDto> getEventCommentByEventId(long eventId) {
         List<EventCommentDto> eventCommentDtos = new ArrayList<>();
@@ -46,12 +55,20 @@ public class CommentApp {
         return eventCommentDtos;
     }
 
+    /**
+     * @param commentId 评论ID
+     * @return 对应评论
+     */
     @GetMapping(value = "/event", params = {"commentId"})
     public EventCommentDto getEventCommentByID(long commentId) {
         EventComment eventComment = eventCommentService.findEventCommentById(commentId);
         return new EventCommentDto(eventComment);
     }
 
+    /**
+     * @param commentIds 评论ID数组
+     * @return 对应评论列表
+     */
     @GetMapping(value = "/event", params = {"commentIds"})
     public List<EventCommentDto> getAllEventCommentById(Long[] commentIds) {
         List<EventCommentDto> eventCommentDtos = new ArrayList<>();
@@ -62,12 +79,20 @@ public class CommentApp {
         return eventCommentDtos;
     }
 
+    /**
+     * @param commentId 评论ID
+     * @return 对应评论的回复评论
+     */
     @GetMapping(value = "/reply", params = {"commentId"})
     public ReplyCommentDto getReplyCommentByID(Long commentId) {
         ReplyComment replyComment = replyCommentService.findReplyCommentById(commentId);
         return new ReplyCommentDto(replyComment);
     }
 
+    /**
+     * @param commentIds 评论ID数组
+     * @return 回复评论列表
+     */
     @GetMapping(value = "/reply", params = {"commentIds"})
     public List<ReplyCommentDto> getAllReplyCommentById(Long[] commentIds) {
         List<ReplyCommentDto> replyCommentDtos = new ArrayList<>();
@@ -78,6 +103,10 @@ public class CommentApp {
         return replyCommentDtos;
     }
 
+    /**
+     * @param commentId 评论ID
+     * @return 对应评论的回复评论列表
+     */
     @GetMapping(value = "/under", params = {"commentId"})
     public List<ReplyCommentDto> getAllReplyCommentUnderId(Long commentId) {
         List<ReplyCommentDto> replyCommentDtos = new ArrayList<>();
