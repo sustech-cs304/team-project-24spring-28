@@ -62,6 +62,7 @@ class BackendApplicationTests {
             user.setPassword(String.valueOf(i));
             user.setName("user" + i);
             user.setBio("user" + i);
+            user.setAvatar("default_avatar.jpg");
             Permission permission = new Permission();
             permission.setUser(user);
             permission.setCanCreate((i & 1) == 1);

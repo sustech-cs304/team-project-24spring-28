@@ -49,6 +49,7 @@ public class AbstractUserApp {
         user.setUsername(username);
         user.setPassword(password);
         user.setName(username);
+        user.setAvatar("default_avatar.jpg");
         try {
             abstractUserService.saveUser(user);
             return true;
