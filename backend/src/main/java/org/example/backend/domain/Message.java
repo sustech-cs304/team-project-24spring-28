@@ -45,6 +45,7 @@ public class Message {
         this.from = from;
         this.read = read;
         this.time = time;
+        this.content = content;
     }
 
     public Message(String type, AbstractUser toUser, AbstractUser from, boolean read, LocalDateTime time, String content) {

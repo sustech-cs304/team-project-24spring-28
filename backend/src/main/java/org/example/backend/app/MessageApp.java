@@ -212,6 +212,8 @@ public class MessageApp {
         messageDto.setId(message.getId());
         messageDto.setFrom(message.getFrom().getId());
         messageDto.setTo(message.getToUser().getId());
+        messageDto.setFromName(message.getFrom().getName());
+        messageDto.setToName(message.getToUser().getName());
         messageDto.setType(message.getType());
         messageDto.setContent(message.getContent());
         messageDto.setTime(String.valueOf(message.getTime()));
