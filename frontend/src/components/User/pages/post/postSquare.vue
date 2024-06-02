@@ -121,6 +121,7 @@ const postUpload = async () => {
         if (response.data.code === 0) {
             ElMessage.success('Post uploaded successfully!');
             editDialogVisible.value = false;
+            window.location.reload(); // 刷新页面
         } else {
             ElMessage.error(`Upload failed: ${response.data.msg}`);
         }
