@@ -63,6 +63,8 @@ const editDialogVisible = ref(false)
 const shareDialogVisible = ref(false)
 const imageDialogVisible = ref(false)
 
+const postIDs = ref([])
+
 const tempTest = '1'
 const load = () => {
     count.value += 10
@@ -80,6 +82,20 @@ const handleImageUpload = () => {
     imageDialogVisible.value = true;
     editDialogVisible.value = false;
 }
+
+async function getAllPostOnSquare() {
+    try {
+        const response = await axiosInstance.get(`/post/getPostSquare`)
+        const postData = response.data.data;
+        postIDs.value = postData.map(post => post.postID);
+    } catch (error) {
+        console.error('Error fetching post data:', error);
+    }
+}
+
+onMounted(() => {
+    getAllPostOnSquare();
+});
 
 const postUpload = async () => {
     if (!postTitle.value) {
@@ -253,14 +269,7 @@ const handleUploadImage = async (event, insertImage, files) => {
                 <el-row>
                     <el-col :span="24">
                         <div>
-                            <postCard :post-i-d="tempTest"></postCard>
-                            <postCard :post-i-d="2"></postCard>
-<!--                            <postCard :post-i-d="1"></postCard>-->
-<!--                            <postCard :post-i-d="2"></postCard>-->
-<!--                            <postCard :post-i-d="3"></postCard>-->
-<!--                            <postCard :post-i-d="4"></postCard>-->
-
-
+                            <postCard v-for="postID in postIDs" :key="postID" :post-i-d="postID"></postCard>
                         </div>
                     </el-col>
                 </el-row>

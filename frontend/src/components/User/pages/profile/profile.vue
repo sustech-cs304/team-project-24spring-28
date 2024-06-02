@@ -77,6 +77,7 @@ import SimplePost from "@/components/Modules/SimplePost.vue";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import Avatar from "@/components/old/Student/Avatar.vue";
 import { useRoute } from 'vue-router';
+import axiosInstance from "@/utils/axios";
 
 export default {
     components: {Avatar, HeaderForAll, SimplePost },
@@ -99,19 +100,19 @@ export default {
 
         const fetchData = async (userId) => {
             try {
-                const profileResponse = await axios.post('/api/profile/info/get', { userId }); // 使用传入的 userId
-                const profileData = profileResponse.data;
+                const profileResponse = await axiosInstance.get(`/profile/info/get?userID=${userId}`); // 使用传入的 userId
+                const profileData = profileResponse.data.data;
 
                 avatar.value = profileData.avatar;
                 userName.value = profileData.name;
                 userID.value = profileData.id;
                 bio.value = profileData.bio;
 
-                const postCollectionResponse = await axios.post('/api/profile/postCollection', { userId }); // 使用传入的 userId
+                const postCollectionResponse = await axios.post(`/profile/postCollection?userID=${userId}`); // 使用传入的 userId
                 const postCollectionData = postCollectionResponse.data;
 
                 for (const postId of postCollectionData.postIds) {
-                    const postResponse = await axios.get(`/api/posts/${postId}`);
+                    const postResponse = await axios.get(`/posts/${postId}`);
                     posts.value.push(postResponse.data);
                 }
             } catch (error) {
