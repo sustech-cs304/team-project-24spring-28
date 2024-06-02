@@ -1,143 +1,123 @@
 <template>
     <div class="bg">
-        <el-row :class="main-header">header</el-row>
+        <el-row :class="main-header">
+            <el-col :span="24">
+                <header-for-all/>
+            </el-col>
+        </el-row>
         <el-row :class="main-main" gutter="10">
-                <section>
-                    <div class="sec_new">
-                        <el-row>
-                            <el-col span="8">
-                                <div class="profile">
-                                    <el-avatar
-                                        :size="250"
-                                        :src="avatar"
-                                        shape="square"
-                                        style="margin-bottom: 8px; opacity: 1"
+            <section>
+                <div class="sec_new">
+                    <el-row>
+                        <el-col span="8">
+                            <div class="profile">
+                                <el-avatar
+                                    :size="250"
+                                    :src="avatar"
+                                    shape="square"
+                                    style="margin-bottom: 8px; opacity: 1"
+                                />
+                                <h1>{{ name }}</h1>
+                                <p style="margin: 0; font-size: 14px; color: var(--el-color-info)">@{{ id }}</p>
+                                <p>{{ bio }}</p>
+                            </div>
+                        </el-col>
+                        <el-col span="16">
+                            <!-- 这里可以放其他内容 -->
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col span="12">
+                            <el-scrollbar :noresize="false" style="width: 70vw">
+                                <div class="scrollbar-flex-content">
+                                    <SimplePost
+                                        v-for="post in posts"
+                                        :key="post.id + 'b'"
+                                        :link="post.link"
+                                        :title="post.title"
+                                        :content="post.content"
+                                        :image="post.image"
+                                        :eventLink="post.eventLink"
+                                        :eventSmallImage="post.eventSmallImage"
+                                        :eventName="post.eventName"
+                                        :eventId="post.eventId"
+                                        :eventBio="post.eventBio"
                                     />
-                                    <!--                        <img :src="$props.avatar" alt="Avatar" class="avatar">-->
-                                    <h1>{{$props.name}}</h1>
-                                    <p style="margin: 0; font-size: 14px; color: var(--el-color-info)">@{{$props.id }}</p>
-                                    <p>{{$props.bio}}</p>
                                 </div>
-                            </el-col>
-                            <el-col span="16">
-
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col span="12">
-                                <el-scrollbar :noresize="false" style="width: 70vw">
-                                    <div class="scrollbar-flex-content">
-                                        <SimplePost
-                                            v-for="post in posts"
-                                            :key="post.id + 'b'"
-                                            :link="post.link"
-                                            :title="post.title"
-                                            :content="post.content"
-                                            :image="post.image"
-                                            :eventLink="post.eventLink"
-                                            :eventSmallImage="post.eventSmallImage"
-                                            :eventName="post.eventName"
-                                            :eventId="post.eventId"
-                                            :eventBio="post.eventBio"
-                                        />
-                                    </div>
-                                </el-scrollbar>
-                            </el-col>
-                            <el-col span="12">
-                                <el-scrollbar style="width: 70vw">
-                                    <div class="scrollbar-flex-content">
-                                        <p v-for="item in 50" :key="item" class="scrollbar-demo-item">
-                                            {{ item }}
-                                        </p>
-                                    </div>
-                                </el-scrollbar>
-                            </el-col>
-
-                        </el-row>
-                    </div>
-                    <img src="@/components/User/pages/profile/images/stars.png" alt="" id="stars">
-                    <img src="@/components/User/pages/profile/images/moon.png" alt="" id="moon">
-                    <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
-                    <div id="text">Moon Light</div>
-                    <!--            <a href="#" id="btn">explore</a>-->
-                    <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
-                </section>
-
-
+                            </el-scrollbar>
+                        </el-col>
+                        <el-col span="12">
+                            <el-scrollbar style="width: 70vw">
+                                <div class="scrollbar-flex-content">
+                                    <p v-for="item in 50" :key="item" class="scrollbar-demo-item">
+                                        {{ item }}
+                                    </p>
+                                </div>
+                            </el-scrollbar>
+                        </el-col>
+                    </el-row>
+                </div>
+                <img src="@/components/User/pages/profile/images/stars.png" alt="" id="stars">
+                <img src="@/components/User/pages/profile/images/moon.png" alt="" id="moon">
+                <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
+                <div id="text">Moon Light</div>
+                <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
+            </section>
         </el-row>
         <el-row :class="main-footer">footer</el-row>
-<!--        <div class="sec">-->
-<!--            <h2>This is title</h2>-->
-<!--            <p>-->
-<!--                &lt;!&ndash; 这里是你的长文本内容 &ndash;&gt;-->
-<!--                12323149236012897102958713098735-->
-<!--            </p>-->
-<!--        </div>-->
     </div>
 </template>
 
+
 <script>
-import {defineProps} from "vue";
+import { ref, onMounted } from "vue";
+import axios from 'axios';
 import SimplePost from "@/components/Modules/SimplePost.vue";
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
 export default {
-    components: {SimplePost},
-    props: {
-        avatar: {
-            type: String,
-            default: 'https://q.115.com/imgload?r=242FCAA00B768FC8F00058B3781B71185BE2F6E7&u=dPjgXZ&s=eIAgzeJggQMuoquThaEovA&e=5&st=0' // 设置头像的默认值
-        },
-        name: {
-            type: String,
-            default: 'John Doe' // 设置名字的默认值
-        },
-        id: {
-            type: String,
-            default: '666666'
-        },
-        bio: {
-            type: String,
-            default: 'Have no bio yet.'
-        },
-        // 对应人物页面
-        link: {
-            type: String
-        }
-    },
-    mounted() {
-        //获取到一些关键元素
-        let stars = this.$el.querySelector('#stars');
-        let moon = this.$el.querySelector('#moon');
-        let mountain_behind = this.$el.querySelector('#mountain_behind');
-        let text = this.$el.querySelector('#text');
-        // let btn = this.$el.querySelector('#btn');
-        let mountain_front = this.$el.querySelector('#mountain_front');
+    components: { HeaderForAll, SimplePost },
+    setup() {
+        const avatar = ref('https://q.115.com/imgload?r=242FCAA00B768FC8F00058B3781B71185BE2F6E7&u=dPjgXZ&s=eIAgzeJggQMuoquThaEovA&e=5&st=0');
+        const name = ref('default');
+        const id = ref('666666');
+        const bio = ref('no bio yet');
+        const posts = ref([]);
 
-        //给窗口添加鼠标滚动事件
-        window.addEventListener('scroll', () => {
-            let value = window.scrollY;
-            stars.style.left = value * 0.25 + 'px';
-            moon.style.top = value * 1.2 + 'px';
-            mountain_behind.style.top = value * 0.5 + 'px';
-            text.style.marginRight = value * 4 + 'px';
-            text.style.marginTop = value * 0.5 + 'px';
-            // btn.style.marginRight = value * 1.5 + 'px';
-            // btn.style.marginTop = value * 0.5 + 'px';
+        onMounted(async () => {
+            try {
+                const profileResponse = await axios.post('/api/profile/info/get', { userId: 'yourUserId' }); // 传入实际的用户ID
+                const profileData = profileResponse.data;
+
+                avatar.value = profileData.avatar;
+                name.value = profileData.name;
+                id.value = profileData.id;
+                bio.value = profileData.bio;
+
+                const postCollectionResponse = await axios.post('/api/profile/postCollection', { userId: 'yourUserId' }); // 获取收藏帖子的ID
+                const postCollectionData = postCollectionResponse.data;
+
+                for (const postId of postCollectionData.postIds) {
+                    const postResponse = await axios.get(`/api/posts/${postId}`);
+                    posts.value.push(postResponse.data);
+                }
+            } catch (error) {
+                console.error('Error fetching profile or posts data:', error);
+            }
         });
-    },
-    data() {
-        return {
-            posts: [
-                { id: 1, title: 'Post 1', content: 'Content of post 1', eventName: 'event1'},
-                { id: 2, title: 'Post 2', content: 'Content of post 2', eventName: 'event2' },
-                { id: 3, title: 'Post 3', content: 'Content of post 3', eventName: 'event3' },
-                // 添加更多 post 对象
-            ]
-        };
-    },
-};
 
+        return {
+            avatar,
+            name,
+            id,
+            bio,
+            posts
+        };
+    }
+};
 </script>
+
+
 
 
 <style scoped>

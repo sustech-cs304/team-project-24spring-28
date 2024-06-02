@@ -40,6 +40,7 @@ import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 // style
 import 'codemirror/lib/codemirror.css';
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
 VMdEditor.Codemirror = Codemirror;
 VMdEditor.use(githubTheme, {
@@ -81,6 +82,20 @@ const postUpload = () => {
     editDialogVisible.value = false;
 }
 
+const handleUploadImage=(event, insertImage, files)=>{
+    // 拿到 files 之后上传到文件服务器，然后向编辑框中插入对应的内容
+    console.log(files);
+
+    // 此处只做示例
+    insertImage({
+        url:
+            'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1269952892,3525182336&fm=26&gp=0.jpg',
+        desc: '七龙珠',
+        // width: 'auto',
+        // height: 'auto',
+    });
+}
+
 const fullScreenLoading = () => {
 
 }
@@ -111,7 +126,9 @@ const markdownText = ref('')
         :before-close="handleClose"
     >
         <div></div>
-        <v-md-editor v-model="markdownText" height="400px"></v-md-editor>
+        <v-md-editor v-model="markdownText" height="400px"
+                     :disabled-menus="[]"
+                     @upload-image="handleUploadImage"></v-md-editor>
         <el-dialog
             v-model="imageDialogVisible"
             width="500"
@@ -140,8 +157,11 @@ const markdownText = ref('')
 
 
     <div class="common-layout-all">
-        <el-row :class="main-header">
-            header
+        <el-row >
+            <el-col :span="24">
+                <header-for-all/>
+            </el-col>
+
             <el-backtop :right="10" :bottom="10"/>
         </el-row>
         <el-row :class="main-main" gutter="10">
@@ -158,7 +178,6 @@ const markdownText = ref('')
                                     <el-button-group class="ml-4">
                                         <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
                                         <el-button type="primary" :icon="Share" @click="handleSharePost"/>
-
                                         <el-button type="primary" :icon="Delete" @click="postUpload" v-loading.fullscreen.lock="fullscreenLoading"/>
                                     </el-button-group>
                                 </el-col>
