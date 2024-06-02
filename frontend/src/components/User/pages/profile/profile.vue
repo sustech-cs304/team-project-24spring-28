@@ -11,13 +11,26 @@
                     <el-row>
                         <el-col span="8">
                             <div class="profile">
-                                <el-avatar
+                                <el-row><el-avatar
                                     :size="250"
                                     :src="avatar"
                                     shape="square"
                                     style="margin-bottom: 8px; opacity: 1"
-                                />
-                                <avatar user-id="{{userID}}"/>
+                                /></el-row>
+                                <el-button-group>
+                                    <el-button v-if="!isSelf" @click="chat" :icon="ChatDotSquare">
+                                        Chat
+                                    </el-button>
+                                    <el-button v-if="isSelf" @click="edit" :icon="EditPen">
+                                        Edit
+                                    </el-button>
+                                    <el-button v-if="isSelf" @click="changeAvatar" :icon="User">
+                                        Avatar
+                                    </el-button>
+                                    <el-button v-if="isSelf" @click="logout" :icon="House">
+                                        Logout
+                                    </el-button>
+                                </el-button-group>
                                 <h1>{{ userName }}</h1>
                                 <p style="margin: 0; font-size: 14px; color: var(--el-color-info)">@{{ userID }}</p>
                                 <p>{{ bio }}</p>
@@ -63,8 +76,10 @@
                 <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
                 <div id="text">Moon Light</div>
                 <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
+
             </section>
         </el-row>
+
         <el-row :class="main-footer">footer</el-row>
     </div>
 </template>
@@ -75,32 +90,65 @@ import { ref, onMounted, onBeforeMount } from "vue";
 import axios from 'axios';
 import SimplePost from "@/components/Modules/SimplePost.vue";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
-import Avatar from "@/components/old/Student/Avatar.vue";
-import { useRoute } from 'vue-router';
+import Avatar from "@/components/Modules/avatar/Avatar.vue";
+import { useRoute, useRouter } from 'vue-router';
 import axiosInstance from "@/utils/axios";
+import ProfileIntersection from "@/components/User/pages/profile/profileIntersection.vue";
+import {ChatDotSquare, EditPen} from "@element-plus/icons-vue";
+import { House, User} from "@element-plus/icons";
+
 
 export default {
-    components: {Avatar, HeaderForAll, SimplePost },
+    computed: {
+        User() {
+            return User
+        },
+        Avatar() {
+            return Avatar
+        },
+        EditPen() {
+            return EditPen
+        },
+        House() {
+            return House
+        },
+        ChatDotSquare() {
+            return ChatDotSquare
+        }
+    },
+    components: {ProfileIntersection, Avatar, HeaderForAll, SimplePost },
     setup() {
         const route = useRoute();
+        const router = useRouter();
         const avatar = ref('');
         const userName = ref('');
         const userID = ref('');
         const bio = ref('');
         const posts = ref([]);
+        const isSelf = ref(false);
 
-        onBeforeMount(() => {
+        onBeforeMount(async () => {
             const userIdFromRoute = route.query.userID;
-            if(userIdFromRoute) {
-                fetchData(userIdFromRoute);
+            if (userIdFromRoute) {
+                await fetchData(userIdFromRoute);
+                if (route.query.userID.toString() === localStorage.getItem('userId').toString()) {
+                    isSelf.value = true;
+                    console.log('true')
+                } else {
+                    isSelf.value = false;
+                    console.log('false')
+                }
+                console.log(route.query.userID)
+                console.log(localStorage.getItem('userId'))
             } else {
+                await router.push({ path: '/notFound', query: { errorCode: 2 } });
                 console.error('User ID not found in the route query parameters.');
             }
         });
 
         const fetchData = async (userId) => {
             try {
-                const profileResponse = await axiosInstance.get(`/profile/info/get?userID=${userId}`); // 使用传入的 userId
+                const profileResponse = await axiosInstance.get(`/profile/info/get?userID=${userId}`);
                 const profileData = profileResponse.data.data;
 
                 avatar.value = profileData.avatar;
@@ -108,13 +156,13 @@ export default {
                 userID.value = profileData.id;
                 bio.value = profileData.bio;
 
-                const postCollectionResponse = await axios.post(`/profile/postCollection?userID=${userId}`); // 使用传入的 userId
-                const postCollectionData = postCollectionResponse.data;
-
-                for (const postId of postCollectionData.postIds) {
-                    const postResponse = await axios.get(`/posts/${postId}`);
-                    posts.value.push(postResponse.data);
-                }
+                // const postCollectionResponse = await axios.post(`/profile/postCollection?userID=${userId}`);
+                // const postCollectionData = postCollectionResponse.data;
+                //
+                // for (const postId of postCollectionData.postIds) {
+                //     const postResponse = await axios.get(`/posts/${postId}`);
+                //     posts.value.push(postResponse.data);
+                // }
             } catch (error) {
                 console.error('Error fetching profile or posts data:', error);
             }
@@ -125,8 +173,23 @@ export default {
             userName,
             userID,
             bio,
-            posts
+            posts,
+            isSelf
         };
+    },
+    function: {
+        edit() {
+
+        },
+        changeAvatar() {
+
+        },
+        logout() {
+
+        },
+        chat() {
+
+        }
     }
 };
 
@@ -200,7 +263,7 @@ header ul li a.active{
 section{
     position: relative;
     width: 100vw;
-    //height: 100vh;
+//height: 100vh;
     padding: 100px;
     display: flex;
     justify-content: center;

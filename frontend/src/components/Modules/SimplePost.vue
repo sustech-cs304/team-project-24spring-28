@@ -21,7 +21,7 @@
                     </el-col>
                     <el-col :span="16">
                         <span class="content">
-                            {{ postContent }}
+                            {{ truncatedContent }}
                         </span>
                     </el-col>
                 </el-row>
@@ -106,7 +106,7 @@ onMounted(() => {
 });
 
 const truncatedContent = computed(() => {
-    return postContent.value.length > 350 ? postContent.value.substring(0, 350) + '...' : postContent.value;
+    return postContent.value.length > 50 ? postContent.value.substring(0, 50) + '...' : postContent.value;
 });
 
 function goToPost() {

@@ -3,6 +3,7 @@
         <el-card shadow="hover" class="not-found-card">
             <h1 class="title">404</h1>
             <p class="message">Sorry, the page you are looking for could not be found.</p>
+            <p>{{ errorDescription }}</p>
             <el-button type="primary" @click="goHome">Go to Home</el-button>
         </el-card>
     </div>
@@ -10,15 +11,34 @@
 
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
-import { ElCard, ElButton } from 'element-plus'
+import { ref, watchEffect } from 'vue'
 
 const router = useRouter()
 const route = useRoute()
+const errorDescription = ref('')
+
 const goHome = () => {
     router.push('/')
 }
 
-const errorType = route.query.errorCode
+const errorType = ref(route.query.errorCode)
+
+const getErrorDescription = (type) => {
+    switch (type) {
+        case '1':
+            return 'The post is not exist.'
+        case '2':
+            return 'The user is not exist.'
+        case '3':
+            return 'Internal server error. Please try again later.'
+        default:
+            return 'An unknown error has occurred.'
+    }
+}
+
+watchEffect(() => {
+    errorDescription.value = getErrorDescription(errorType.value)
+})
 </script>
 
 <style scoped>
