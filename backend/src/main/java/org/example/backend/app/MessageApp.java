@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * 该类用于处理消息相关的请求
+ * @author Shinomiya
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/message")
 public class MessageApp {

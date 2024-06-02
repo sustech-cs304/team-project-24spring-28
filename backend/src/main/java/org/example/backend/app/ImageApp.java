@@ -13,6 +13,11 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * 该类用于处理图片上传下载相关的请求
+ * @author Shinomiya
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/image")
 public class ImageApp {

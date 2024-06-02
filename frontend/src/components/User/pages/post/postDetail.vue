@@ -1,4 +1,6 @@
 <script setup>
+import { ElMessage } from 'element-plus';
+import 'element-plus/theme-chalk/el-message.css';
 import PostComments from "@/components/User/pages/post/components/postDetail/postComments.vue";
 import ProfileCard from "@/components/User/pages/post/components/profileCard.vue";
 import { ArrowLeft, ArrowRight, Delete, MoreFilled, Open, Pointer, Share, StarFilled } from "@element-plus/icons";
@@ -10,12 +12,15 @@ import EventCard from "@/components/User/pages/post/components/postDetail/eventC
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
 import axios from 'axios';
-import {useRoute, useRouter} from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import axiosInstance from "@/utils/axios";
+import EventCardBig from "@/components/Modules/event/EventCardBig.vue";
+import PostCard from "@/components/User/pages/post/components/postsSquare/postCard.vue";
 
 const route = useRoute(); // Initialize route
 const router = useRouter();
 
+const postIds = ref([1, 2]);
 // API call to get post data
 const postID = route.query.id; // Example post ID
 let postData = ref({});
@@ -51,7 +56,7 @@ onMounted(async () => {
         isStarred.value = temp.collectOrNot;
         console.log(temp)
     } catch (error) {
-        await router.push({path: '/notFound', query: {errorCode: 1}});
+        await router.push({ path: '/notFound', query: { errorCode: 1 } });
         console.error('Failed to fetch post data:', error);
     } finally {
     }
@@ -104,9 +109,24 @@ const toggleLike = async () => {
     }
 };
 
+const toggleShare = async () => {
+    try {
+        await navigator.clipboard.writeText(window.location.href);
+        ElMessage({
+            message: 'URL has been copied to clipboard',
+            type: 'success',
+        });
+    } catch (error) {
+        console.error('Failed to copy URL:', error);
+        ElMessage({
+            message: 'Failed to copy URL',
+            type: 'error',
+        });
+    }
+};
+
 const dialogVisible = ref(false);
 const handleDelete = async () => {
-
     if (localStorage.getItem('userId').toString() === userID.value.toString()) {
         try {
             await axiosInstance({
@@ -116,11 +136,11 @@ const handleDelete = async () => {
                     postId: postID
                 }
             });
-            await router.push({path: '/notFound', query: {errorCode: 1}});
+            await router.push({ path: '/notFound', query: { errorCode: 1 } });
         } catch (error) {
             console.error('Failed to delete the post:', error);
         }
-    }else {
+    } else {
         console.log('delete failed')
         console.log(localStorage.getItem('userId'))
         console.log(userID.value)
@@ -251,10 +271,7 @@ const toggleCollapse = () => {
                             </div>
                         </el-col>
                         <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="Share" class="button-left" style="width: 100%;" plain />
-                        </el-col>
-                        <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="ChatDotSquare" class="button-left" style="width: 100%;" plain @click="scrollToCommentSection" />
+                            <el-button type="primary" :icon="Share" @click="toggleShare" class="button-left" style="width: 100%;" plain />
                         </el-col>
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="ArrowLeft" class="button-left" style="width: 100%;" plain />
@@ -272,9 +289,11 @@ const toggleCollapse = () => {
                     <el-row>
                         <el-col>
                             <el-card style="border-radius: 0.5vw">
-                                <el-carousel height="30vh" motion-blur interval="6000">
-                                    <el-carousel-item v-for="item in 4" :key="item">
-                                        <h3 class="small justify-center" text="2xl">{{ item }}</h3>
+                                <el-carousel height="40vh" motion-blur interval="6000">
+                                    <el-carousel-item v-for="item in postIds" :key="item.id">
+                                        <div class="event-card-wrapper">
+                                            <post-card :id="item" />
+                                        </div>
                                     </el-carousel-item>
                                 </el-carousel>
                             </el-card>
