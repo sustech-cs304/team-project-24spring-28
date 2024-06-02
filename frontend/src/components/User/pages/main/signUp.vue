@@ -3,7 +3,6 @@ import  {reactive, ref} from "vue";
 import axiosInstance from "@/utils/axios";
 import {useRouter} from "vue-router";
 
-const router = useRouter()
 
 const registerForm = reactive({
   username: '',
