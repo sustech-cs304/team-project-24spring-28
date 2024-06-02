@@ -28,6 +28,8 @@
 
 <script>
 import Avatar from './avatar/Avatar.vue';
+import axiosInstance from "@/utils/axios";
+
 export default {
   components: {Avatar},
   data() {
@@ -35,13 +37,30 @@ export default {
       menuItems: [
         { id: 1, label: '主页', url: '/main' },
         { id: 2, label: '帖子广场', url: '/square' },
-        { id: 3, label: '活动管理', url: '/' },
-        { id: 4, label: '所有活动', url: '/allEvent' },
-        { id: 5, label: '我的活动', url: '/'}
+        { id: 3, label: '所有活动', url: '/allEvent' },
+        { id: 4, label: '我的活动', url: '/event/my'}
       ],
       userId: localStorage.getItem('userId')
     };
   },
+
+  mounted() {
+    axiosInstance.get('/user/permission',
+        {
+          headers: {
+            'Authorization': localStorage.getItem('token')
+          }
+        }
+    ).then((res) => {
+      console.log(res)
+      if (res.data.data.canCreate) {
+        this.menuItems.push({id: 5, label: '活动管理', url: '/event/manage'})
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
+
+  }
 };
 </script>
 
