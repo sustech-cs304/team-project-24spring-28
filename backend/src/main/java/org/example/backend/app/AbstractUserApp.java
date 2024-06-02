@@ -3,6 +3,7 @@ package org.example.backend.app;
 import org.example.backend.config.MyException;
 import org.example.backend.domain.AbstractUser;
 import org.example.backend.domain.Admin;
+import org.example.backend.domain.Permission;
 import org.example.backend.domain.User;
 import org.example.backend.dto.AbstractUserDto;
 import org.example.backend.service.AbstractUserService;
@@ -43,7 +44,7 @@ public class AbstractUserApp {
 
     @PostMapping("/signUp")
     public boolean signUp(@RequestParam String username, @RequestParam String password) {
-        AbstractUser user = new User();
+        User user = new User();
         if (abstractUserService.findUserByUsername(username) != null) {
             throw new MyException(5, "username already exists");
         }
@@ -51,6 +52,12 @@ public class AbstractUserApp {
         user.setPassword(password);
         user.setName(username);
         user.setAvatar(IMAGE_PATH + "default_avatar.jpg");
+        Permission permission = new Permission();
+        permission.setUser(user);
+        user.setPermission(permission);
+        permission.setCanCreate(false);
+        permission.setCanEnroll(true);
+        permission.setCanComment(true);
         try {
             abstractUserService.saveUser(user);
             return true;
