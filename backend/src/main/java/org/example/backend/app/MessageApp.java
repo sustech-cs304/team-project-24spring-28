@@ -87,13 +87,13 @@ public class MessageApp {
     }
 
     @GetMapping("/chat")
-    public List<AbstractUserDto> getChatMessages(@RequestHeader("Authorization") String token) {
+    public List<String> getChatMessages(@RequestHeader("Authorization") String token) {
         long userId = JwtUtil.getIdByToken(token);
         List<Message> fromMessages = messageService.findMessageByFromIdAndType(userId, "Chat");
         List<Message> toMessages = messageService.findMessageByToUserIdAndType(userId, "Chat");
         Map<Long, Boolean> map = new HashMap<>();
         Set<Long> seen = new HashSet<>();
-        List<AbstractUserDto> result = new ArrayList<>();
+        List<String> result = new ArrayList<>();
         for (Message message : toMessages) {
             if (map.containsKey(message.getFrom().getId())) {
                 map.put(message.getFrom().getId(), map.get(message.getFrom().getId()) && message.isRead());
@@ -111,22 +111,22 @@ public class MessageApp {
                 continue;
             }
             seen.add(message.getToUser().getId());
-            AbstractUserDto abstractUserDto = new AbstractUserDto();
-            abstractUserDto.setId(message.getToUser().getId());
-            abstractUserDto.setName(message.getToUser().getName());
-            abstractUserDto.setHasUnread(!map.get(message.getToUser().getId()));
-            result.add(abstractUserDto);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", message.getToUser().getId());
+            jsonObject.put("userName", message.getToUser().getName());
+            jsonObject.put("hasUnread", !map.get(message.getToUser().getId()));
+            result.add(jsonObject.toString());
         }
         for (Message message : toMessages) {
             if (seen.contains(message.getFrom().getId())) {
                 continue;
             }
             seen.add(message.getFrom().getId());
-            AbstractUserDto abstractUserDto = new AbstractUserDto();
-            abstractUserDto.setId(message.getFrom().getId());
-            abstractUserDto.setName(message.getFrom().getName());
-            abstractUserDto.setHasUnread(!map.get(message.getFrom().getId()));
-            result.add(abstractUserDto);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", message.getFrom().getId());
+            jsonObject.put("userName", message.getFrom().getName());
+            jsonObject.put("hasUnread", !map.get(message.getFrom().getId()));
+            result.add(jsonObject.toString());
         }
         return result;
     }
