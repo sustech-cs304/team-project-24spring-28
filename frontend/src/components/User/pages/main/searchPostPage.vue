@@ -51,11 +51,12 @@ import postCard from '@/components/User/pages/post/components/postsSquare/postCa
 const route = useRoute();
 const router = useRouter();
 
-const content = ref(route.query.content);
+const content = ref(' ');
 const postIds = ref([]);
 const searchInput = ref('');
 
 onMounted(async () => {
+  content.value = ref(route.query.content);
   postIds.value = await searchApi.searchPost(content.value);
 });
 
