@@ -19,13 +19,19 @@ public class EventCommentDto {
     private long userId;
     private String userName;
     private long eventId;
+    private long postId;
     private List<Long> replyCommentIds;
 
     public EventCommentDto(EventComment eventComment) {
         this.id = eventComment.getId();
         this.comment = eventComment.getComment();
         this.userId = eventComment.getUser().getId();
-        this.eventId = eventComment.getEvent().getId();
+        if (eventComment.getEvent() != null) {
+            this.eventId = eventComment.getEvent().getId();
+        }
+        if (eventComment.getPost() != null) {
+            this.postId = eventComment.getPost().getId();
+        }
         this.userName = eventComment.getUser().getName();
         this.replyCommentIds = eventComment.getReplyComments().stream().map(ReplyComment::getId).toList();
     }
