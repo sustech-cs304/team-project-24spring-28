@@ -95,6 +95,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> searchEvent(String keyword) {
-        return eventRepository.findAllByTextContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword);
+        return eventRepository.findAllByTextContainingIgnoreCaseOrIntroductionContainingIgnoreCaseOrNameContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword, keyword, keyword);
     }
 }

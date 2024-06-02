@@ -1,7 +1,9 @@
 package org.example.backend.app;
 
+import org.example.backend.domain.AbstractUser;
 import org.example.backend.domain.Message;
 import org.example.backend.dto.AbstractUserDto;
+import org.example.backend.dto.MessageDto;
 import org.example.backend.service.AbstractUserService;
 import org.example.backend.service.MessageService;
 import org.example.backend.util.JwtUtil;
@@ -79,6 +81,13 @@ public class MessageApp {
 //        long userId = JwtUtil.getIdByToken(token);
 //        return messageService.findMessageByToIdAndType(userId, "Invitation");
 //    }
+
+    private String getSendMessage(AbstractUser user) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("userId", user.getId());
+        jsonObject.put("userName", user.getUsername());
+        return jsonObject.toString();
+    }
 
     @GetMapping("/notice")
     public List<Message> getNotices(@RequestHeader("Authorization") String token) {
@@ -174,7 +183,7 @@ public class MessageApp {
     }
 
     @GetMapping("/chatText")
-    public List<Message> getChatText(@RequestHeader("Authorization") String token, @RequestParam("userId") long friendId) {
+    public List<MessageDto> getChatText(@RequestHeader("Authorization") String token, @RequestParam("userId") long friendId) {
         long userId = JwtUtil.getIdByToken(token);
         List<Message> fromMessages = messageService.findMessageByFromIdAndToUserIdAndType(userId, friendId, "Chat");
         List<Message> toMessages = messageService.findMessageByFromIdAndToUserIdAndType(friendId, userId, "Chat");
@@ -184,20 +193,31 @@ public class MessageApp {
         }
         fromMessages.addAll(toMessages);
         fromMessages.sort(Comparator.comparing(Message::getTime));
-        return fromMessages;
+        return fromMessages.stream().map(this::constructMessageDto).toList();
     }
-    public List<Message> getChatText(@RequestParam("id") long userId, @RequestParam("userId") long friendId) {
-        List<Message> fromMessages = messageService.findMessageByFromIdAndToUserIdAndType(userId, friendId, "Chat");
-        List<Message> toMessages = messageService.findMessageByFromIdAndToUserIdAndType(friendId, userId, "Chat");
-        for (Message message : toMessages) {
-            message.setRead(true);
-            messageService.updateMessage(message);
-        }
-        fromMessages.addAll(toMessages);
-        fromMessages.sort(Comparator.comparing(Message::getTime));
-        return fromMessages;
-    }
+//    public List<Message> getChatText(@RequestParam("id") long userId, @RequestParam("userId") long friendId) {
+//        List<Message> fromMessages = messageService.findMessageByFromIdAndToUserIdAndType(userId, friendId, "Chat");
+//        List<Message> toMessages = messageService.findMessageByFromIdAndToUserIdAndType(friendId, userId, "Chat");
+//        for (Message message : toMessages) {
+//            message.setRead(true);
+//            messageService.updateMessage(message);
+//        }
+//        fromMessages.addAll(toMessages);
+//        fromMessages.sort(Comparator.comparing(Message::getTime));
+//        return fromMessages;
+//    }
 
+    private MessageDto constructMessageDto(Message message) {
+        MessageDto messageDto = new MessageDto();
+        messageDto.setId(message.getId());
+        messageDto.setFrom(message.getFrom().getId());
+        messageDto.setTo(message.getToUser().getId());
+        messageDto.setType(message.getType());
+        messageDto.setContent(message.getContent());
+        messageDto.setTime(String.valueOf(message.getTime()));
+        messageDto.setRead(message.isRead());
+        return messageDto;
+    }
     @PostMapping("/sendChat")
     public boolean sendChat(@RequestHeader("Authorization") String token, @RequestParam("userId") long friendId, @RequestParam("content") String content, @RequestParam("time") String time) {
         try {
@@ -210,7 +230,7 @@ public class MessageApp {
             message.setTime(LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
             message.setRead(false);
             messageService.saveMessage(message);
-            WebSocketServer.sendMessageToUser(friendId, content);
+            WebSocketServer.sendMessageToUser(friendId, getSendMessage(message.getFrom()));
             return true;
         } catch (Exception e) {
             return false;
@@ -284,12 +304,12 @@ public class MessageApp {
 //    }
 
     @GetMapping("/comment")
-    public List<Message> getComment(@RequestHeader("Authorization") String token) {
+    public List<MessageDto> getComment(@RequestHeader("Authorization") String token) {
         long userId = JwtUtil.getIdByToken(token);
         List<Message> fromMessages = messageService.findMessageByFromIdAndType(userId, "Comment");
         List<Message> toMessages = messageService.findMessageByToUserIdAndType(userId, "Comment");
         fromMessages.addAll(toMessages);
-        return fromMessages;
+        return fromMessages.stream().map(this::constructMessageDto).toList();
     }
 
 //    @GetMapping("/exchange")
