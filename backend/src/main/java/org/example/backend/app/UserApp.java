@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * 该类用于处理用户相关的请求
+ * @author wangyr
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/user")
 public class UserApp {
