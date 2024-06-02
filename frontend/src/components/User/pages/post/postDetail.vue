@@ -56,12 +56,10 @@ onMounted(async () => {
 let isStarred = ref(false);
 let isLiked = ref(false);
 const toggleStar = async () => {
-    if (isLiked.value === false) {
+    if (isStarred.value === false) {
         try {
-            await axiosInstance.post('/post/collectThePost', null, {
-                params: {
+            await axiosInstance.post('/post/collectThePost', {
                     postID: postID
-                }
             });
             isStarred.value = !isStarred.value;
         } catch (error) {
@@ -69,10 +67,8 @@ const toggleStar = async () => {
         }
     } else {
         try {
-            await axiosInstance.post('/post/discollectThePost', null, {
-                params: {
+            await axiosInstance.post('/post/discollectThePost', {
                     postID: postID
-                }
             });
             isStarred.value = !isStarred.value;
         } catch (error) {
@@ -83,10 +79,8 @@ const toggleStar = async () => {
 const toggleLike = async () => {
     if (isLiked.value === false) {
         try {
-            await axiosInstance.post('/post/likeThePost', null, {
-                params: {
+            await axiosInstance.post('/post/likeThePost', {
                     postID: postID
-                }
             });
             isLiked.value = !isLiked.value;
         } catch (error) {
@@ -94,10 +88,8 @@ const toggleLike = async () => {
         }
     }else {
         try {
-            await axiosInstance.post('/post/dislikeThePost', null, {
-                params: {
+            await axiosInstance.post('/post/dislikeThePost', {
                     postID: postID
-                }
             });
             isLiked.value = !isLiked.value;
         } catch (error) {
