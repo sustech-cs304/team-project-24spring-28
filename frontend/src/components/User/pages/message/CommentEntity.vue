@@ -29,10 +29,6 @@ const props = defineProps({
     required: false,
     default: -1
   },
-  roomName: {
-    type: String,
-    required: true
-  },
   commentContent: {
     type: String,
     required: true
@@ -52,7 +48,7 @@ function toOrigin() {
   if (props.eventId !== -1) {
     router.push({path: '/event', query: {id: props.eventId}})
   } else if (props.postId !== -1) {
-    router.push({path: '/post', query: {id: props.postId}})
+    router.push({path: '/square/post', query: {id: props.postId}})
   }
 }
 
@@ -65,8 +61,7 @@ function toOrigin() {
         <avatar :user-id="commenterId"/>
         <p style="font-size: 15px; font-weight: bold; margin-left: 10px;">{{commenterName}}</p>
       </div>
-      <p style="cursor: default; color: #ffb2b2">&nbsp; replied you under &nbsp;</p>
-      <p class="room">{{roomName}}</p>
+      <p style="cursor: default; color: #ffb2b2">&nbsp; replied you &nbsp;</p>
     </div>
 
     <div style="display: flex; align-items: flex-start; margin-top: 5px">
@@ -82,7 +77,7 @@ function toOrigin() {
     </div>
 
     <div class="button-wrap">
-      <el-button style="background-color: #ffb2b2;" @click="toRoom">
+      <el-button style="background-color: #ffb2b2;" @click="toOrigin">
         <p style="color: white">See Details</p>
       </el-button>
     </div>

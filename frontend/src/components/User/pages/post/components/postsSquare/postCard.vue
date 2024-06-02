@@ -101,7 +101,7 @@ function goToPost() {
                             <el-tag type="primary">{{ eventTitle }}</el-tag>
                         </el-row>
                         <el-row>
-                            <img :src="posterUrl" style="width: 6vw" />
+                            <img :src="posterUrl" style="width: 6vw"  alt=""/>
                         </el-row>
                     </el-col>
                     <el-col :span="20">

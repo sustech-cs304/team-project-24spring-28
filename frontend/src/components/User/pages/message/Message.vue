@@ -93,15 +93,17 @@ onMounted(() => {
             let exData = JSON.parse(tempList[i].content)
             commentData.value.push({
               id: tempList[i].id,
-              time: formatTime(tempList[i].time),
-              commenterId: tempList[i].from.id,
-              commenterName: tempList[i].from.name,
-              roomId: exData.roomId,
-              roomName: exData.roomName,
+              time: formatTime(tempList[i].time).split('.')[0],
+              commenterId: tempList[i].from,
+              commenterName: tempList[i].fromName,
+              // TODO: communicate with the backend to get the ids
+              eventId: exData.eventId === undefined ? -1 : exData.eventId,
+              postId: exData.postId === undefined ? -1 : exData.postId,
               commentContent: exData.commentContent,
               oriCommentContent: exData.oriCommentContent
             })
           }
+          console.log(commentData.value)
         })
         .catch(error => {
           console.error(error);
@@ -118,11 +120,11 @@ onMounted(() => {
             let exData = JSON.parse(tempList[i].content)
             commentData.value.push({
               id: tempList[i].id,
-              time: formatTime(tempList[i].time),
-              commenterId: tempList[i].from.id,
-              commenterName: tempList[i].from.name,
-              roomId: exData.roomId,
-              roomName: exData.roomName,
+              time: formatTime(tempList[i].time).split('.')[0],
+              commenterId: tempList[i].from,
+              commenterName: tempList[i].fromName,
+              eventId: exData.eventId === undefined ? -1 : exData.eventId,
+              postId: exData.postId === undefined ? -1 : exData.postId,
               commentContent: exData.commentContent,
               oriCommentContent: exData.oriCommentContent
             })
@@ -215,7 +217,7 @@ onMounted(() => {
       <div v-else>
         <div v-for="item in commentData" :key="item.id">
           <CommentEntity :id="item.id.toString()" :time="item.time" :commenterId="item.commenterId.toString()"
-                         :commenterName="item.commenterName" :roomId="item.roomId" :roomName="item.roomName"
+                         :commenterName="item.commenterName" :event-id="item.eventId" :post-id="item.postId"
                          :commentContent="item.commentContent" :oriCommentContent="item.oriCommentContent"/>
         </div>
       </div>
@@ -240,7 +242,7 @@ onMounted(() => {
   justify-content: space-evenly;
   align-items: center;
   background: #ffffed;
-  height: 269px;
+  height: 105px;
   width: 15%;
   margin: 10px 10px;
   border-radius: 10px;

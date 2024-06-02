@@ -75,7 +75,6 @@ onMounted(() => {
   // }).catch((err) => {
   //   console.log(err)
   // })
-
 })
 
 // TODO: edit in the future
@@ -83,6 +82,7 @@ function submitComment() {
   if (textarea.value === '') {
     return
   }
+  console.log(props.postId)
   if (props.eventId !== -1) {
     let temp = new FormData()
     temp.append('eventId', props.eventId)
@@ -102,6 +102,7 @@ function submitComment() {
       console.log(err)
     })
   }
+  textarea.value = ''
   // axiosInstance.get('/student/comment', {
   //   headers: {
   //     'Authorization': localStorage.getItem('token')

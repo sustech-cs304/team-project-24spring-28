@@ -1,19 +1,20 @@
 <script setup>
 import PostComments from "@/components/User/pages/post/components/postDetail/postComments.vue";
 import ProfileCard from "@/components/User/pages/post/components/profileCard.vue";
-import { ArrowLeft, ArrowRight, MoreFilled, Open, Pointer, Share, StarFilled } from "@element-plus/icons";
+import { ArrowLeft, ArrowRight, Delete, MoreFilled, Open, Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import Comment from '@/components/Modules/comment/Comment.vue';
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import EventCard from "@/components/User/pages/post/components/postDetail/eventCard.vue";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import AvatarWithName from "@/components/Modules/avatar/AvatarWithName.vue";
 import axios from 'axios';
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import axiosInstance from "@/utils/axios";
 
-const route = useRoute(); // 初始化 route
+const route = useRoute(); // Initialize route
+const router = useRouter();
 
 // API call to get post data
 const postID = route.query.id; // Example post ID
@@ -22,14 +23,15 @@ let userData = ref({});
 let eventData = ref({});
 
 let postTitle = ref('');
-let postContent = ref()
-let postRelevantEventID = ref()
-let username = ref()
-let userID = ref()
-let userBio = ref()
-let userAvatar = ref()
-let likeOrNot = ref()
-let collectOrNot = ref()
+let postContent = ref();
+let postRelevantEventID = ref();
+let username = ref();
+let userID = ref();
+let userBio = ref();
+let userAvatar = ref();
+let likeOrNot = ref();
+let collectOrNot = ref();
+
 onMounted(async () => {
     try {
         const response = await axiosInstance.get('/post/getFullPost', {
@@ -47,8 +49,11 @@ onMounted(async () => {
         userAvatar.value = temp.userAvatar;
         isLiked.value = temp.likeOrNot;
         isStarred.value = temp.collectOrNot;
+        console.log(temp)
     } catch (error) {
+        await router.push({path: '/notFound', query: {id: 1}});
         console.error('Failed to fetch post data:', error);
+    } finally {
     }
 });
 
@@ -59,7 +64,7 @@ const toggleStar = async () => {
     if (isStarred.value === false) {
         try {
             await axiosInstance.post('/post/collectThePost', {
-                    postID: postID
+                postID: postID
             });
             isStarred.value = !isStarred.value;
         } catch (error) {
@@ -68,34 +73,66 @@ const toggleStar = async () => {
     } else {
         try {
             await axiosInstance.post('/post/discollectThePost', {
-                    postID: postID
+                postID: postID
             });
             isStarred.value = !isStarred.value;
         } catch (error) {
-            console.error('Failed to collect the post:', error);
+            console.error('Failed to discollect the post:', error);
         }
     }
 };
+
 const toggleLike = async () => {
     if (isLiked.value === false) {
         try {
             await axiosInstance.post('/post/likeThePost', {
-                    postID: postID
+                postID: postID
             });
             isLiked.value = !isLiked.value;
         } catch (error) {
             console.error('Failed to like the post:', error);
         }
-    }else {
+    } else {
         try {
             await axiosInstance.post('/post/dislikeThePost', {
-                    postID: postID
+                postID: postID
             });
             isLiked.value = !isLiked.value;
         } catch (error) {
-            console.error('Failed to like the post:', error);
+            console.error('Failed to dislike the post:', error);
         }
     }
+};
+
+const dialogVisible = ref(false);
+const handleDelete = async () => {
+
+    if (localStorage.getItem('userId').toString() === userID.value.toString()) {
+        try {
+            await axiosInstance({
+                method: 'delete',
+                url: '/admin/post',
+                params: {
+                    postId: postID
+                }
+            });
+            await router.push({path: '/notFound', query: {id: 1}});
+        } catch (error) {
+            console.error('Failed to delete the post:', error);
+        }
+    }else {
+        console.log('delete failed')
+        console.log(localStorage.getItem('userId'))
+        console.log(userID.value)
+    }
+};
+
+const closeDialog = () => {
+    dialogVisible.value = false;
+};
+
+const closePage = () => {
+    window.close();
 };
 
 const commentSectionRef = ref(null);
@@ -110,6 +147,9 @@ const handleChange = (val) => {
 const toggleCollapse = () => {
     activeNames.value = activeNames.value.length ? [] : ['contentFold'];
 };
+
+// Computed property to check if the delete button should be disabled
+
 </script>
 
 <template>
@@ -140,8 +180,7 @@ const toggleCollapse = () => {
                                         <el-row>
                                             <!--profile-->
                                             <el-col :span="3">
-                                                <profile-card :name="username"></profile-card>
-<!--                                                <AvatarWithName :user-id="userID" :name="username" :avatar="userAvatar"></AvatarWithName>-->
+                                                <profile-card :name="username" :id="userID" :avatar="userAvatar" :bio="userBio" ></profile-card>
                                             </el-col>
                                             <!--activity-->
                                             <el-col :span="4" />
@@ -177,7 +216,7 @@ const toggleCollapse = () => {
                         <el-row>
                             <!--comment-->
                             <el-col>
-                                <comment ref="commentSection" :post-id="Number(postID)" />
+<!--                                <comment ref="commentSection" :postId="Number(postID)" />-->
                                 <el-card style="height: 1000px"></el-card>
                                 <el-card></el-card>
                                 <el-card></el-card>
@@ -227,7 +266,7 @@ const toggleCollapse = () => {
                             <el-button type="primary" :icon="Open" @click="toggleCollapse" class="button-left" style="width: 100%;" plain />
                         </el-col>
                         <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="MoreFilled" class="button-left" style="width: 100%;" plain />
+                            <el-button type="danger" :icon="Delete" @click="handleDelete" class="button-left" style="width: 100%;" />
                         </el-col>
                     </el-row>
                     <el-row>
@@ -248,6 +287,13 @@ const toggleCollapse = () => {
             footer
         </el-row>
     </div>
+
+    <el-dialog :visible="dialogVisible" title="Post Deleted">
+        <span>The post has been successfully deleted.</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="closePage">Close Page</el-button>
+        </span>
+    </el-dialog>
 </template>
 
 <style scoped>

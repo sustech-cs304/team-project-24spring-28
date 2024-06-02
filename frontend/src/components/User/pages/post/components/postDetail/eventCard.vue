@@ -9,13 +9,13 @@
         <template #reference>
             <div class="card-container">
                 <el-button-group >
-                    <el-button class="profile-avatar" v-if="props.posterVisible">
+                    <el-button class="profile-avatar" >
                         <div class="block">
                             <el-avatar shape="square" :size="40" :src="posterUrl" />
                         </div>
                     </el-button>
-                    <el-button class="profile-name" v-if="props.nameVisible">
-                        <p>{{ name }}</p>
+                    <el-button class="profile-name">
+                        <p>{{ eventName }}</p>
                     </el-button>
                 </el-button-group>
             </div>
@@ -33,15 +33,16 @@
 <!--                />-->
                 <div>
                     <div class="demo-image__lazy">
-                        <el-image v-for="url in urls" :key="url" :src="url" lazy />
+                        <el-image :src="posterUrl" />
                     </div>
+<!--                    <el-image style="max-height: 30vh;"  :src="posterUrl"></el-image>-->
                 </div>
                 <div>
                     <p
                         class="demo-rich-content__name"
                         style="margin: 0; font-weight: 500"
                     >
-                        {{name}}
+                        {{eventName}}
                     </p>
                     <p
                         class="demo-rich-content__mention"

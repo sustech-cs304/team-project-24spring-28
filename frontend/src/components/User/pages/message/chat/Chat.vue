@@ -59,7 +59,7 @@ function updateChatTexts() {
     for (let i = 0; i < tempList.length; i++) {
       chatTexts.value.push({
         id: tempList[i].id,
-        fromSelf: (tempList[i].from.id === Number(localStorage.getItem('userId'))),
+        fromSelf: (tempList[i].from === Number(localStorage.getItem('userId'))),
         time: formatTime(tempList[i].time),
         content: tempList[i].content,
       })
@@ -89,70 +89,79 @@ onUpdated(() => {
   scrollToBottom()
 })
 
-// onMounted(() => {
-//   axiosInstance.get('/message/chat').then(response => {
-//     let temp = response.data.data;
-//     for (let i = 0; i < temp.length; i++) {
-//       chatData.value.push({
-//         userId: JSON.parse(temp[i]).userId,
-//         userName: JSON.parse(temp[i]).userName,
-//         hasUnread: JSON.parse(temp[i]).hasUnread,
-//       })
-//     }
-//     // alert(chatData.value[1].userId)
-//     // alert(chatData.value[1].userName)
-//     // alert(chatData.value[1].hasUnread)
-//
-//     if (typeof (route.query.userId) !== 'undefined') {
-//
-//       userId.value = Number(route.query.userId)
-//       console.log(userId.value)
-//       noChat.value = false
-//
-//       let userName = null
-//       for (let i = 0; i < chatData.value.length; i++) {
-//         if (chatData.value[i].userId === Number(userId.value)) {
-//           userName = chatData.value[i].userName
-//           let user = chatData.value.splice(i, 1)[0]
-//           chatData.value.unshift(user)
-//           break
-//         }
-//       }
-//       if (userName === null) {
-//         axiosInstance.get('/user/students', {
-//           params: {
-//             id: Number(userId.value)
-//           }
-//         }).then(response => {
-//           userName = response.data.data.name
-//           chatData.value.unshift({
-//             userId: Number(userId.value),
-//             userName: userName,
-//             hasUnread: false
-//           })
-//         }).catch(error => {
-//               console.error(error);
-//             });
-//       }
-//
-//     } else if (chatData.value.length > 0) {
-//       userId.value = chatData.value[0].userId
-//       noChat.value = false
-//     } else {
-//       noChat.value = true
-//     }
-//
-//     if (noChat.value === false) {
-//       updateChatTexts()
-//       connectWs();
-//     }
-//
-//
-//   }).catch(error => {
-//     console.error(error);
-//   });
-//
-// })
+let timer = null
+const polling = () => {
+  timer = setInterval(() => {
+    updateChatTexts()
+  }, 1500)
+}
+
+onMounted(() => {
+  axiosInstance.get('/message/chat').then(response => {
+    let temp = response.data.data;
+    for (let i = 0; i < temp.length; i++) {
+      chatData.value.push({
+        userId: JSON.parse(temp[i]).userId,
+        userName: JSON.parse(temp[i]).userName,
+        hasUnread: JSON.parse(temp[i]).hasUnread,
+      })
+    }
+    // alert(chatData.value[1].userId)
+    // alert(chatData.value[1].userName)
+    // alert(chatData.value[1].hasUnread)
+
+    if (typeof (route.query.userId) !== 'undefined') {
+
+      userId.value = Number(route.query.userId)
+      console.log(userId.value)
+      noChat.value = false
+
+      let userName = null
+      for (let i = 0; i < chatData.value.length; i++) {
+        if (chatData.value[i].userId === Number(userId.value)) {
+          userName = chatData.value[i].userName
+          let user = chatData.value.splice(i, 1)[0]
+          chatData.value.unshift(user)
+          break
+        }
+      }
+      if (userName === null) {
+        axiosInstance.get('profile/info/get', {
+          params: {
+            userID: Number(userId.value)
+          }
+        }).then(response => {
+          userName = response.data.data.name
+          chatData.value.unshift({
+            userId: Number(userId.value),
+            userName: userName,
+            hasUnread: false
+          })
+        }).catch(error => {
+              console.error(error);
+            });
+      }
+
+    } else if (chatData.value.length > 0) {
+      userId.value = chatData.value[0].userId
+      noChat.value = false
+    } else {
+      noChat.value = true
+    }
+
+    if (noChat.value === false) {
+      updateChatTexts()
+      // connectWs();
+    }
+    // handle the polling
+    polling()
+
+
+  }).catch(error => {
+    console.error(error);
+  });
+
+})
 
 
 const ws = getCurrentInstance()
@@ -161,6 +170,7 @@ function connectWs() {
   ws.proxy.$connect()
   console.log('WS connected')
   ws.proxy.$socket.onmessage = function (event) {
+    console.log('WS received message: ' + event.data)
     let ws_id = JSON.parse(event.data).userId
     let ws_name = JSON.parse(event.data).userName
 
@@ -187,78 +197,79 @@ function connectWs() {
   }
 }
 
-// onBeforeUnmount(() => {
-//   try {
-//     ws.proxy.$disconnect()
-//   } catch (error) {
-//     console.error(error)
-//   }
-// })
+onBeforeUnmount(() => {
+  // try {
+  //   ws.proxy.$disconnect()
+  // } catch (error) {
+  //   console.error(error)
+  // }
+  clearInterval(timer)
+})
 
 
 // test data
-noChat.value = false
-chatData.value = [
-  {
-    userId: 1,
-    userName: 'Alice'
-  },
-{
-    userId: 2,
-    userName: 'Bob'
-  },
-  {
-    userId: 3,
-    userName: 'Charlie'
-  },
-  {
-    userId: 4,
-    userName: 'David'
-  },
-  {
-    userId: 5,
-    userName: 'Eve'
-  }
-]
-
-chatTexts.value = [
-  {
-    id: 1,
-    fromSelf: true,
-    time: '2021-10-01 12:00:00',
-    content: 'Hello, Alice!'
-  },
-  {
-    id: 2,
-    fromSelf: false,
-    time: '2021-10-01 12:01:00',
-    content: 'Hi, Bob!'
-  },
-  {
-    id: 3,
-    fromSelf: true,
-    time: '2021-10-01 12:02:00',
-    content: 'How are you?'
-  },
-  {
-    id: 4,
-    fromSelf: false,
-    time: '2021-10-01 12:03:00',
-    content: 'I am fine, thank you.'
-  },
-  {
-    id: 5,
-    fromSelf: true,
-    time: '2021-10-01 12:04:00',
-    content: 'Good to hear that.'
-  },
-  {
-    id: 6,
-    fromSelf: false,
-    time: '2021-10-01 12:05:00',
-    content: 'Goodbye.'
-  }
-]
+// noChat.value = false
+// chatData.value = [
+//   {
+//     userId: 1,
+//     userName: 'Alice'
+//   },
+// {
+//     userId: 2,
+//     userName: 'Bob'
+//   },
+//   {
+//     userId: 3,
+//     userName: 'Charlie'
+//   },
+//   {
+//     userId: 4,
+//     userName: 'David'
+//   },
+//   {
+//     userId: 5,
+//     userName: 'Eve'
+//   }
+// ]
+//
+// chatTexts.value = [
+//   {
+//     id: 1,
+//     fromSelf: true,
+//     time: '2021-10-01 12:00:00',
+//     content: 'Hello, Alice!'
+//   },
+//   {
+//     id: 2,
+//     fromSelf: false,
+//     time: '2021-10-01 12:01:00',
+//     content: 'Hi, Bob!'
+//   },
+//   {
+//     id: 3,
+//     fromSelf: true,
+//     time: '2021-10-01 12:02:00',
+//     content: 'How are you?'
+//   },
+//   {
+//     id: 4,
+//     fromSelf: false,
+//     time: '2021-10-01 12:03:00',
+//     content: 'I am fine, thank you.'
+//   },
+//   {
+//     id: 5,
+//     fromSelf: true,
+//     time: '2021-10-01 12:04:00',
+//     content: 'Good to hear that.'
+//   },
+//   {
+//     id: 6,
+//     fromSelf: false,
+//     time: '2021-10-01 12:05:00',
+//     content: 'Goodbye.'
+//   }
+// ]
 
 </script>
 
