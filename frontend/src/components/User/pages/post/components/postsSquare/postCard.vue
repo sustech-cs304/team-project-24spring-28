@@ -1,9 +1,10 @@
 <script setup>
+import { ref, onMounted, defineProps, computed } from 'vue'
 import { Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import InfoBox from "@/components/User/pages/post/components/infoBox.vue";
-import SimplePost from "@/components/Modules/SimplePost.vue";
+import axiosInstance from "@/utils/axios";
 
 const router = useRouter();
 
@@ -12,73 +13,124 @@ const PointerIcon = Pointer;
 const ShareIcon = Share;
 const StarFilledIcon = StarFilled;
 
-function goToPost() {
-    // router.push({ path: '/square/post' });
+const props = defineProps({
+    postID: {
+        type: String,
+        default: '666666'
+    },
+});
 
-    let url = router.resolve({path: '/square/post'}).href;
+const postLink = ref("666666")
+const postTitle = ref("default title")
+const postContent = ref("default content")
+const postRelevantEventID = ref("1")
+const postLikeAmount = ref("666")
+const postCollectAmount = ref("666")
+const postCommentAmount = ref("666")
+const username = ref("default username")
+const userID = ref("666666")
+const userBio = ref("default userBio")
+const userAvatar = ref("")
+
+const eventTitle = ref("default event")
+const posterUrl = ref("https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png")
+
+async function fetchData() {
+    try {
+        const response = await axiosInstance.get(`/post/getFullPost?postID=${props.postID}`)
+        const postData = response.data.data;
+
+        postTitle.value = postData.postTitle;
+        postContent.value = postData.postContent;
+        postLikeAmount.value = postData.postLikeAmount;
+        postCollectAmount.value = postData.postCollectAmount;
+        postCommentAmount.value = postData.postCommentAmount;
+        username.value = postData.username;
+        userID.value = postData.userID;
+        userBio.value = postData.userBio;
+        userAvatar.value = postData.userAvatar;
+
+        // Fetch event details
+        await fetchEventDetails(postData.postRelevantEventID);
+    } catch (error) {
+        console.error('Error fetching post data:', error);
+    }
+}
+
+async function fetchEventDetails(eventID) {
+    try {
+        const response = await axiosInstance.get(`/event/detail?id=${eventID}`);
+        const eventData = response.data.data;
+
+        eventTitle.value = eventData.title;
+        posterUrl.value = eventData.postUrl;
+    } catch (error) {
+        console.error('Error fetching event details:', error);
+    }
+}
+
+onMounted(() => {
+    fetchData();
+});
+
+const truncatedContent = computed(() => {
+    return postContent.value.length > 350 ? postContent.value.substring(0, 350) + '...' : postContent.value;
+});
+
+function goToPost() {
+    let url = router.resolve({ path: '/square/post', query: { id: props.postID } }).href;
     window.open(url, '_blank');
 }
 </script>
 
-<template>
-<!--    <el-card class="card-box" shadow="never">-->
-        <el-card style=" max-height: 27vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover" @click="goToPost">
-<!--            <template #header>Yummy hamburger</template>-->
-            <el-row>
-                <el-col :span="20">
-                    <el-row style="margin-bottom: 10px;">
-                        <el-col :span="22">
-                            <span class="title">
-                                Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title
-                            </span>
-                        </el-col>
-                    </el-row>
-                    <el-row :gutter="5">
-                        <el-col :span="8">
-                            <el-row style="margin-bottom: 5px">
-                                <el-tag type="primary">Event</el-tag>
-                            </el-row>
-                            <el-row>
-                                <img
-                                    src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                                    style="width: 6vw"/>
-                            </el-row>
-                        </el-col>
-                        <el-col :span="16">
-                    <span class="content">
-                        content content content content content content content content
-                        content content content content content content content content
-                        content content content content content content content content
-                        content content content content content content content content
-                        content content content content content content content content
-                        content content content content content content content content
-                    </span>
-                        </el-col>
-                    </el-row>
-                </el-col>
-                <el-col :span="4">
-                    <el-row>
-                        <el-col :span="12">
-                            <info-box :given-number="1" :background="'@/assets/Like/like.png'"></info-box>
-                        </el-col>
-                        <el-col :span="12">
-                            <info-box></info-box>
-                        </el-col>
-                        <el-col :span="12">
-                            <info-box :given-number="32456"></info-box>
-                        </el-col>
-                        <el-col :span="12">
-                            <info-box></info-box>
-                        </el-col>
-                    </el-row>
-                </el-col>
-            </el-row>
-        </el-card>
-<!--    </el-card>-->
-    <el-row>
 
-    </el-row>
+<template>
+    <el-card style="max-height: 34vh; margin-bottom: 10px; border-radius: 0.5vw" shadow="hover" @click="goToPost">
+        <el-row>
+            <el-col :span="20">
+                <el-row style="margin-bottom: 10px;">
+                    <el-col :span="22">
+                        <span class="title">
+                            {{ postTitle }}
+                        </span>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="5">
+                    <el-col :span="4">
+                        <el-row style="margin-bottom: 5px">
+                            <el-tag type="primary">{{ eventTitle }}</el-tag>
+                        </el-row>
+                        <el-row>
+                            <img :src="posterUrl" style="width: 6vw" />
+                        </el-row>
+                    </el-col>
+                    <el-col :span="20">
+                        <span class="content">
+                            {{ truncatedContent }}
+                        </span>
+                    </el-col>
+                </el-row>
+            </el-col>
+            <el-col :span="4">
+                <el-row>
+                    <el-col :span="12">
+                        <info-box :given-number="Number(postLikeAmount)" :background="'@/assets/Like/like.png'"></info-box>
+                    </el-col>
+                    <el-col :span="12">
+                        <info-box :given-number="Number(postCollectAmount)"></info-box>
+                    </el-col>
+                    <el-col :span="12">
+                        <info-box :given-number="Number(postCommentAmount)"></info-box>
+                    </el-col>
+                    <el-col :span="12">
+                        <info-box></info-box>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+    </el-card>
 </template>
+
 
 <style scoped>
 .card-box{

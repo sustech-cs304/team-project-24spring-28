@@ -4,6 +4,7 @@ import VMdEditor from '@kangc/v-md-editor'
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 
 import axiosInstance from "@/utils/axios";
+import router from "@/utils/router";
 
 
 let imageUrl = ref('')
@@ -296,6 +297,12 @@ function createEventClick() {
   // jsonContent = "{\"title\": \"asdf\"}"
   axiosInstance.post('/event/create', jsonContent).then((res) => {
     console.log(res)
+    if (res.data.code === 0) {
+      alert('创建成功')
+      router.push({path: '/event/manage'})
+    } else {
+      alert('创建失败')
+    }
   }).catch((err) => {
     console.log(err)
   })
