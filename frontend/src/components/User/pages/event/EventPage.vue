@@ -106,16 +106,20 @@ function countApply() {
   temp.append('id', eventId)
   axiosInstance.post('/event/apply', temp).then(response => {
     console.log(response)
+    if (response.data.code === 0) {
+      alert('报名成功！')
+      currentCount.value += 1
+    } else {
+      alert('报名失败！')
+    }
   }).catch(error => {
     console.error(error)
   })
-  currentCount.value += 1
-  alert('报名成功！')
   countVisible.value = false
 }
 
 function formApply() {
-  // console.log(appliedForm.value)
+  console.log(appliedForm.value)
   for (let i = 0; i < appliedForm.value.length; i++) {
     console.log(appliedForm.value[i].name + ': ' + appliedForm.value[i].value.toString())
   }
@@ -131,19 +135,17 @@ function formApply() {
   temp.append('id', eventId)
 
   // TODO: check the correctness
-  let formValues = []
   for (let i = 0; i < appliedForm.value.length; i++) {
-    // formValues.push({
-    //   id: appliedForm.value[i].id,
-    //   value: appliedForm.value[i].value
-    // })
-    // example: ["王煜然", "12110330", "", "男"]
-    formValues.push(appliedForm.value[i])
+    temp.append('formValues[]', appliedForm.value[i].value)
   }
-  temp.append('formValues', JSON.stringify(formValues))
 
   axiosInstance.post('/event/apply', temp).then(response => {
     console.log(response)
+    if (response.data.code === 0) {
+      alert('报名成功！')
+    } else {
+      alert('报名失败！')
+    }
   }).catch(error => {
     console.error(error)
   })
@@ -151,7 +153,6 @@ function formApply() {
   for (let i = 0; i < appliedForm.value.length; i++) {
     appliedForm.value[i].value = ''
   }
-  alert('报名成功！')
   formVisible.value = false
 }
 
@@ -173,7 +174,6 @@ onMounted(() => {
     grade.value = temp.score
     posterUrl.value = temp.postUrl
     liked.value = temp.liked
-    // commentBlockId.value = temp.commentBlockId
 
 
     stars.value = '⭐'
@@ -360,7 +360,7 @@ function showGrade(newGrade) {
         <v-md-preview :text="text"></v-md-preview>
       </div>
 
-      <comment :comment-block-id="commentBlockId"></comment>
+      <comment :event-id="Number(eventId)"></comment>
 
 
     </div>

@@ -54,9 +54,9 @@ onMounted(() => {
     introduction.value = temp.introduction
     posterUrl.value = temp.postUrl
 
-    stars = '⭐'
+    stars.value = '⭐'
     for (let i = 1; i < score; i++) {
-      stars = stars + '⭐'
+      stars.value += '⭐'
     }
 
 

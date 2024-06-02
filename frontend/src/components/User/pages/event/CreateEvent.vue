@@ -145,7 +145,7 @@ function formCancel() {
 let newFormEntryVisible = ref(false)
 let newFormEntryName = ref('')
 let newFormEntryType = ref('')
-let newFormEntryOptions = ref([])
+let newFormEntryOptions = ref('')
 let newFormEntryRequired = ref(false)
 
 function addNewFormEntryClick() {
@@ -169,6 +169,11 @@ function addNewFormEntryApply() {
       required: newFormEntryRequired.value
     })
   }
+  newFormEntryName.value = ''
+  newFormEntryType.value = ''
+  newFormEntryOptions.value = ''
+  newFormEntryRequired.value = false
+
   newFormEntryVisible.value = false
 }
 
@@ -261,33 +266,6 @@ function formatTime(str) {
 }
 
 function createEventClick() {
-  // console.log(form)
-  // console.log(mdText)
-  // let temp = new FormData()
-  // temp.append('title', form.title)
-  // temp.append('name', form.name)
-  // temp.append('applyStartTime', formatTime(form.applyStartTime))
-  // temp.append('applyEndTime', formatTime(form.applyEndTime))
-  // temp.append('startTime', formatTime(form.startTime))
-  // temp.append('endTime', formatTime(form.endTime))
-  // temp.append('introduction', form.introduction)
-  // temp.append('imageUrl', imageUrl.value)
-  // temp.append('mdText', mdText.value)
-  // if (form.type === '1') {
-  //   temp.append('enrollmentType', 'count')
-  //   if (form.limitCount === '') {
-  //     temp.append('limitCount', 0)
-  //   } else {
-  //     temp.append('limitCount', Number(form.limitCount))
-  //   }
-  // } else if (form.type === '2') {
-  //   temp.append('enrollmentType', 'select')
-  // } else {
-  //   temp.append('enrollmentType', 'form')
-  //   temp.append('limitCount', 0)
-  //   temp.append('definedForm', JSON.stringify(definedForm.value))
-  // }
-  // change to JSON string
   let temp = {
     title: form.title,
     name: form.name,
@@ -315,9 +293,8 @@ function createEventClick() {
     temp.definedForm = definedForm.value
   }
   let jsonContent = JSON.stringify(temp)
-  axiosInstance.post('/event/create', {
-    content: jsonContent
-  }).then((res) => {
+  // jsonContent = "{\"title\": \"asdf\"}"
+  axiosInstance.post('/event/create', jsonContent).then((res) => {
     console.log(res)
   }).catch((err) => {
     console.log(err)
@@ -339,27 +316,27 @@ function mdUploadImage(event, insertImage, files) {
 
 
 onMounted(() => {
-  definedForm.value = [
-    {
-      id: 0,
-      name: '姓名',
-      type: 'input',
-      required: true,
-    },
-    {
-      id: 1,
-      name: '学号',
-      type: 'input',
-      required: false,
-    },
-    {
-      id: 2,
-      name: '年级',
-      type: 'select',
-      options: ['大一', '大二', '大三', '大四'],
-      required: true,
-    }
-  ]
+  // definedForm.value = [
+  //   {
+  //     id: 0,
+  //     name: '姓名',
+  //     type: 'input',
+  //     required: true,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: '学号',
+  //     type: 'input',
+  //     required: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: '年级',
+  //     type: 'select',
+  //     options: ['大一', '大二', '大三', '大四'],
+  //     required: true,
+  //   }
+  // ]
 
 
 
