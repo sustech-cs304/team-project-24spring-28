@@ -180,7 +180,7 @@ const toggleCollapse = () => {
                                         <el-row>
                                             <!--profile-->
                                             <el-col :span="3">
-                                                <profile-card :name="username" :id="userID"></profile-card>
+                                                <profile-card :name="username" :id="userID" :avatar="userAvatar" :bio="userBio" ></profile-card>
                                             </el-col>
                                             <!--activity-->
                                             <el-col :span="4" />
