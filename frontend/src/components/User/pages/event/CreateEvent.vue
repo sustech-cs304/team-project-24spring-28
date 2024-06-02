@@ -79,7 +79,6 @@ function handleSuccess(response, file, fileList) {
 
 let eventTypes = [
   { value: '1', label: '计数式' },
-  { value: '2', label: '选座式' },
   { value: '3', label: '自定义报名' },
 ]
 
