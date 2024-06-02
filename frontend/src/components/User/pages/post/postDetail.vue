@@ -183,7 +183,18 @@ const toggleCollapse = () => {
         </el-row>
         <el-row :class="main-main" gutter="10">
             <el-col :span="3">
-                aside
+                <el-card>
+                    <div class="common-layout" style="height: 20vh">
+                        <el-container>
+                            <el-header :height="10">
+                                <h4>Tips</h4>
+                            </el-header>
+                            <el-main>
+                                <span>Here are the details of the post</span>
+                            </el-main>
+                        </el-container>
+                    </div>
+                </el-card>
             </el-col>
             <el-col :span="20">
                 <!--subheader-->
@@ -270,12 +281,12 @@ const toggleCollapse = () => {
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="Share" @click="toggleShare" class="button-left" style="width: 100%;" plain />
                         </el-col>
-                        <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="ArrowLeft" class="button-left" style="width: 100%;" plain />
-                        </el-col>
-                        <el-col style="margin-bottom: 4px">
-                            <el-button type="primary" :icon="ArrowRight" class="button-left" style="width: 100%;" plain />
-                        </el-col>
+<!--                        <el-col style="margin-bottom: 4px">-->
+<!--                            <el-button type="primary" :icon="ArrowLeft" class="button-left" style="width: 100%;" plain />-->
+<!--                        </el-col>-->
+<!--                        <el-col style="margin-bottom: 4px">-->
+<!--                            <el-button type="primary" :icon="ArrowRight" class="button-left" style="width: 100%;" plain />-->
+<!--                        </el-col>-->
                         <el-col style="margin-bottom: 4px">
                             <el-button type="primary" :icon="Open" @click="toggleCollapse" class="button-left" style="width: 100%;" plain />
                         </el-col>
