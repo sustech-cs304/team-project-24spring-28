@@ -9,14 +9,14 @@
                         </span>
                     </el-col>
                     <el-col>
-                        <event-card :poster="eventSmallImage" :name="eventName"></event-card>
+                        <event-card :poster="posterUrl" :name="eventTitle"></event-card>
                     </el-col>
                 </el-row>
                 <el-row :gutter="5">
                     <el-col :span="8">
                         <el-row style="margin-bottom: 5px"></el-row>
                         <el-row>
-                            <img :src="postImage" style="width: 6vw"/>
+                            <img :src="posterUrl" style="width: 6vw"/>
                         </el-row>
                     </el-col>
                     <el-col :span="16">
@@ -31,12 +31,12 @@
 </template>
 
 <script setup>
+import { ref, onMounted, defineProps, computed } from 'vue'
 import { Pointer, Share, StarFilled } from "@element-plus/icons";
 import { ChatDotSquare } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
-import { defineProps, ref, onMounted } from "vue";
-import axios from 'axios';
-import EventCard from "@/components/User/pages/post/components/postDetail/eventCard.vue";
+import InfoBox from "@/components/User/pages/post/components/infoBox.vue";
+import axiosInstance from "@/utils/axios";
 
 const router = useRouter();
 
@@ -45,47 +45,74 @@ const PointerIcon = Pointer;
 const ShareIcon = Share;
 const StarFilledIcon = StarFilled;
 
-function goToPost() {
-    let url = router.resolve({ path: '/square/post' }).href;
-    window.open(url, '_blank');
-}
-
 const props = defineProps({
     postID: {
         type: String,
-        default: '0'
-    }
+        default: '666666'
+    },
 });
 
-// Create refs for post data
-const postTitle = ref('Loading...');
-const postContent = ref('Loading content...');
-const postImage = ref('https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png');
-const eventLink = ref('');
-const eventSmallImage = ref('');
-const eventName = ref('Loading event...');
-const eventId = ref('');
-const eventBio = ref('');
+const postLink = ref("666666")
+const postTitle = ref("default title")
+const postContent = ref("default content")
+const postRelevantEventID = ref("1")
+const postLikeAmount = ref("666")
+const postCollectAmount = ref("666")
+const postCommentAmount = ref("666")
+const username = ref("default username")
+const userID = ref("666666")
+const userBio = ref("default userBio")
+const userAvatar = ref("")
 
-// Fetch post data from API
-onMounted(async () => {
+const eventTitle = ref("default event")
+const posterUrl = ref("https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png")
+
+async function fetchData() {
     try {
-        const response = await axios.post('/api/post/getFullPost', { postID: props.postID });
-        const data = response.data;
+        const response = await axiosInstance.get(`/post/getFullPost?postID=${props.postID}`)
+        const postData = response.data.data;
 
-        // Update refs with fetched data
-        postTitle.value = data.title;
-        postContent.value = data.content;
-        postImage.value = data.image;
-        eventLink.value = data.eventLink;
-        eventSmallImage.value = data.eventSmallImage;
-        eventName.value = data.eventName;
-        eventId.value = data.eventId;
-        eventBio.value = data.eventBio;
+        postTitle.value = postData.postTitle;
+        postContent.value = postData.postContent;
+        postLikeAmount.value = postData.postLikeAmount;
+        postCollectAmount.value = postData.postCollectAmount;
+        postCommentAmount.value = postData.postCommentAmount;
+        username.value = postData.username;
+        userID.value = postData.userID;
+        userBio.value = postData.userBio;
+        userAvatar.value = postData.userAvatar;
+
+        // Fetch event details
+        await fetchEventDetails(postData.postRelevantEventID);
     } catch (error) {
         console.error('Error fetching post data:', error);
     }
+}
+
+async function fetchEventDetails(eventID) {
+    try {
+        const response = await axiosInstance.get(`/event/detail?id=${eventID}`);
+        const eventData = response.data.data;
+
+        eventTitle.value = eventData.title;
+        posterUrl.value = eventData.postUrl;
+    } catch (error) {
+        console.error('Error fetching event details:', error);
+    }
+}
+
+onMounted(() => {
+    fetchData();
 });
+
+const truncatedContent = computed(() => {
+    return postContent.value.length > 350 ? postContent.value.substring(0, 350) + '...' : postContent.value;
+});
+
+function goToPost() {
+    let url = router.resolve({ path: '/square/post', query: { id: props.postID } }).href;
+    window.open(url, '_blank');
+}
 </script>
 
 <style scoped>

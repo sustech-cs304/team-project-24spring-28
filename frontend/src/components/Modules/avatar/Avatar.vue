@@ -185,7 +185,7 @@ onMounted(() => {
   border: 1px solid #cccccc;
   border-radius: 10px;
   background-color: #ffffff;
-  z-index: 3;
+  z-index: 9999;
 }
 
 .levi_butt {

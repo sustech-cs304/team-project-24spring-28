@@ -17,8 +17,9 @@
                                     shape="square"
                                     style="margin-bottom: 8px; opacity: 1"
                                 />
-                                <h1>{{ name }}</h1>
-                                <p style="margin: 0; font-size: 14px; color: var(--el-color-info)">@{{ id }}</p>
+                                <avatar user-id="{{userID}}"/>
+                                <h1>{{ userName }}</h1>
+                                <p style="margin: 0; font-size: 14px; color: var(--el-color-info)">@{{ userID }}</p>
                                 <p>{{ bio }}</p>
                             </div>
                         </el-col>
@@ -70,51 +71,65 @@
 
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeMount } from "vue";
 import axios from 'axios';
 import SimplePost from "@/components/Modules/SimplePost.vue";
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
+import Avatar from "@/components/old/Student/Avatar.vue";
+import { useRoute } from 'vue-router';
+import axiosInstance from "@/utils/axios";
 
 export default {
-    components: { HeaderForAll, SimplePost },
+    components: {Avatar, HeaderForAll, SimplePost },
     setup() {
-        const avatar = ref('https://q.115.com/imgload?r=242FCAA00B768FC8F00058B3781B71185BE2F6E7&u=dPjgXZ&s=eIAgzeJggQMuoquThaEovA&e=5&st=0');
-        const name = ref('default');
-        const id = ref('666666');
-        const bio = ref('no bio yet');
+        const route = useRoute();
+        const avatar = ref('');
+        const userName = ref('');
+        const userID = ref('');
+        const bio = ref('');
         const posts = ref([]);
 
-        onMounted(async () => {
+        onBeforeMount(() => {
+            const userIdFromRoute = route.query.userID;
+            if(userIdFromRoute) {
+                fetchData(userIdFromRoute);
+            } else {
+                console.error('User ID not found in the route query parameters.');
+            }
+        });
+
+        const fetchData = async (userId) => {
             try {
-                const profileResponse = await axios.post('/api/profile/info/get', { userId: 'yourUserId' }); // 传入实际的用户ID
-                const profileData = profileResponse.data;
+                const profileResponse = await axiosInstance.get(`/profile/info/get?userID=${userId}`); // 使用传入的 userId
+                const profileData = profileResponse.data.data;
 
                 avatar.value = profileData.avatar;
-                name.value = profileData.name;
-                id.value = profileData.id;
+                userName.value = profileData.name;
+                userID.value = profileData.id;
                 bio.value = profileData.bio;
 
-                const postCollectionResponse = await axios.post('/api/profile/postCollection', { userId: 'yourUserId' }); // 获取收藏帖子的ID
+                const postCollectionResponse = await axios.post(`/profile/postCollection?userID=${userId}`); // 使用传入的 userId
                 const postCollectionData = postCollectionResponse.data;
 
                 for (const postId of postCollectionData.postIds) {
-                    const postResponse = await axios.get(`/api/posts/${postId}`);
+                    const postResponse = await axios.get(`/posts/${postId}`);
                     posts.value.push(postResponse.data);
                 }
             } catch (error) {
                 console.error('Error fetching profile or posts data:', error);
             }
-        });
+        };
 
         return {
             avatar,
-            name,
-            id,
+            userName,
+            userID,
             bio,
             posts
         };
     }
 };
+
 </script>
 
 

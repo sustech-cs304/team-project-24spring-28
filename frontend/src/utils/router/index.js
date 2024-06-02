@@ -15,6 +15,7 @@ import searchPage from "@/components/User/pages/main/searchPage.vue";
 import signUp from "@/components/User/pages/main/signUp.vue";
 import Profile from "@/components/User/pages/profile/profile.vue";
 import ProfileExample from "@/components/User/pages/profile/profileExample.vue";
+import notFound from "@/components/User/pages/post/notFound.vue";
 
 const routes = [
     {path: '/', component: Login},
@@ -33,7 +34,9 @@ const routes = [
 
     {path: '/main', component: mainPage},
     {path: '/search', component: searchPage},
-    {path: '/message', component: Message}
+    {path: '/message', component: Message},
+
+    {path: '/notFound', component: notFound}
 ]
 
 const router = createRouter({
