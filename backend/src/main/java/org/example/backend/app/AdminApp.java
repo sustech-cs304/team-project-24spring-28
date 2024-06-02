@@ -3,6 +3,7 @@ package org.example.backend.app;
 import org.example.backend.config.MyException;
 import org.example.backend.domain.Permission;
 import org.example.backend.domain.User;
+import org.example.backend.dto.UserDto;
 import org.example.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class AdminApp {
     @Autowired
     PostService postService;
     @GetMapping("/user")
-    public List<User> getAllUsers() {
-        return abstractUserService.findAllUsers();
+    public List<UserDto> getAllUsers() {
+        return abstractUserService.findAllUsers().stream().map(UserDto::new).toList();
     }
 
     @PostMapping("/permission")
