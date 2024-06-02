@@ -97,12 +97,13 @@ onMounted(() => {
               commenterId: tempList[i].from.id,
               commenterName: tempList[i].from.name,
               // TODO: communicate with the backend to get the ids
-              eventId: exData.eventId,
-              postId: exData.postId,
+              eventId: exData.eventId === undefined ? -1 : exData.eventId,
+              postId: exData.postId === undefined ? -1 : exData.postId,
               commentContent: exData.commentContent,
               oriCommentContent: exData.oriCommentContent
             })
           }
+          console.log(commentData.value)
         })
         .catch(error => {
           console.error(error);
@@ -122,8 +123,8 @@ onMounted(() => {
               time: formatTime(tempList[i].time),
               commenterId: tempList[i].from.id,
               commenterName: tempList[i].from.name,
-              eventId: exData.eventId,
-              postId: exData.postId,
+              eventId: exData.eventId === undefined ? -1 : exData.eventId,
+              postId: exData.postId === undefined ? -1 : exData.postId,
               commentContent: exData.commentContent,
               oriCommentContent: exData.oriCommentContent
             })

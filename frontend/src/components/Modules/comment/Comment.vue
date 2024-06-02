@@ -33,30 +33,30 @@ const commentData = ref([])
 
 // TODO: edit in the future
 onMounted(() => {
-  // let param_id = {}
-  // if (props.postId !== -1) {
-  //   param_id = {postId: props.postId}
-  // } else if (props.eventId !== -1) {
-  //   param_id = {eventId: props.eventId}
-  // }
-  // axiosInstance.get(`/comment/event`, {params: param_id}).then((res) => {
-  //   commentData.value = res.data.data
-  //   for (let i = 0; i < commentData.value.length; i++) {
-  //     axiosInstance.get(`/comment/under`, {
-  //           params: {
-  //             commentId: commentData.value[i].id
-  //           }
-  //         }
-  //     ).then((res) => {
-  //       commentData.value[i].subComments = res.data.data
-  //       console.log('commentData:', commentData)
-  //     }).catch((err) => {
-  //       console.log(err)
-  //     })
-  //   }
-  // }).catch((err) => {
-  //   console.log(err)
-  // })
+  let param_id = {}
+  if (props.postId !== -1) {
+    param_id = {postId: props.postId}
+  } else if (props.eventId !== -1) {
+    param_id = {eventId: props.eventId}
+  }
+  axiosInstance.get(`/comment/event`, {params: param_id}).then((res) => {
+    commentData.value = res.data.data
+    for (let i = 0; i < commentData.value.length; i++) {
+      axiosInstance.get(`/comment/under`, {
+            params: {
+              commentId: commentData.value[i].id
+            }
+          }
+      ).then((res) => {
+        commentData.value[i].subComments = res.data.data
+        console.log('commentData:', commentData)
+      }).catch((err) => {
+        console.log(err)
+      })
+    }
+  }).catch((err) => {
+    console.log(err)
+  })
   // axiosInstance.get(`/comment/event`, {params: {roomId: roomId}}).then((res) => {
   //   commentData.value = res.data.data
   //   for (let i = 0; i < commentData.value.length; i++) {
@@ -75,45 +75,6 @@ onMounted(() => {
   // }).catch((err) => {
   //   console.log(err)
   // })
-  if (props.eventId !== -1) {
-    axiosInstance.get('/comment/event', {params: {eventId: props.eventId}}).then((res) => {
-      commentData.value = res.data.data
-      for (let i = 0; i < commentData.value.length; i++) {
-        axiosInstance.get('/comment/under', {
-              params: {
-                commentId: commentData.value[i].id
-              }
-            }
-        ).then((res) => {
-          commentData.value[i].subComments = res.data.data
-          console.log('commentData:', commentData)
-        }).catch((err) => {
-          console.log(err)
-        })
-      }
-    }).catch((err) => {
-      console.log(err)
-    })
-  } else if (props.postId !== -1) {
-    axiosInstance.get('/comment/post', {params: {postId: props.postId}}).then((res) => {
-      commentData.value = res.data.data
-      for (let i = 0; i < commentData.value.length; i++) {
-        axiosInstance.get('/comment/under', {
-              params: {
-                commentId: commentData.value[i].id
-              }
-            }
-        ).then((res) => {
-          commentData.value[i].subComments = res.data.data
-          console.log('commentData:', commentData)
-        }).catch((err) => {
-          console.log(err)
-        })
-      }
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
 })
 
 // TODO: edit in the future
