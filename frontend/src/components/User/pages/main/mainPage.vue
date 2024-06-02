@@ -1,95 +1,125 @@
-<script>
-import {ref} from 'vue'
+<!--<script setup>-->
+<!--import {ref} from 'vue'-->
+<!--import postCardForM from "@/components/User/pages/main/components/postCardForM.vue";-->
+<!--import * as API from "@/components/User/pages/main/mainApi"-->
+<!--import HeaderForAll from "@/components/Modules/HeaderForAll.vue";-->
+<!--import EventCardBig from "@/components/Modules/event/EventCardBig.vue";-->
+<!--import {useRouter} from "vue-router";-->
+<!--const router = useRouter()-->
+
+
+<!--// const count = ref(0)-->
+<!--// const load = () => {-->
+<!--//     count.value += 10-->
+<!--// }-->
+<!--export default {-->
+
+<!--  data() {-->
+<!--    return {-->
+<!--      input: '' ,// 绑定搜索框的输入值-->
+<!--      events: [],-->
+<!--      eventIds:[],-->
+<!--      postItems: [],-->
+<!--      event:{}-->
+<!--    };-->
+<!--  },-->
+
+<!--  async created() {-->
+<!--    await this.loadEventItems();-->
+<!--    // await this.loadEventItems()-->
+<!--  },-->
+
+<!--  methods: {-->
+<!--      async loadEventItems() {-->
+<!--      const ids = [1, 2];-->
+<!--      for (const id of ids) {-->
+<!--        // const res = await API.getBriefEvent(id);-->
+<!--        // this.events.push(res);-->
+<!--        this.eventIds.push(id);-->
+<!--      }-->
+<!--    },-->
+
+<!--    async loadPostlItems() {-->
+<!--      const ids = [1, 2, 3, 4];-->
+<!--      for (const id of ids) {-->
+<!--        const res = await API.getPost(id);-->
+<!--        this.postItems.push(res.data);-->
+<!--      }-->
+<!--    },-->
+
+<!--    onClear() {-->
+<!--      // 清除搜索框的输入值-->
+<!--      this.input = '';-->
+<!--    },-->
+<!--    search() {-->
+<!--      if (this.input.trim() !== '') {-->
+<!--        router.push({path: '/search', query: {content: this.input}})-->
+<!--      } else {-->
+<!--        alert('请输入搜索内容');-->
+<!--      }-->
+<!--    }-->
+<!--  }-->
+<!--}-->
+<!--</script>-->
+<script setup>
+import { ref, reactive, onMounted } from 'vue';
 import postCardForM from "@/components/User/pages/main/components/postCardForM.vue";
-import EventCard from "@/components/User/pages/main/components/EventCard.vue";
-import * as API from "@/components/User/pages/main/mainApi"
-import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import EventCardBig from "@/components/Modules/event/EventCardBig.vue";
+import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
+import { useRouter } from "vue-router";
+import * as API from "@/components/User/pages/main/mainApi";
 
-import {
-    ArrowLeft,
-    ArrowRight,
-    Delete,
-    Edit, Search,
-    Share,
-} from "@element-plus/icons";
+const router = useRouter();
 
-// const count = ref(0)
-// const load = () => {
-//     count.value += 10
-// }
-export default {
-    computed: {
-        Search() {
-            return Search
-        },
-        Delete() {
-            return Delete
-        },
-        Share() {
-            return Share
-        },
-        Edit() {
-            return Edit
-        },
-        ArrowLeft() {
-            return ArrowLeft
-        }
-    },
-    components: {
-      EventCardBig,
-      // eslint-disable-next-line vue/no-unused-components
-      EventCard,
-      HeaderForAll,
-      postCardForM
-    },
+const input = ref('');
+const events = ref([]);
+const eventIds = ref([]);
+const postItems = ref([]);
+const event = reactive({});
 
-  data() {
-    return {
-      input: '' ,// 绑定搜索框的输入值
-      events: [],
-      eventIds:[],
-      postItems: [],
-      event:{}
-    };
-  },
-
-  async created() {
-    await this.loadEventItems();
-    // await this.loadEventItems()
-  },
-
-  methods: {
-      async loadEventItems() {
-      const ids = [1, 2];
-      for (const id of ids) {
-        // const res = await API.getBriefEvent(id);
-        // this.events.push(res);
-        this.eventIds.push(id);
-      }
-    },
-
-    async loadPostlItems() {
-      const ids = [1, 2, 3, 4];
-      for (const id of ids) {
-        const res = await API.getPost(id);
-        this.postItems.push(res.data);
-      }
-    },
-
-    onClear() {
-      // 清除搜索框的输入值
-      this.input = '';
-    },
-    search() {
-      if (this.input.trim() !== '') {
-
-      } else {
-        alert('请输入搜索内容');
-      }
-    }
+const loadEventItems = async () => {
+  const ids = [1, 2];
+  for (const id of ids) {
+    // const res = await API.getBriefEvent(id);
+    // events.value.push(res);
+    eventIds.value.push(id);
   }
-}
+};
+
+const loadPostItems = async () => {
+  const ids = [1, 2, 3, 4];
+  for (const id of ids) {
+    const res = await API.getPost(id);
+    postItems.value.push(res.data);
+  }
+};
+
+const onClear = () => {
+  input.value = '';
+};
+
+const searchPost = () => {
+  if (input.value.trim() !== '') {
+    let url = router.resolve({ path: '/post/search', query: { content: input.value } }).href;
+    window.open(url, '_blank');
+  } else {
+    alert('请输入搜索内容');
+  }
+};
+
+const searchEvent = () => {
+  if (input.value.trim() !== '') {
+    let url = router.resolve({ path: '/event/search', query: { content: input.value } }).href;
+    window.open(url, '_blank');
+  } else {
+    alert('请输入搜索内容');
+  }
+};
+
+onMounted(async () => {
+  await loadEventItems();
+  // await loadPostItems();
+});
 </script>
 
 <template>
@@ -100,14 +130,22 @@ export default {
         <div class="container">
           <h1>校园活动平台</h1>
           <p>欢迎来到校园活动平台，发现最新最热门的校园活动！</p>
-          <el-input
-              v-model="input"
-              placeholder="搜索你感兴趣的活动！"
-              clearable
-              @clear="onClear"
-          >
-            <template #prepend><el-button @click="search" type="primary">搜索</el-button></template>
-          </el-input>
+          <el-row gutter="10" align="middle">
+            <el-col :span="12">
+              <el-input
+                  v-model="input"
+                  placeholder="搜索你感兴趣的活动或帖子！"
+                  clearable
+                  @clear="onClear"
+              />
+            </el-col>
+            <el-col :span="6">
+              <el-button @click="searchEvent" type="primary" block>搜索活动</el-button>
+            </el-col>
+            <el-col :span="6">
+              <el-button @click="searchPost" type="primary" block>搜索帖子</el-button>
+            </el-col>
+          </el-row>
         </div>
       </el-row>
         <el-row :class="main-main" gutter="10">
@@ -217,8 +255,6 @@ export default {
 .infinite-list .infinite-list-item + .list-item {
   margin-top: 10px;
 }
-
-
 
 
 </style>
