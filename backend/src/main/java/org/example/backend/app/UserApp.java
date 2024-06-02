@@ -1,6 +1,7 @@
 package org.example.backend.app;
 
 import org.example.backend.domain.*;
+import org.example.backend.dto.UserDto;
 import org.example.backend.service.*;
 import org.example.backend.util.JwtUtil;
 import org.json.JSONObject;
@@ -110,5 +111,16 @@ public class UserApp {
             messageService.saveMessage(new Message("Comment", tempComment.getUser(), user, false, LocalDateTime.now(), jsonObject.toString()));
             return commentService.updateComment(tempComment);
         }
+    }
+
+    @GetMapping("/permission")
+    public UserDto getUserPermission(@RequestHeader("Authorization") String token) {
+        long userId = JwtUtil.getIdByToken(token);
+        User user = (User) abstractUserService.findUserById(userId);
+        UserDto userDto = new UserDto();
+        userDto.setCanComment(user.getPermission().isCanComment());
+        userDto.setCanCreate(user.getPermission().isCanCreate());
+        userDto.setCanEnroll(user.getPermission().isCanEnroll());
+        return userDto;
     }
 }
