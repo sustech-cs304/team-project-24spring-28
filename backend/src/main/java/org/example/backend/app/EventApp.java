@@ -54,6 +54,7 @@ public class EventApp {
                 countEnrollment.setStartTime(LocalDateTime.parse(eventPostDto.getApplyStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 countEnrollment.setEndTime(LocalDateTime.parse(eventPostDto.getApplyEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 countEnrollment.setCapacity(eventPostDto.getLimitCount());
+                countEnrollment.setEvent(event);
                 event.setAbstractEnrollment(countEnrollment);
                 break;
             case "form":
@@ -61,6 +62,7 @@ public class EventApp {
                 formEnrollment.setStartTime(LocalDateTime.parse(eventPostDto.getApplyStartTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 formEnrollment.setEndTime(LocalDateTime.parse(eventPostDto.getApplyEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
                 formEnrollment.setDefinedFormEntries(eventPostDto.getDefinedForm().stream().map(DefinedFormDto::toDefinedFormEntry).toList());
+                formEnrollment.setEvent(event);
                 event.setAbstractEnrollment(formEnrollment);
                 break;
         }
@@ -101,7 +103,7 @@ public class EventApp {
     }
 
     @PostMapping("/apply")
-    public boolean applyEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam(value = "formValues[]", required = false)List<String>formValues) {
+    public boolean applyEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam(value = "formValues[]", required = false) List<String> formValues) {
         User user = (User) JwtUtil.verifyToken(token);
         if (!user.getPermission().isCanEnroll()) {
             throw new MyException(-1, "Permission denied");
@@ -125,7 +127,9 @@ public class EventApp {
                 throw new MyException(-1, "Form values not match");
             } else {
                 List<User> participants = formEnrollment.getParticipants();
-                participants.add(user);
+                if (!eventService.appliedByUser(user.getId(), eventId)) {
+                    participants.add(user);
+                }
                 enrollForm.setUser(user);
                 enrollForm.setFormEnrollment((FormEnrollment) event.getAbstractEnrollment());
                 enrollForm.setFormValues(formValues);
