@@ -12,7 +12,7 @@ public class AbstractEnrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "abstractEnrollment")
     private Event event;
     @ManyToMany
     @JoinTable(name = "enrollment_user",
