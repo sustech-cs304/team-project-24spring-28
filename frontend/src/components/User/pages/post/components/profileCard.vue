@@ -7,12 +7,11 @@
         offset="0"
     >
         <template #reference>
-            <div class="card-container">
+            <div class="card-container" @click="toProfile">
                 <el-button-group >
                     <el-button class="profile-avatar">
                         <div class="block">
                             <el-avatar :size="40" :src="props.avatar" />
-
                         </div>
                     </el-button>
                     <el-button  class="profile-name">
@@ -29,7 +28,7 @@
 
                 <el-avatar
                     :size="60"
-                    src="{{props.avatar}}"
+                    :src="props.avatar"
                     style="margin-bottom: 8px"
                 />
                 <div>
@@ -121,25 +120,26 @@ const isSelf = computed(() => {
 })
 
 function toProfile() {
-    if (isSelf.value) {
-        router.push({path: '/self'})
-    } else {
-        let studentId = 0
-        axiosInstance.get('/user/students', {
-            params: {
-                id: props.id
-            }
-        }).then(response => {
-            studentId = response.data.data.username
-            router.push({
-                path: '/bulletin', query: {
-                    tag: studentId
-                }
-            })
-        }).catch(error => {
-            console.error(error);
-        });
-    }
+    // if (isSelf.value) {
+    //     router.push({path: '/self'})
+    // } else {
+    //     let studentId = 0
+    //     axiosInstance.get('/user/students', {
+    //         params: {
+    //             id: props.id
+    //         }
+    //     }).then(response => {
+    //         studentId = response.data.data.username
+    //         router.push({
+    //             path: '/bulletin', query: {
+    //                 tag: studentId
+    //             }
+    //         })
+    //     }).catch(error => {
+    //         console.error(error);
+    //     });
+    // }
+    router.push({ path: '/profile', query: { userID: props.id } })
 }
 
 function mouseEnter() {

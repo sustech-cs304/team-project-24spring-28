@@ -76,7 +76,6 @@ const goToCollect = () => {
 const goToHistory = () => {
     router.push({ path: '/square/post/write' })
 }
-
 const handlePageChange = (newPage) => {
     currentPage.value = newPage;
 };
@@ -96,7 +95,7 @@ const handleImageUpload = () => {
 
 async function getAllPostOnSquare() {
     try {
-        const response = await axiosInstance.get(`/post/getPostSquare`)
+        const response = await axiosInstance.get(`/post/getPostSquare/write`)
         const postData = response.data.data;
         postIDs.value = postData.map(post => post.postID);
     } catch (error) {
