@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findPostsByUserId(long userId);
+
+    List<Post> findAllByPostContentContainingIgnoreCaseOrPostTitleContainingIgnoreCase(String text, String title);
 }

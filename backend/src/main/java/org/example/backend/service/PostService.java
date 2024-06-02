@@ -16,4 +16,6 @@ public interface PostService {
     List<Post> findPostsByUserId(long userId);
 
     boolean deletePost(long postId);
+
+    List<Post> searchPost(String keyword);
 }

@@ -44,4 +44,9 @@ public class PostServiceImpl implements PostService {
         postRepository.deleteById(postId);
         return true;
     }
+
+    @Override
+    public List<Post> searchPost(String keyword) {
+        return postRepository.findAllByPostContentContainingIgnoreCaseOrPostTitleContainingIgnoreCase(keyword, keyword);
+    }
 }

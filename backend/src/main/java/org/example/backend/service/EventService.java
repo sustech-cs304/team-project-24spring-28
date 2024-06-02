@@ -27,4 +27,6 @@ public interface EventService {
     boolean deleteEvent(long eventId);
 
     boolean appliedByUser(long userId, long eventId);
+
+    List<Event> searchEvent(String keyword);
 }

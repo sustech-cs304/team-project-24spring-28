@@ -92,4 +92,9 @@ public class EventServiceImpl implements EventService {
     public boolean appliedByUser(long userId, long eventId) {
         return abstractEnrollmentRepository.findAbstractEnrollmentByEventIdAndParticipantsId(eventId, userId) != null;
     }
+
+    @Override
+    public List<Event> searchEvent(String keyword) {
+        return eventRepository.findAllByTextContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword);
+    }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findEventByAuthorId(long authorId);
+
+    List<Event> findAllByTextContainingIgnoreCaseOrTitleContainingIgnoreCase(String text, String title);
 }
