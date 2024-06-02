@@ -21,7 +21,7 @@ public class ImageApp {
     @Value("${image-server.path}")
     String basePath;
 
-    private final String IMAGE_PATH = "http://10.16.88.247:8082/image";
+    private final String IMAGE_PATH = "http://10.16.88.247:8082/image/";
 
     @PostMapping("/upload")
     public String uploadImage(@RequestParam("file") MultipartFile file) throws Exception{
@@ -38,7 +38,7 @@ public class ImageApp {
         Path path = Paths.get(basePath, filename);
         logger.info("Image saved, url: " + path);
         file.transferTo(path.toAbsolutePath());
-        return IMAGE_PATH + "/" + filename;
+        return IMAGE_PATH + filename;
     }
 
     @GetMapping("/download")

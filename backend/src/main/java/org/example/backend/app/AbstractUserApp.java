@@ -23,6 +23,7 @@ import java.util.List;
 public class AbstractUserApp {
     private final AbstractUserService abstractUserService;
     private final ResourceUrlProvider mvcResourceUrlProvider;
+    private final String IMAGE_PATH = "http://10.16.88.247:8082/image/";
 
     @Autowired
     public AbstractUserApp(AbstractUserService abstractUserService, ResourceUrlProvider mvcResourceUrlProvider) {
@@ -49,7 +50,7 @@ public class AbstractUserApp {
         user.setUsername(username);
         user.setPassword(password);
         user.setName(username);
-        user.setAvatar("default_avatar.jpg");
+        user.setAvatar(IMAGE_PATH + "default_avatar.jpg");
         try {
             abstractUserService.saveUser(user);
             return true;
