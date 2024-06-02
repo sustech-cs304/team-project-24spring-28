@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 该类用于处理搜索相关的请求
+ * @author Shinomiya
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/search")
 public class SearchApp {
@@ -20,11 +25,19 @@ public class SearchApp {
     @Autowired
     private PostService postService;
 
+    /**
+     * @param content 搜索内容
+     * @return 模糊搜索到的相关活动
+     */
     @GetMapping("/event")
     public List<Long> searchEvent(@RequestParam String content) {
         return eventService.searchEvent(content).stream().map(Event::getId).toList();
     }
 
+    /**
+     * @param content 搜索内容
+     * @return 模糊搜索到的相关帖子
+     */
     @GetMapping("/post")
     public List<Long> searchPost(@RequestParam String content) {
         return postService.searchPost(content).stream().map(Post::getId).toList();

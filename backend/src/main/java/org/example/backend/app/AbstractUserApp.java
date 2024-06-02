@@ -19,7 +19,11 @@ import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.List;
 
-
+/**
+ * 该类用于处理用户登录注册相关的请求
+ * @author Shinomiya
+ * @version 1.0
+ */
 @RestController
 public class AbstractUserApp {
     private final AbstractUserService abstractUserService;
@@ -32,6 +36,11 @@ public class AbstractUserApp {
         this.mvcResourceUrlProvider = mvcResourceUrlProvider;
     }
 
+    /**
+     * @param username 用户名
+     * @param password 密码
+     * @return 返回一个token
+     */
     @PostMapping(value = "/login")
     public String login(@RequestParam String username, @RequestParam String password) {
         AbstractUser user = abstractUserService.checkUser(username, password);
@@ -42,6 +51,11 @@ public class AbstractUserApp {
         return JwtUtil.getToken(String.valueOf(user.getId()), password);
     }
 
+    /**
+     * @param username 用户名
+     * @param password 密码
+     * @return 返回一个boolean值表示是否注册成功
+     */
     @PostMapping("/signUp")
     public boolean signUp(@RequestParam String username, @RequestParam String password) {
         User user = new User();
@@ -66,6 +80,11 @@ public class AbstractUserApp {
         }
     }
 
+    /**
+     *
+     * @param token 用户对应的token
+     * @return 用户信息
+     */
     @GetMapping("/userInfo")
     public AbstractUserDto getUserByToken(@RequestHeader("Authorization") String token) {
         AbstractUser user = JwtUtil.verifyToken(token);

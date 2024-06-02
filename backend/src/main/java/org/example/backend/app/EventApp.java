@@ -24,6 +24,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 该类用于处理活动相关的请求
+ * @author wangyr
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/event")
 public class EventApp {
@@ -32,6 +37,11 @@ public class EventApp {
     @Autowired
     AbstractEnrollmentService abstractEnrollmentService;
 
+    /**
+     * @param token 用户token
+     * @param eventPostDto 活动信息
+     * @return 是否创建成功
+     */
     @PostMapping("/create")
 //    public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestParam String title, @RequestParam String name, @RequestParam String enrollmentType, @RequestParam String applyStartTime, @RequestParam String applyEndTime, @RequestParam String startTime, @RequestParam String endTime, @RequestParam String imageUrl, @RequestParam String introduction, @RequestParam String mdText, @RequestParam(required = false) long limitCount, @RequestParam(required = false) List<DefinedFormDto> definedForm) {
     public boolean releaseEvent(@RequestHeader("Authorization") String token, @RequestBody EventPostDto eventPostDto) {
@@ -69,11 +79,19 @@ public class EventApp {
         return eventService.saveEvent(event);
     }
 
+    /**
+     * @return 所有活动ID
+     */
     @GetMapping("/all")
     public long[] getAllEvents() {
         return eventService.findAllEvents().stream().mapToLong(Event::getId).toArray();
     }
 
+    /**
+     * @param token 用户token
+     * @param eventId 活动ID
+     * @return 活动信息
+     */
     @GetMapping("/detail")
     public EventDto getEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
         User user = (User) JwtUtil.verifyToken(token);
@@ -87,6 +105,10 @@ public class EventApp {
         return eventDto;
     }
 
+    /**
+     * @param eventId 活动ID
+     * @return 活动简要信息
+     */
     @GetMapping("/brief")
     public EventBriefDto getEventBrief(@RequestParam("id") long eventId) {
         Event event = eventService.findEventById(eventId);
@@ -96,12 +118,22 @@ public class EventApp {
         return new EventBriefDto(event);
     }
 
+    /**
+     * @param token 用户token
+     * @return 用户发布活动的简要信息
+     */
     @GetMapping("/hold")
     public List<EventBriefDto> getEventByAuthorId(@RequestHeader("Authorization") String token) {
         long authorId = JwtUtil.verifyToken(token).getId();
         return eventService.findEventByAuthorId(authorId).stream().map(EventBriefDto::new).toList();
     }
 
+    /**
+     * @param token 用户token
+     * @param eventId 活动ID
+     * @param formValues 报名表单(可选)
+     * @return 是否删除成功
+     */
     @PostMapping("/apply")
     public boolean applyEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam(value = "formValues[]", required = false) List<String> formValues) {
         User user = (User) JwtUtil.verifyToken(token);
@@ -140,6 +172,9 @@ public class EventApp {
         return true;
     }
 
+    /**
+     * @param id 活动ID
+     */
     @GetMapping("/getExcel")
     @ResponseBody
     public void getExcel(@RequestParam("id") long id, HttpServletResponse response) {
@@ -190,6 +225,11 @@ public class EventApp {
         }
     }
 
+    /**
+     * @param token 用户token
+     * @param eventId 活动ID
+     * @return 收藏活动是否成功
+     */
     @PostMapping("/favor")
     public boolean favorEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
         User user = (User) JwtUtil.verifyToken(token);
@@ -204,6 +244,11 @@ public class EventApp {
         return eventService.updateEvent(event);
     }
 
+    /**
+     * @param token 用户token
+     * @param eventId 活动ID
+     * @return 取消收藏活动是否成功
+     */
     @PostMapping("/unfavor")
     public boolean unfavorEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId) {
         User user = (User) JwtUtil.verifyToken(token);
@@ -218,6 +263,12 @@ public class EventApp {
         return eventService.updateEvent(event);
     }
 
+    /**
+     * @param token 用户token
+     * @param eventId 活动ID
+     * @param grade 评分
+     * @return 评分是否成功
+     */
     @PostMapping("/grade")
     public boolean gradeEvent(@RequestHeader("Authorization") String token, @RequestParam("id") long eventId, @RequestParam("grade") int grade) {
         User user = (User) JwtUtil.verifyToken(token);
@@ -235,12 +286,20 @@ public class EventApp {
         return true;
     }
 
+    /**
+     * @param token 用户token
+     * @return 用户已报名的活动ID
+     */
     @GetMapping("/applied")
     public long[] getAppliedEvents(@RequestHeader("Authorization") String token) {
         User user = (User) JwtUtil.verifyToken(token);
         return user.getEnrollments().stream().mapToLong(enrollment -> enrollment.getEvent().getId()).toArray();
     }
 
+    /**
+     * @param token 用户token
+     * @return 用户收藏的活动ID
+     */
     @GetMapping("favored")
     public long[] getFavoredEvents(@RequestHeader("Authorization") String token) {
         User user = (User) JwtUtil.verifyToken(token);

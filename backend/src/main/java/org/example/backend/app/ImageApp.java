@@ -13,6 +13,11 @@ import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * 该类用于处理图片上传下载相关的请求
+ * @author Shinomiya
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/image")
 public class ImageApp {
@@ -23,6 +28,12 @@ public class ImageApp {
 
     private final String IMAGE_PATH = "http://10.16.88.247:8082/image/";
 
+    /**
+     * 上传图片
+     * @param file 上传的图片文件
+     * @return 上传成功后的图片url
+     * @throws Exception 上传失败时抛出异常
+     */
     @PostMapping("/upload")
     public String uploadImage(@RequestParam("file") MultipartFile file) throws Exception{
         File dir = new File(basePath);
@@ -41,6 +52,12 @@ public class ImageApp {
         return IMAGE_PATH + filename;
     }
 
+    /**
+     * 下载图片
+     * @param fileURL 图片url
+     * @param response HttpServletResponse
+     * @throws Exception 下载失败时抛出异常
+     */
     @GetMapping("/download")
     public void downloadImage(@RequestParam("url") String fileURL, HttpServletResponse response) throws Exception {
         File file = Paths.get(basePath, fileURL).toFile();
@@ -61,6 +78,12 @@ public class ImageApp {
         fileInputStream.close();
     }
 
+    /**
+     * 通过url下载图片
+     * @param url 图片url
+     * @param response HttpServletResponse
+     * @throws Exception 下载失败时抛出异常
+     */
     @GetMapping("{url}")
     public void getImage(@PathVariable String url, HttpServletResponse response) throws Exception {
         downloadImage(url, response);

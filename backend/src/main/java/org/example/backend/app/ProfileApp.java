@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 该类用于处理用户个人信息相关的请求
+ * @author Shinomiya
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/profile")
 public class ProfileApp {
@@ -26,6 +31,13 @@ public class ProfileApp {
     @Autowired
     private EventCommentService eventCommentService;
 
+    /**
+     * 编辑用户个人信息
+     * @param token 用户token
+     * @param name 用户昵称
+     * @param bio 用户简介
+     * @return boolean
+     */
     @PostMapping("/info/edit")
     public boolean editProfile(@RequestHeader("Authorization") String token, @RequestParam("name") String name, @RequestParam("bio") String bio){
         AbstractUser user = JwtUtil.verifyToken(token);
@@ -38,6 +50,12 @@ public class ProfileApp {
         return true;
     }
 
+    /**
+     * 编辑用户头像
+     * @param token 用户token
+     * @param avatar 用户头像
+     * @return boolean
+     */
     @PostMapping("/avatar/edit")
     public boolean editAvatar(@RequestHeader("Authorization") String token, @RequestParam("avatar") String avatar){
         AbstractUser user = JwtUtil.verifyToken(token);
@@ -49,6 +67,11 @@ public class ProfileApp {
         return true;
     }
 
+    /**
+     * 获取用户个人信息
+     * @param userID 用户ID
+     * @return AbstractUserDto
+     */
     @GetMapping("/info/get")
     public AbstractUserDto getProfile(@RequestParam("userID") long userID){
         AbstractUser user = abstractUserService.findUserById(userID);
@@ -63,6 +86,11 @@ public class ProfileApp {
         return abstractUserDto;
     }
 
+    /**
+     * 获取用户发布的帖子
+     * @param userID 用户ID
+     * @return List<PostDto>
+     */
     @GetMapping("/profile/post")
     public List<PostDto> getProfilePost(@RequestParam("userID") long userID){
         AbstractUser user = abstractUserService.findUserById(userID);
