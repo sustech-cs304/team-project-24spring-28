@@ -255,7 +255,7 @@ const handleUploadImage = async (event, insertImage, files) => {
                     <el-col>
                         <el-card>
                             <el-row>
-                                <el-col :span="8">
+                                <el-col :span="10">
                                     <el-button-group class="ml-4">
                                         <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
                                         <el-button type="primary"  @click="goToSquare">Square</el-button>
@@ -263,7 +263,7 @@ const handleUploadImage = async (event, insertImage, files) => {
                                         <el-button type="primary"  @click="goToHistory" v-loading.fullscreen.lock="fullscreenLoading">History</el-button>
                                     </el-button-group>
                                 </el-col>
-                                <el-col :span="16">
+                                <el-col :span="14">
                                     <el-button :icon="Search" round style="width: 100%" @click="goToSearch">Search</el-button>
                                 </el-col>
                             </el-row>
