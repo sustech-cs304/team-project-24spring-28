@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { ElLoading, ElMessage } from 'element-plus'
 import postCard from '@/components/User/pages/post/components/postsSquare/postCard.vue'
 import {
@@ -10,65 +10,62 @@ import {
     Search,
     Share,
 } from "@element-plus/icons";
-// import MarkdownEdit from "@/components/User/pages/post/components/postsSquare/markdownEdit.vue";
 import SimplePost from "@/components/Modules/SimplePost.vue";
 import VMdEditor from '@kangc/v-md-editor/lib/codemirror-editor';
 import '@kangc/v-md-editor/lib/style/codemirror-editor.css';
 import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
 import '@kangc/v-md-editor/lib/theme/style/github.css';
-// highlightjs
 import hljs from 'highlight.js';
-
-// codemirror 编辑器的相关资源
 import Codemirror from 'codemirror';
-// mode
 import 'codemirror/mode/markdown/markdown';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/css/css';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/vue/vue';
-// edit
 import 'codemirror/addon/edit/closebrackets';
 import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/matchbrackets';
-// placeholder
 import 'codemirror/addon/display/placeholder';
-// active-line
 import 'codemirror/addon/selection/active-line';
-// scrollbar
 import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
-// style
 import 'codemirror/lib/codemirror.css';
 import HeaderForAll from "@/components/Modules/HeaderForAll.vue";
 import { useRoute } from "vue-router";
 
-const route = useRoute(); // 初始化 route
+const route = useRoute();
 VMdEditor.Codemirror = Codemirror;
 VMdEditor.use(githubTheme, {
     Hljs: hljs,
 });
 
-const eventID = ref(route.query.eventID); // Using ref to make eventID reactive
+const eventID = ref(route.query.eventID);
 
 const bindingEventID = ref(route.query.eventID);
 const postTitle = ref()
 const markdownText = ref('')
 const errorMessage = ref('')
 
-const count = ref(0)
 const fullscreenLoading = ref(false)
 
-const editDialogVisible = ref(false)
+const editDialogVisible = ref(!!route.query.eventID);
 const shareDialogVisible = ref(false)
 const imageDialogVisible = ref(false)
 
 const postIDs = ref([])
 
-const tempTest = '1'
-const load = () => {
-    count.value += 10
-}
+const currentPage = ref(1);
+const pageSize = ref(8);
+
+const paginatedPostIDs = computed(() => {
+    const start = (currentPage.value - 1) * pageSize.value;
+    const end = start + pageSize.value;
+    return postIDs.value.slice(start, end);
+});
+
+const handlePageChange = (newPage) => {
+    currentPage.value = newPage;
+};
 
 const handleEditPost = () => {
     editDialogVisible.value = true;
@@ -160,8 +157,6 @@ const handleUploadImage = async (event, insertImage, files) => {
                 insertImage({
                     url: imageUrl,
                     desc: 'sample',
-                    // width: 'auto',
-                    // height: 'auto',
                 });
                 console.log(imageUrl)
             } else {
@@ -172,12 +167,7 @@ const handleUploadImage = async (event, insertImage, files) => {
         }
     }
 };
-
-
-
 </script>
-
-
 
 <template>
     <el-dialog
@@ -269,17 +259,24 @@ const handleUploadImage = async (event, insertImage, files) => {
                 <el-row>
                     <el-col :span="24">
                         <div>
-                            <postCard v-for="postID in postIDs" :key="postID" :post-i-d="postID"></postCard>
+                            <postCard v-for="postID in paginatedPostIDs" :key="postID" :post-i-d="postID"></postCard>
                         </div>
                     </el-col>
                 </el-row>
-                <!--翻页-->
+                <!--pagination-->
                 <el-row>
                     <el-col>
                         <el-affix offset="5" position="bottom">
                             <el-card style="border: none; display: flex; justify-content: center; align-items: center;"
                                      shadow="never">
-                                <el-pagination background layout="prev, pager, next" :total="1000"/>
+                                <el-pagination
+                                    background
+                                    layout="prev, pager, next"
+                                    :total="postIDs.length"
+                                    :page-size="pageSize"
+                                    @current-change="handlePageChange"
+                                    :current-page="currentPage"
+                                />
                             </el-card>
                         </el-affix>
                     </el-col>
@@ -314,7 +311,6 @@ const handleUploadImage = async (event, insertImage, files) => {
                     </el-row>
                     <el-row>
                         <el-col>
-                            <!--                            <simple-post></simple-post>-->
                         </el-col>
                     </el-row>
                 </el-affix>
@@ -327,6 +323,7 @@ const handleUploadImage = async (event, insertImage, files) => {
         </el-row>
     </div>
 </template>
+
 
 
 <style scoped>
