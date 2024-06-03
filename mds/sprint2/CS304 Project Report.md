@@ -31,7 +31,7 @@ In test part, we use **Spring Boot Test** and **MockMvc** for unit tests. [Sourc
 
 Finally, we achieved decent coverage through simple automated testing. Meanwhile, considering convenience, we completed other detailed testing section through manual testing.
 
-![coverage](D:\cs304\team-project-24spring-28\mds\sprint2\imgs\coverage.png)
+<img src="imgs/coverage.png" alt="1" style="zoom:100%;" />
 
 [test coverage report](files/backend/htmlReport/index.html)
 
