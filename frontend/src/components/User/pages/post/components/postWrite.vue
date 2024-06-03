@@ -151,6 +151,7 @@ const postUpload = async () => {
 }
 
 import axiosInstance from "@/utils/axios"
+import PostCard from "@/components/User/pages/post/components/postsSquare/postCard.vue";
 
 const handleUploadImage = async (event, insertImage, files) => {
     console.log(files);
@@ -247,27 +248,40 @@ const handleUploadImage = async (event, insertImage, files) => {
         </el-row>
         <el-row :class="main-main" gutter="10">
             <el-col :span="3">
-                aside
+                <el-card>
+                    <div class="common-layout" style="height: 30vh">
+                        <el-container>
+                            <el-header :height="10">
+                                <h4>Tips</h4>
+                            </el-header>
+                            <el-main>
+                                <span>Here is the page where you can see all the posts you wrote.</span>
+                            </el-main>
+                        </el-container>
+                    </div>
+                </el-card>
             </el-col>
             <el-col :span="15">
                 <!--subheader-->
                 <el-row :justify="space-between">
                     <el-col>
-                        <el-card>
-                            <el-row>
-                                <el-col :span="10">
-                                    <el-button-group class="ml-4">
-                                        <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
-                                        <el-button type="primary"  @click="goToSquare">Square</el-button>
-                                        <el-button type="primary"  @click="goToCollect">Collection</el-button>
-                                        <el-button type="primary"  @click="goToHistory" v-loading.fullscreen.lock="fullscreenLoading">History</el-button>
-                                    </el-button-group>
-                                </el-col>
-                                <el-col :span="14">
-                                    <el-button :icon="Search" round style="width: 100%" @click="goToSearch">Search</el-button>
-                                </el-col>
-                            </el-row>
-                        </el-card>
+                        <el-affix :offset="10">
+                            <el-card>
+                                <el-row>
+                                    <el-col :span="10">
+                                        <el-button-group class="ml-4">
+                                            <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
+                                            <el-button type="primary"  @click="goToSquare">Square</el-button>
+                                            <el-button type="primary"  @click="goToCollect">Collection</el-button>
+                                            <el-button type="primary"  @click="goToHistory" v-loading.fullscreen.lock="fullscreenLoading">History</el-button>
+                                        </el-button-group>
+                                    </el-col>
+                                    <el-col :span="14">
+                                        <el-button :icon="Search" round style="width: 100%" @click="goToSearch">Search</el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                        </el-affix>
                     </el-col>
                 </el-row>
                 <!--main-->
@@ -305,8 +319,11 @@ const handleUploadImage = async (event, insertImage, files) => {
                             <el-card>
                                 <div class="common-layout" style="height: 20vh">
                                     <el-container>
-                                        <el-header :height="10">Announcement</el-header>
+                                        <el-header :height="10">
+                                            <h4>Announcement</h4>
+                                        </el-header>
                                         <el-main>
+                                            <span>Amazing events and posts waiting for you!</span>
                                         </el-main>
                                     </el-container>
                                 </div>
@@ -315,13 +332,15 @@ const handleUploadImage = async (event, insertImage, files) => {
                     </el-row>
                     <el-row>
                         <el-col>
-                            <el-card style="border-radius: 0.5vw">
-                                <el-carousel height="30vh" motion-blur interval="6000">
-                                    <el-carousel-item v-for="item in 4" :key="item">
-                                        <h3 class="small justify-center" text="2xl">{{ item }}</h3>
-                                    </el-carousel-item>
-                                </el-carousel>
-                            </el-card>
+<!--                            <el-card style="border-radius: 0.5vw">-->
+<!--                                <el-carousel height="30vh" motion-blur interval="6000">-->
+<!--                                    <el-carousel-item v-for="item in postIds" :key="item.id">-->
+<!--                                        <div class="event-card-wrapper">-->
+<!--                                            <simple-post :post-i-d="item" />-->
+<!--                                        </div>-->
+<!--                                    </el-carousel-item>-->
+<!--                                </el-carousel>-->
+<!--                            </el-card>-->
                         </el-col>
                     </el-row>
                     <el-row>
@@ -331,11 +350,11 @@ const handleUploadImage = async (event, insertImage, files) => {
                 </el-affix>
             </el-col>
         </el-row>
-        <el-row :class="main-footer">
-            <el-col>
-                <header-for-all/>
-            </el-col>
-        </el-row>
+        <!--        <el-row :class="main-footer">-->
+        <!--            <el-col>-->
+        <!--                <header-for-all/>-->
+        <!--            </el-col>-->
+        <!--        </el-row>-->
     </div>
 </template>
 

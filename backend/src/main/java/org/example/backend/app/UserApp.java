@@ -34,6 +34,13 @@ public class UserApp {
     @Autowired
     private MessageService messageService;
 
+    /**
+     * 评论活动
+     * @param token 用户token
+     * @param eventId 活动id
+     * @param comment 评论内容
+     * @return boolean
+     */
     @PostMapping(value = "/commentEvent")
     boolean commentEvent(@RequestHeader("Authorization") String token, @RequestParam long eventId, @RequestParam String comment) {
         long userId = JwtUtil.getIdByToken(token);
@@ -47,6 +54,13 @@ public class UserApp {
         return true;
     }
 
+    /**
+     * 评论帖子
+     * @param token 用户token
+     * @param postId 帖子id
+     * @param comment 评论内容
+     * @return boolean
+     */
     @PostMapping(value = "/commentPost")
     boolean commentPost(@RequestHeader("Authorization") String token, @RequestParam long postId, @RequestParam String comment) {
         long userId = JwtUtil.getIdByToken(token);
@@ -60,6 +74,13 @@ public class UserApp {
         return true;
     }
 
+    /**
+     * 回复评论
+     * @param token 用户token
+     * @param commentId 评论id
+     * @param comment 回复内容
+     * @return boolean
+     */
     @PostMapping(value = "/reply")
     boolean replyComment(@RequestHeader("Authorization") String token, @RequestParam long commentId, @RequestParam String comment) {
         long userId = JwtUtil.getIdByToken(token);
@@ -118,6 +139,11 @@ public class UserApp {
         }
     }
 
+    /**
+     * 获取用户权限
+     * @param token 用户token
+     * @return UserDto
+     */
     @GetMapping("/permission")
     public UserDto getUserPermission(@RequestHeader("Authorization") String token) {
         long userId = JwtUtil.getIdByToken(token);

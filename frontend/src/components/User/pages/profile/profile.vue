@@ -113,21 +113,21 @@
                                 </div>
                             </el-scrollbar>
                         </el-col>
-                        <el-col span="12">
-                            <el-scrollbar style="width: 70vw">
-                                <div class="scrollbar-flex-content">
-                                    <p v-for="item in 50" :key="item" class="scrollbar-demo-item">
-                                        {{ item }}
-                                    </p>
-                                </div>
-                            </el-scrollbar>
-                        </el-col>
+<!--                        <el-col span="12">-->
+<!--                            <el-scrollbar style="width: 70vw">-->
+<!--                                <div class="scrollbar-flex-content">-->
+<!--                                    <p v-for="item in 50" :key="item" class="scrollbar-demo-item">-->
+<!--                                        {{ item }}-->
+<!--                                    </p>-->
+<!--                                </div>-->
+<!--                            </el-scrollbar>-->
+<!--                        </el-col>-->
                     </el-row>
                 </div>
                 <img src="@/components/User/pages/profile/images/stars.png" alt="" id="stars">
                 <img src="@/components/User/pages/profile/images/moon.png" alt="" id="moon">
                 <img src="@/components/User/pages/profile/images/mountains_behind.png" alt="" id="mountain_behind">
-                <div id="text">Moon Light</div>
+                <div id="text">{{userName}}</div>
                 <img src="@/components/User/pages/profile/images/mountains_front.png" alt="" id="mountain_front">
 
             </section>
@@ -480,7 +480,7 @@ section #btn{
     background-color: #cccccc;
     z-index: 200;
     width: 85vw;
-    height: 200vh;
+    height: 100vh;
     opacity: 0.9;
     border-radius: 10px;
 }

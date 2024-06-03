@@ -79,7 +79,6 @@ function handleSuccess(response, file, fileList) {
 
 let eventTypes = [
   { value: '1', label: '计数式' },
-  { value: '2', label: '选座式' },
   { value: '3', label: '自定义报名' },
 ]
 
@@ -348,10 +347,10 @@ onMounted(() => {
 
 
 
-  mdText.value = 'sdf\n' +
-      '### Title\n' +
-      '\n' +
-      '![Description](https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg){{{width="200" height="auto"}}}'
+  // mdText.value = 'sdf\n' +
+  //     '### Title\n' +
+  //     '\n' +
+  //     '![Description](https://github.com/LampTales/YuxiaLin/raw/main/pics/lin.jpg){{{width="200" height="auto"}}}'
 
 })
 

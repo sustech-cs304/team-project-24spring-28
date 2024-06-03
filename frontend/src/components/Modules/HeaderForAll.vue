@@ -39,7 +39,8 @@ export default {
         { id: 2, label: '帖子广场', url: '/square' },
         { id: 3, label: '所有活动', url: '/allEvent' },
         { id: 4, label: '我的活动', url: '/event/my'},
-        { id: 6, label: '我的消息', url: '/message'}
+        { id: 6, label: '我的消息', url: '/message'},
+        { id: 7, label: '帮助文档', url: '/doc'}
       ],
       userId: localStorage.getItem('userId')
     };

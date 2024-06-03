@@ -249,27 +249,41 @@ const handleUploadImage = async (event, insertImage, files) => {
         </el-row>
         <el-row :class="main-main" gutter="10">
             <el-col :span="3">
-                aside
+                <el-card>
+                    <div class="common-layout" style="height: 25vh">
+                        <el-container>
+                            <el-header :height="10">
+                                <h4>Tips</h4>
+                            </el-header>
+                            <el-main>
+                                <span>Here is the page where you can see all the posts.</span>
+                            </el-main>
+                        </el-container>
+                    </div>
+                </el-card>
             </el-col>
             <el-col :span="15">
                 <!--subheader-->
                 <el-row :justify="space-between">
                     <el-col>
-                        <el-card>
-                            <el-row>
-                                <el-col :span="10">
-                                    <el-button-group class="ml-4">
-                                        <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
-                                        <el-button type="primary"  @click="goToSquare">Square</el-button>
-                                        <el-button type="primary"  @click="goToCollect">Collection</el-button>
-                                        <el-button type="primary"  @click="goToHistory" v-loading.fullscreen.lock="fullscreenLoading">History</el-button>
-                                    </el-button-group>
-                                </el-col>
-                                <el-col :span="14">
-                                    <el-button :icon="Search" round style="width: 100%" @click="goToSearch">Search</el-button>
-                                </el-col>
-                            </el-row>
-                        </el-card>
+                        <el-affix :offset="10">
+                            <el-card>
+                                <el-row>
+                                    <el-col :span="10">
+                                        <el-button-group class="ml-4">
+                                            <el-button type="primary" :icon="Edit" @click="handleEditPost"/>
+                                            <el-button type="primary"  @click="goToSquare">Square</el-button>
+                                            <el-button type="primary"  @click="goToCollect">Collection</el-button>
+                                            <el-button type="primary"  @click="goToHistory" v-loading.fullscreen.lock="fullscreenLoading">History</el-button>
+                                        </el-button-group>
+                                    </el-col>
+                                    <el-col :span="14">
+                                        <el-button :icon="Search" round style="width: 100%" @click="goToSearch">Search</el-button>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                        </el-affix>
+
                     </el-col>
                 </el-row>
                 <!--main-->
@@ -307,8 +321,11 @@ const handleUploadImage = async (event, insertImage, files) => {
                             <el-card>
                                 <div class="common-layout" style="height: 20vh">
                                     <el-container>
-                                        <el-header :height="10">Announcement</el-header>
+                                        <el-header :height="10">
+                                            <h4>Announcement</h4>
+                                        </el-header>
                                         <el-main>
+                                            <span>Amazing events and posts waiting for you!</span>
                                         </el-main>
                                     </el-container>
                                 </div>
@@ -335,11 +352,11 @@ const handleUploadImage = async (event, insertImage, files) => {
                 </el-affix>
             </el-col>
         </el-row>
-        <el-row :class="main-footer">
-            <el-col>
-                <header-for-all/>
-            </el-col>
-        </el-row>
+<!--        <el-row :class="main-footer">-->
+<!--            <el-col>-->
+<!--                <header-for-all/>-->
+<!--            </el-col>-->
+<!--        </el-row>-->
     </div>
 </template>
 

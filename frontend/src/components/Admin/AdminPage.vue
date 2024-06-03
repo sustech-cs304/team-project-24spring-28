@@ -4,6 +4,7 @@
       <button @click="showTable(1)" :class="{ active: activeTable === 1 }">切换活动表格</button>
       <button @click="showTable(2)" :class="{ active: activeTable === 2 }">切换帖子表格</button>
       <button @click="showTable(3)" :class="{ active: activeTable === 3 }">切换用户表格</button>
+      <button @click="goToDoc">跳转到文档</button>
     </div>
 
     <div v-show="activeTable === 1">
@@ -72,6 +73,12 @@
 <script setup>
 import {onMounted, ref} from 'vue';
 import * as adminApi from '@/components/Admin/admin.js';
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+function goToDoc() {
+  router.push('/docAdmin');
+}
 
 const activeTable = ref(1);
 const eventIds = ref([]);

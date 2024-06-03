@@ -32,6 +32,14 @@ public class PostApp {
     @Autowired
     private EventCommentService eventCommentService;
 
+    /**
+     * 发布帖子
+     * @param token 用户token
+     * @param postTitle 帖子标题
+     * @param postContent 帖子内容
+     * @param eventId 相关事件ID
+     * @return 帖子ID
+     */
     @PostMapping("/releasePost")
     public Long releasePost(@RequestHeader("Authorization") String token, @RequestParam("postTitle") String postTitle, @RequestParam("postContent") String postContent, @RequestParam("postRelevantEvent") String eventId) {
 //        long userId = JwtUtil.getIdByToken(token);
@@ -45,6 +53,11 @@ public class PostApp {
         return post.getId();
     }
 
+    /**
+     * 获取帖子
+     * @param postId 帖子ID
+     * @return 帖子信息
+     */
     @GetMapping("/getFullPost")
     public PostDto getFullPost(@RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
@@ -74,6 +87,11 @@ public class PostApp {
         return postDto;
     }
 
+    /**
+     * @param token 用户token
+     * @param postId 帖子ID
+     * @return 点赞帖子是否成功
+     */
     @PostMapping("/likeThePost")
     public boolean likeThePost(@RequestHeader("Authorization") String token, @RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
@@ -86,6 +104,11 @@ public class PostApp {
         return postService.savePost(post);
     }
 
+    /**
+     * @param token 用户token
+     * @param postId 帖子ID
+     * @return 取消点赞帖子是否成功
+     */
     @PostMapping("/dislikeThePost")
     public boolean dislikeThePost(@RequestHeader("Authorization") String token, @RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
@@ -98,6 +121,11 @@ public class PostApp {
         return postService.savePost(post);
     }
 
+    /**
+     * @param token 用户token
+     * @param postId 帖子ID
+     * @return 收藏帖子是否成功
+     */
     @PostMapping("/collectThePost")
     public boolean collectThePost(@RequestHeader("Authorization") String token, @RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
@@ -113,6 +141,11 @@ public class PostApp {
         return abstractUserService.saveUser(user);
     }
 
+    /**
+     * @param token 用户token
+     * @param postId 帖子ID
+     * @return 取消收藏帖子是否成功
+     */
     @PostMapping("/discollectThePost")
     public boolean discollectThePost(@RequestHeader("Authorization") String token, @RequestParam("postID") String postId) {
         Post post = postService.findPostById(Long.parseLong(postId));
@@ -128,6 +161,9 @@ public class PostApp {
         return abstractUserService.saveUser(user);
     }
 
+    /**
+     * @return 所有帖子
+     */
     @GetMapping("/getPostSquare")
     public List<PostDto> getPostSquare() {
         List<Post> posts = postService.findAllPosts();
@@ -138,6 +174,9 @@ public class PostApp {
         return postDtos;
     }
 
+    /**
+     * @return 所有事件
+     */
     @GetMapping("/getAllEvent")
     public List<EventDto> getAllEvent() {
         List<EventDto> eventDtos = new ArrayList<>();
@@ -155,11 +194,19 @@ public class PostApp {
         return eventDto;
     }
 
+    /**
+     * @param postId 帖子ID
+     * @return 删除帖子是否成功
+     */
     @DeleteMapping("/delete/{postID}")
     public boolean deletePost(@PathVariable("postID") String postId) {
         return postService.deletePostById(Long.parseLong(postId));
     }
 
+    /**
+     * @param token 用户token
+     * @return 用户收藏的帖子
+     */
     @GetMapping("/getPostSquare/collect")
     public List<PostDto> getPostSquareCollect(@RequestHeader("Authorization") String token) {
         AbstractUser user = JwtUtil.verifyToken(token);
@@ -171,6 +218,10 @@ public class PostApp {
         return postDtos;
     }
 
+    /**
+     * @param token 用户token
+     * @return 用户发布的帖子
+     */
     @GetMapping("/getPostSquare/write")
     public List<PostDto> getPostSquareWrite(@RequestHeader("Authorization") String token) {
         AbstractUser user = JwtUtil.verifyToken(token);

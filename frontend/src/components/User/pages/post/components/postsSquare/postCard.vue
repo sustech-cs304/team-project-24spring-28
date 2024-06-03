@@ -33,7 +33,7 @@ const userBio = ref("default userBio")
 const userAvatar = ref("")
 
 const eventTitle = ref("default event")
-const posterUrl = ref("https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png")
+const posterUrl = ref("")
 
 async function fetchData() {
     try {
