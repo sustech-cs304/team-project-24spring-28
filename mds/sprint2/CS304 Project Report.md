@@ -23,6 +23,20 @@ The specific results are shown in the figure below:
 
 ## Part 3: Tests
 
+In test part, we use **Spring Boot Test** and **MockMvc** for unit tests. [Source code](https://github.com/sustech-cs304/team-project-24spring-28/blob/d60183c49150c30591971fdc4a607ff9c6cbd73c/backend/src/test/java/org/example/backend/BackendApplicationTests.java)
+
+**Spring Boot Test** is a module provided by Spring Boot for testing purposes. It simplifies the setup and writing of tests for Spring Boot applications. 
+
+**MockMvc** is a part of the Spring Test module and provides a powerful way to test Spring MVC applications. It allows us to send HTTP requests to the DispatcherServlet and make assertions about the resulting responses.
+
+Finally, we achieved decent coverage through simple automated testing. Meanwhile, considering convenience, we completed other detailed testing section through manual testing.
+
+<img src="imgs/coverage.png" alt="1" style="zoom:100%;" />
+
+[test coverage report](files/backend/htmlReport/index.html)
+
+
+
 ## Part 4: Build
 
 In build part, we use **Maven** to manage our project. The following is the basic lifecycle of Maven:
