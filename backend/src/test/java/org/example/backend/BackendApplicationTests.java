@@ -15,6 +15,7 @@ import org.example.backend.util.JwtUtil;
 import org.hamcrest.Matchers;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration;
@@ -216,6 +217,7 @@ class BackendApplicationTests {
 
 
     @Test
+    @Order(1)
     void saveUser() {
         Admin admin = new Admin();
         admin.setUsername("admin");
@@ -240,6 +242,7 @@ class BackendApplicationTests {
     }
 
     @Test
+    @Order(2)
     void LoginTest() {
         String token = (String) restTemplate.postForObject("http://localhost:" + port + "/login?username=1&password=1", null, GlobalResponse.class).getData();
         assert (token != null);
@@ -249,6 +252,7 @@ class BackendApplicationTests {
 
 
     @Test
+    @Order(3)
     void MessageTest() {
         // preform login
         String token1 = (String) restTemplate.postForObject("http://localhost:" + port + "/login?username=1&password=1", null, GlobalResponse.class).getData();
@@ -263,11 +267,13 @@ class BackendApplicationTests {
     }
 
     @Test
+    @Order(4)
     void EventTest() throws JSONException, JsonProcessingException {
         // preform login
         String token = (String) restTemplate.postForObject("http://localhost:" + port + "/login?username=7&password=7", null, GlobalResponse.class).getData();
         User user = (User) JwtUtil.verifyToken(token);
-        // test the releaseEvent api
+        // test the create api
+        // create two events
         Event event = generateSoccer(user, "event1");
         ObjectMapper mapper = new ObjectMapper();
         EventPostDto eventPostDto = new EventPostDto(event);
@@ -293,6 +299,29 @@ class BackendApplicationTests {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        // get the event list
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:" + port + "/event/hold").header("Authorization", token)).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.length()").value(2));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // get the event detail
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:" + port + "/event/detail").header("Authorization", token).param("id", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.title").value("event1"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // get the event brief
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:" + port + "/event/brief").header("Authorization", token).param("id", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.title").value("event1"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+
         // test the apply api
         // apply for event1
         try {
@@ -345,13 +374,78 @@ class BackendApplicationTests {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
+        // score event1
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/event/grade").header("Authorization", token).param("id", "1").param("grade", "5")).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.jsonPath("$.data").value("true"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // get the excelFile
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:" + port + "/event/getExcel").header("Authorization", token).param("id", "1")).andExpect(MockMvcResultMatchers.status().isOk());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
+    @Order(5)
     void PostTest() {
+        // preform login
+        String token = (String) restTemplate.postForObject("http://localhost:" + port + "/login?username=1&password=1", null, GlobalResponse.class).getData();
+        // test the create api
+        // create a post
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/post/releasePost").header("Authorization", token).param("postTitle", "post1").param("postContent", "content1").param("postRelevantEvent", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("code").value("0"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // like and collect
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/post/likeThePost").header("Authorization", token).param("postID", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data").value("true"));
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/post/collectThePost").header("Authorization", token).param("postID", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data").value("true"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // get the post list
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:" + port + "/post/getPostSquare").header("Authorization", token)).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.length()").value(1));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // get the post detail
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:" + port + "/post/getFullPost").header("Authorization", token).param("postID", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.postTitle").value("post1"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.postContent").value("content1"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.likeOrNot").value("true"))
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.collectOrNot").value("true"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // dislike and discollect
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/post/dislikeThePost").header("Authorization", token).param("postID", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data").value("true"));
+            mockMvc.perform(MockMvcRequestBuilders.post("http://localhost:" + port + "/post/discollectThePost").header("Authorization", token).param("postID", "1")).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data").value("true"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        // get collection
+        try {
+            mockMvc.perform(MockMvcRequestBuilders.get("http://localhost:" + port + "/post/getPostSquare/collect").header("Authorization", token)).andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(MockMvcResultMatchers.jsonPath("data.length()").value(0));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
+
 
     Event generateSoccer(User author, String title) {
         // generate soccer
