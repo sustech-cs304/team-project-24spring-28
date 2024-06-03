@@ -56,7 +56,7 @@ const postIds = ref([]);
 const searchInput = ref('');
 
 onMounted(async () => {
-  content.value = ref(route.query.content);
+  content.value = route.query.content;
   postIds.value = await searchApi.searchPost(content.value);
 });
 
