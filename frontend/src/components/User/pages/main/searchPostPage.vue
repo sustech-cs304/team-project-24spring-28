@@ -57,6 +57,9 @@ const searchInput = ref('');
 
 onMounted(async () => {
   content.value = route.query.content;
+  if (typeof route.query.content === 'undefined') {
+    content.value = '';
+  }
   postIds.value = await searchApi.searchPost(content.value);
 });
 
