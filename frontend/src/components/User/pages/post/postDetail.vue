@@ -47,7 +47,7 @@ onMounted(async () => {
         let temp = response.data.data;
         postTitle.value = temp.postTitle;
         postContent.value = temp.postContent;
-        postRelevantEventID.value = temp.postRelevantEvent;
+        postRelevantEventID.value = temp.postRelevantEventID;
         username.value = temp.username;
         userID.value = temp.userID;
         userBio.value = temp.userBio;
@@ -55,6 +55,7 @@ onMounted(async () => {
         isLiked.value = temp.likeOrNot;
         isStarred.value = temp.collectOrNot;
         console.log(temp)
+        console.log(postRelevantEventID.value)
     } catch (error) {
         await router.push({ path: '/notFound', query: { errorCode: 1 } });
         console.error('Failed to fetch post data:', error);
