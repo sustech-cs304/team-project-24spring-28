@@ -25,7 +25,7 @@ import Admin from "@/components/Admin/AdminPage.vue";
 import AllEvent from "@/components/User/pages/main/AllEvent.vue";
 
 import Doc from "@/components/User/pages/doc/Doc.vue";
-
+import DocforA from "@/components/User/pages/doc/DocforA.vue";
 
 const routes = [
     {path: '/', component: Login},
@@ -58,7 +58,8 @@ const routes = [
     {path: '/admin', component: Admin},
     {path: '/allEvent', component: AllEvent},
 
-    {path: '/doc', component: Doc}
+    {path: '/doc', component: Doc},
+    {path: '/docAdmin', component: DocforA}
 
 
 ]

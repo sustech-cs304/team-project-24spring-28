@@ -85,6 +85,7 @@ onMounted(async () => {
           </el-row>
         </div>
       </el-row>
+      <h1>热门活动</h1>
         <el-row :class="main-main" gutter="10">
             <el-col :span="24">
                     <el-row>
@@ -107,6 +108,7 @@ onMounted(async () => {
                     </el-row>
             </el-col>
         </el-row>
+      <h1>热门帖子</h1>
       <el-row>
         <el-col :span="24">
           <div>

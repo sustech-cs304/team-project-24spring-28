@@ -214,16 +214,29 @@ let text = ref('# 南科大活动中心用户手册\n' +
     '\n' +
     '通过遵循本指南，您将能够在管理员界面中有效管理活动、帖子和用户。如遇到任何问题或有进一步的疑问，请参考技术文档或联系开发团队以获取帮助。\n')
 
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+function goBack() {
+  router.push('/admin');
+}
+
+
+
 </script>
 
 <template>
-  <div>
-    <HeaderForAll></HeaderForAll>
-  </div>
+    <div class="button-container">
+      <button @click="goBack">返回</button>
+    </div>
   <v-md-preview :text="text"></v-md-preview>
 
 </template>
 
 <style scoped>
-
+.button-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+}
 </style>
