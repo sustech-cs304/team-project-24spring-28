@@ -16,7 +16,7 @@ The specific results are shown in the figure below:
 ## Part 2: Documentation
 
 - Documentation for end users:
-  [user_manual](../../frontend/src/components/User/pages/doc/Doc.vue)
+  [user_manual](前端用户手册.md)
 
 - Documentation for developers:
   [apidocs](files/backend/apidocs/index.html)
