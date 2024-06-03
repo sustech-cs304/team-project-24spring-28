@@ -29,7 +29,7 @@ let eventData = ref({});
 
 let postTitle = ref('');
 let postContent = ref();
-let postRelevantEventID = ref();
+const postRelevantEventID = ref();
 let username = ref();
 let userID = ref();
 let userBio = ref();
@@ -54,7 +54,7 @@ onMounted(async () => {
         userAvatar.value = temp.userAvatar;
         isLiked.value = temp.likeOrNot;
         isStarred.value = temp.collectOrNot;
-        console.log(temp)
+        console.log(postTitle)
     } catch (error) {
         await router.push({ path: '/notFound', query: { errorCode: 1 } });
         console.error('Failed to fetch post data:', error);

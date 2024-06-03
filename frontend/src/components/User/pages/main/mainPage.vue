@@ -14,7 +14,7 @@ const postIds = ref([]);
 
 
 const loadEventItems = async () => {
-  const ids = [1, 2];
+  const ids = [1, 2,3,4,5];
   for (const id of ids) {
     // const res = await API.getBriefEvent(id);
     // events.value.push(res);
@@ -23,7 +23,7 @@ const loadEventItems = async () => {
 };
 
 const loadPostItems = async () => {
-  const ids = [1, 2, 3, 4];
+  const ids = [1, 2, 5, 7];
   for (const id of ids) {
     // const res = await API.getPost(id);
     // postItems.value.push(res.data);
