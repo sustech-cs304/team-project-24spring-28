@@ -15,8 +15,10 @@ import org.example.backend.util.JwtUtil;
 import org.hamcrest.Matchers;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.info.ProjectInfoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -41,6 +43,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class BackendApplicationTests {
     // This will inject the port that the server is running on
     @LocalServerPort
