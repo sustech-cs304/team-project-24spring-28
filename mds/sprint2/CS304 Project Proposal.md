@@ -16,6 +16,7 @@ The specific results are shown in the figure below:
 ## Part 2: Documentation
 
 - Documentation for end users:
+  [user_manual](../../frontend/src/components/User/pages/doc/Doc.vue)
 
 - Documentation for developers:
   [apidocs](files/backend/apidocs/index.html)
@@ -58,6 +59,6 @@ At the same time to make our development process more convenient, we use **Jenki
 
 Here is the Jenkinsfile of our project: [Jenkinsfile](files/backend/Jenkinsfile)
 
-Following is the recent result of our Jenkins pipeline:
+Following is the recent results of our Jenkins pipeline:
 
 <img src="imgs/jenkins_pipeline.png" alt="1" style="zoom:90%;" />
